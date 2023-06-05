@@ -1,0 +1,112 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator subscriptions {
+  provider = "prisma-client-js"
+  output   = "../../node_modules/.prisma/subscriptions"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_SUBSCRIPTIONS_URL")
+  // shadowDatabaseUrl = env("SHADOW_DATABASE_SUBSCRIPTIONS_URL")
+}
+
+enum Currency {
+  USD
+}
+
+enum PaymentStatus {
+  PENDING
+  CONFIRMED
+  REJECTED
+}
+
+enum PaymentReference {
+  SUBSCRIPTION
+  OTHER
+}
+
+enum PaymentProvider {
+  STRIPE
+  PAYPAL
+}
+
+enum SubscriptionType {
+  ONETIME
+  RECCURING
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PENDING
+  CANCELLED
+}
+
+enum PeriodType {
+  DAY
+  MONTH
+  YEAR
+}
+
+model Payment {
+  id                  String               @id @default(uuid())
+  userId              String
+  currency            Currency
+  price               Float
+  status              PaymentStatus
+  reference           PaymentReference     @default(SUBSCRIPTION)
+  provider            PaymentProvider
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  subscriptionPayment SubscriptionPayment?
+}
+
+model SubscriptionPayment {
+  id            String                  @id @default(uuid())
+  info          Json?
+  payment       Payment                 @relation(references: [id], fields: [paymentId], onDelete: Cascade)
+  paymentId     String                  @unique
+  pricingPlan   SubscriptionPricingPlan @relation(references: [id], fields: [pricingPlanId], onDelete: Cascade)
+  pricingPlanId String
+  createdAt     DateTime                @default(now())
+  updatedAt     DateTime                @updatedAt
+  subscription  Subscription?
+}
+
+model SubscriptionPricingPlan {
+  id                  String                @id @default(uuid())
+  providerPriceId     String
+  provider            PaymentProvider
+  subscriptionType    SubscriptionType
+  priceId             String
+  price               SubscriptionPrice     @relation(references: [id], fields: [priceId], onDelete: Cascade)
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  subscriptionPayment SubscriptionPayment[]
+}
+
+model SubscriptionPrice {
+  id                      String                    @id @default(uuid())
+  currency                Currency
+  value                   Float
+  period                  Int
+  periodType              PeriodType                @default(MONTH)
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  SubscriptionPricingPlan SubscriptionPricingPlan[]
+}
+
+model Subscription {
+  id                    String              @id @default(uuid())
+  endDate               DateTime?           @db.Timestamptz(3)
+  startDate             DateTime            @default(now()) @db.Timestamptz(3)
+  relatedSubscription   String?
+  status                SubscriptionStatus
+  type                  SubscriptionType
+  userId                String
+  subscriptionPayment   SubscriptionPayment @relation(references: [id], fields: [subscriptionPaymentId], onDelete: Cascade)
+  subscriptionPaymentId String              @unique
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+}

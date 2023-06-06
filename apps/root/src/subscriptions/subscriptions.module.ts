@@ -11,10 +11,7 @@ import { SubscriptionsController } from './api/subscriptions.controller';
       {
         name: 'SUBSCRIPTIONS',
         useFactory: (config: ConfigType<typeof globalConfig>) => {
-          console.log(config);
           const { host, port } = config.subscriptions;
-          // const port = config.subscriptions.port;
-          console.log(host);
 
           return {
             transport: Transport.TCP,

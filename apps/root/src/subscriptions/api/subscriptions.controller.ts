@@ -26,11 +26,10 @@ import {
   CheckoutSessionApiDecorator,
   SubscriptionsPaymentsApiDecorator,
 } from 'apps/subscriptions/src/decorators/swagger/subscriptions.decorator';
-import { ClientProxy } from '@nestjs/microservices';
 import { SUBSCRIPTIONS_PATTERNS } from '@app/common/patterns/subscriptions.patterns';
-import { PriceList } from '@app/common/interfaces/price-list.interface';
 import { firstValueFrom } from 'rxjs';
 import { PaymentsMapper } from 'apps/subscriptions/src/utils/payments.mapper';
+import { SubscriptionsServiceAdapter } from '../services/subscriptions.service-adapter';
 // import { ProcessPaymentCommand } from '../../../../subscriptions/use-cases/process-payment.use-case';
 // import { CancelSubscriptionCommand } from '../../../../subscriptions/use-cases/cancel-subscription.use-case';
 // import { SubscriptionsQueryRepository } from '../../../../subscriptions/repositories/subscriptions.query-repository';
@@ -39,7 +38,7 @@ import { PaymentsMapper } from 'apps/subscriptions/src/utils/payments.mapper';
 @Controller('api/subscriptions')
 export class SubscriptionsController {
   public constructor(
-    @Inject('SUBSCRIPTIONS') private readonly subscriptionsClient: ClientProxy,
+    private readonly subscriptionsService: SubscriptionsServiceAdapter,
   ) {}
   // public constructor()
   // private readonly subscriptionsQueryRepository: SubscriptionsQueryRepository,
@@ -49,11 +48,8 @@ export class SubscriptionsController {
   @Get('price-list')
   @PriceListApiDecorator()
   public async prices() {
-    return this.subscriptionsClient.send<PriceList[]>(
-      SUBSCRIPTIONS_PATTERNS.GET_PRICES(),
-      {},
-    );
-
+    console.log('here');
+    return this.subscriptionsService.getPriceList();
     // return this.subscriptionsQueryRepository.getPriceList();
   }
 
@@ -67,14 +63,14 @@ export class SubscriptionsController {
   ) {
     const { priceId, paymentSystem } = checkoutDto;
 
-    return this.subscriptionsClient.send<string, any>(
-      SUBSCRIPTIONS_PATTERNS.GET_CHECKOUT_SESSION_URL(),
-      {
-        userId,
-        priceId,
-        paymentSystem,
-      },
-    );
+    // return this.subscriptionsClient.send<string, any>(
+    //   SUBSCRIPTIONS_PATTERNS.GET_CHECKOUT_SESSION_URL(),
+    //   {
+    //     userId,
+    //     priceId,
+    //     paymentSystem,
+    //   },
+    // );
 
     // const url = await this.commandBus.execute<
     //   StartPaymentCommand,
@@ -101,19 +97,17 @@ export class SubscriptionsController {
     @ActiveUser('userId') userId: string,
     @Query() query: PaymentsQueryDto,
   ) {
-    const result = await firstValueFrom(
-      this.subscriptionsClient.send<any, any>(
-        SUBSCRIPTIONS_PATTERNS.GET_PAYMENTS(),
-        {
-          userId,
-          query,
-        },
-      ),
-    );
-
-    return PaymentsMapper.toViewModel(result);
+    // const result = await firstValueFrom(
+    //   this.subscriptionsClient.send<any, any>(
+    //     SUBSCRIPTIONS_PATTERNS.GET_PAYMENTS(),
+    //     {
+    //       userId,
+    //       query,
+    //     },
+    //   ),
+    // );
+    // return PaymentsMapper.toViewModel(result);
     // return result;
-
     // const result = await this.subscriptionsQueryRepository.getPaymentsByQuery(
     //   userId,
     //   query,
@@ -126,24 +120,24 @@ export class SubscriptionsController {
   @CancelSubscriptionApiDecorator()
   @HttpCode(HttpStatus.NO_CONTENT)
   public async cancelSubscription(@ActiveUser('userId') userId: string) {
-    return this.subscriptionsClient.send<void, any>(
-      SUBSCRIPTIONS_PATTERNS.CANCEL_SUBSCRIPTION(),
-      {
-        userId,
-      },
-    );
+    // return this.subscriptionsClient.send<void, any>(
+    //   SUBSCRIPTIONS_PATTERNS.CANCEL_SUBSCRIPTION(),
+    //   {
+    //     userId,
+    //   },
+    // );
     // await this.commandBus.execute(new CancelSubscriptionCommand(userId));
   }
 
   @Get('current')
   @UseGuards(JwtAtGuard)
   public async getCurrentSubscription(@ActiveUser('userId') userId: string) {
-    return this.subscriptionsClient.send<void, any>(
-      SUBSCRIPTIONS_PATTERNS.GET_CURRENT_SUBSCRIPTION(),
-      {
-        userId,
-      },
-    );
+    // return this.subscriptionsClient.send<void, any>(
+    //   SUBSCRIPTIONS_PATTERNS.GET_CURRENT_SUBSCRIPTION(),
+    //   {
+    //     userId,
+    //   },
+    // );
     //   const subscription =
     //     await this.subscriptionsQueryRepository.getUsersCurrentSubscription(
     //       userId,

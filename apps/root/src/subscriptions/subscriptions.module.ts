@@ -4,6 +4,8 @@ import { ConfigType } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 
 import { SubscriptionsController } from './api/subscriptions.controller';
+import { SubscriptionsService } from './services/subscriptions.service';
+import { SubscriptionsServiceAdapter } from './services/subscriptions.service-adapter';
 
 @Module({
   imports: [
@@ -26,5 +28,11 @@ import { SubscriptionsController } from './api/subscriptions.controller';
     ]),
   ],
   controllers: [SubscriptionsController],
+  providers: [
+    {
+      provide: SubscriptionsServiceAdapter,
+      useClass: SubscriptionsService,
+    },
+  ],
 })
 export class SubscriptionsModule {}

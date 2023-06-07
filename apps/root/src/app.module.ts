@@ -7,27 +7,20 @@ import { AppController } from './app.controller';
 import { PrismaModule } from './prisma/prisma.module';
 import { AdaptorModule } from './adaptors/adaptor.module';
 import { googleOauthConfig } from './config/google-oauth.config';
+import { TcpController } from './controllers/tcp.controller';
 import { githubOauthConfig } from './config/github-oauth.config';
 import { configValidationSchema } from './config/validation-schema';
-// import { stripeConfig } from '../../subscriptions/config/stripe.config';
 import { globalConfig } from '@app/common/config/microservices.config';
 import { TestingModule } from './testing-remove-all-data/testing.module';
-import { DeviceSessionsModule } from './deviceSessions/device-sessions.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
-// import { subscriptionsConfig } from '../../subscriptions/config/subscriptions.config';
+import { DeviceSessionsModule } from './deviceSessions/device-sessions.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: configValidationSchema,
-      load: [
-        // stripeConfig,
-        githubOauthConfig,
-        googleOauthConfig,
-        // subscriptionsConfig,
-        globalConfig,
-      ],
+      load: [githubOauthConfig, googleOauthConfig, globalConfig],
     }),
     AuthModule,
     UserModule,
@@ -37,6 +30,6 @@ import { SubscriptionsModule } from './subscriptions/subscriptions.module';
     TestingModule,
     SubscriptionsModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, TcpController],
 })
 export class AppModule {}

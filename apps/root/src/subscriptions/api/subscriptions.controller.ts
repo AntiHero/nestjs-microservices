@@ -1,38 +1,28 @@
 import { ApiTags } from '@nestjs/swagger';
-// import { CommandBus } from '@nestjs/cqrs';
 import {
   Body,
   Controller,
   Get,
   HttpCode,
   HttpStatus,
-  Inject,
   Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
 
 import { CheckoutDto } from '../dto/checkout.dto';
-// import { PaymentsMapper } from '../../../../subscriptions/utils/payments.mapper';
 import { PaymentsQueryDto } from '@app/common/dto/payments-query.dto';
 import { JwtAtGuard } from 'apps/root/src/common/guards/jwt-auth.guard';
-// import type { StripeEvent } from '@app/common/interfaces/events.interface';
 import { ActiveUser } from 'apps/root/src/common/decorators/active-user.decorator';
-// import { StartPaymentCommand } from '../../../../subscriptions/use-cases/start-payment.use-case';
-// import { StripeWebhookGuard } from 'apps/root/src/common/guards/stripe-webhook.guard';
 import {
   PriceListApiDecorator,
   CancelSubscriptionApiDecorator,
   CheckoutSessionApiDecorator,
   SubscriptionsPaymentsApiDecorator,
 } from 'apps/subscriptions/src/decorators/swagger/subscriptions.decorator';
-import { SUBSCRIPTIONS_PATTERNS } from '@app/common/patterns/subscriptions.patterns';
-import { firstValueFrom } from 'rxjs';
-import { PaymentsMapper } from 'apps/subscriptions/src/utils/payments.mapper';
 import { SubscriptionsServiceAdapter } from '../services/subscriptions.service-adapter';
-// import { ProcessPaymentCommand } from '../../../../subscriptions/use-cases/process-payment.use-case';
-// import { CancelSubscriptionCommand } from '../../../../subscriptions/use-cases/cancel-subscription.use-case';
-// import { SubscriptionsQueryRepository } from '../../../../subscriptions/repositories/subscriptions.query-repository';
+import { firstValueFrom } from 'rxjs';
+import { BaseHttpException } from '@app/common/exceptions';
 
 @ApiTags('Subscriptions')
 @Controller('api/subscriptions')
@@ -40,17 +30,11 @@ export class SubscriptionsController {
   public constructor(
     private readonly subscriptionsService: SubscriptionsServiceAdapter,
   ) {}
-  // public constructor()
-  // private readonly subscriptionsQueryRepository: SubscriptionsQueryRepository,
-  // private readonly commandBus: CommandBus,
-  // {}
 
   @Get('price-list')
   @PriceListApiDecorator()
   public async prices() {
-    console.log('here');
     return this.subscriptionsService.getPriceList();
-    // return this.subscriptionsQueryRepository.getPriceList();
   }
 
   @Post('checkout-session')
@@ -62,23 +46,17 @@ export class SubscriptionsController {
     @Body() checkoutDto: CheckoutDto,
   ) {
     const { priceId, paymentSystem } = checkoutDto;
+    const result = await firstValueFrom(
+      this.subscriptionsService.getCheckoutSessionUrl({
+        priceId,
+        paymentSystem,
+        userId,
+      }),
+    );
 
-    // return this.subscriptionsClient.send<string, any>(
-    //   SUBSCRIPTIONS_PATTERNS.GET_CHECKOUT_SESSION_URL(),
-    //   {
-    //     userId,
-    //     priceId,
-    //     paymentSystem,
-    //   },
-    // );
+    if (result.err) throw new BaseHttpException(result.err);
 
-    // const url = await this.commandBus.execute<
-    //   StartPaymentCommand,
-    //   string | null
-    // >(new StartPaymentCommand(paymentSystem, priceId, userId));
-    // const url = '';
-
-    // return url;
+    return result.data;
   }
 
   // @ApiExcludeEndpoint()

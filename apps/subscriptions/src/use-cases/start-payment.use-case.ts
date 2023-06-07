@@ -1,12 +1,13 @@
 import { CommandBus, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Inject, NotFoundException } from '@nestjs/common';
 import { PaymentProvider } from '.prisma/subscriptions';
+import { Inject } from '@nestjs/common';
 
 import {
   PaymentCommand,
   PaymentStrategy,
 } from '../payment-strategies/abstract.strategy';
 import { PAYMENT_STRATEGIES } from '../constants';
+import { Result } from '@app/common/interfaces/result.interface';
 import { ValidatePaymentInputCommand } from './validate-payment-input.use-case';
 
 export class StartPaymentCommand {
@@ -37,22 +38,32 @@ export class StartPaymentCommandHandler
     });
   }
 
-  public async execute(command: StartPaymentCommand): Promise<string | null> {
+  public async execute(
+    command: StartPaymentCommand,
+  ): Promise<Result<string | null>> {
     const { priceId, userId, paymentProvider } = command;
 
     if (!this.paymentStrategiesMap[paymentProvider]) {
-      throw new NotFoundException('Payment provider not found');
+      return {
+        data: null,
+        err: { errorCode: 404, message: 'Payment provider was not found' },
+      };
     }
 
-    await this.commandBus.execute(
-      new ValidatePaymentInputCommand(userId, priceId),
-    );
+    const validationResult = await this.commandBus.execute<
+      ValidatePaymentInputCommand,
+      Result<null> | void
+    >(new ValidatePaymentInputCommand(userId, priceId));
+
+    if (validationResult?.err) {
+      return validationResult;
+    }
 
     const result =
       (await this.paymentStrategiesMap[paymentProvider]?.execute(
         new PaymentCommand(userId, priceId),
       )) || null;
 
-    return result;
+    return { data: result };
   }
 }

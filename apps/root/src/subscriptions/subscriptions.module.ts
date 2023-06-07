@@ -13,7 +13,7 @@ import { SubscriptionsServiceAdapter } from './services/subscriptions.service-ad
       {
         name: 'SUBSCRIPTIONS',
         useFactory: (config: ConfigType<typeof globalConfig>) => {
-          const { host, port } = config.subscriptions;
+          const { host, tcpPort: port } = config.subscriptions;
 
           return {
             transport: Transport.TCP,

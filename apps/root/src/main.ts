@@ -1,3 +1,5 @@
+import { Transport } from '@nestjs/microservices';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import cookieParser from 'cookie-parser';
 import compression from 'compression';
@@ -12,7 +14,6 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, { rawBody: true });
   app.enableCors({
     origin: [
-      // 'http://0.0.0.0:3000',
       process.env.FRONTEND_LOCAL_DOMAIN as string,
       process.env.FRONTEND_DOMAIN as string,
     ],
@@ -34,6 +35,20 @@ async function bootstrap() {
   const prismaService = app.get(PrismaService);
   await prismaService.enableShutdownHooks(app);
 
-  await app.listen(process.env.PORT || 5000);
+  const configService = app.get(ConfigService);
+
+  console.log(configService.get('global.root.tcpPort'));
+  app.connectMicroservice({
+    transport: Transport.TCP,
+    options: {
+      host: '0.0.0.0',
+      port: configService.get<string>('global.root.tcpPort'),
+    },
+  });
+
+  await Promise.all([
+    app.startAllMicroservices(),
+    app.listen(process.env.PORT || 5000),
+  ]).then(() => console.log(`Root Microservice is running...`));
 }
 bootstrap();

@@ -12,7 +12,7 @@
     "migrate:deploy:root": "yarn prisma migrate deploy --schema=prisma/root/schema.prisma",
     "migrate:deploy:subscriptions": "yarn prisma migrate deploy --schema=prisma/subscriptions/schema.prisma",
     "prisma:generate:root": "yarn prisma generate --schema=prisma/root/schema.prisma",
-    "prisma:generate:subscriptions": "yarn prisma generate --schema=prisma/subscriptions/schema.subscriptions",
+    "prisma:generate:subscriptions": "yarn prisma generate --schema=prisma/subscriptions/schema.prisma",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/apps/root/main",

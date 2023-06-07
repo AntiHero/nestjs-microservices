@@ -50,73 +50,77 @@ export class StripePaymentStrategy extends PaymentStrategy {
         CreateCustomerIfNotExistsCommand,
         Stripe.Customer
       >(new CreateCustomerIfNotExistsCommand(userId, this.provider));
+      return this.prisma.$transaction(
+        async (tx) => {
+          const { paymentId, subscriptionPaymentId, providerPriceId } =
+            await this.commandBus.execute<CreatePaymentsCommand, PaymentData>(
+              new CreatePaymentsCommand({
+                tx,
+                priceId,
+                userId,
+                provider: this.provider,
+                subscriptionType: SubscriptionType.ONETIME,
+              }),
+            );
 
-      return this.prisma.$transaction(async (tx) => {
-        const { paymentId, subscriptionPaymentId, providerPriceId } =
-          await this.commandBus.execute<CreatePaymentsCommand, PaymentData>(
-            new CreatePaymentsCommand({
-              tx,
-              priceId,
+          const subscription =
+            await this.subscriptionsTransactionService.createSubscription(tx, {
               userId,
-              provider: this.provider,
-              subscriptionType: SubscriptionType.ONETIME,
-            }),
+              type: SubscriptionType.ONETIME,
+              status: SubscriptionStatus.PENDING,
+              subscriptionPaymentId,
+            });
+
+          const checkoutSession: Stripe.Checkout.SessionCreateParams = {
+            line_items: [
+              {
+                price: providerPriceId,
+                quantity: 1,
+              },
+            ],
+            metadata: {
+              subscriptionId: subscription.id,
+              paymentId,
+            },
+            payment_intent_data: {
+              setup_future_usage: 'off_session',
+            },
+            payment_method_types: ['card'],
+            customer: customer.id,
+            expires_at: Math.floor((Date.now() + 1_800_000) / 1000),
+            mode: 'payment',
+            success_url: this.subscriptionsConf.successUrl,
+            cancel_url: this.subscriptionsConf.cancelUrl,
+          };
+
+          const session = await this.stripe.checkout.sessions.create(
+            checkoutSession,
           );
 
-        const subscription =
-          await this.subscriptionsTransactionService.createSubscription(tx, {
-            userId,
-            type: SubscriptionType.ONETIME,
-            status: SubscriptionStatus.PENDING,
-            subscriptionPaymentId,
-          });
+          // const paymentMethods = await this.stripe.paymentMethods.list({
+          //   customer: customer.id,
+          //   type: 'card',
+          // });
 
-        const checkoutSession: Stripe.Checkout.SessionCreateParams = {
-          line_items: [
-            {
-              price: providerPriceId,
-              quantity: 1,
-            },
-          ],
-          metadata: {
-            subscriptionId: subscription.id,
-            paymentId,
-          },
-          payment_intent_data: {
-            setup_future_usage: 'off_session',
-          },
-          payment_method_types: ['card'],
-          customer: customer.id,
-          expires_at: Math.floor((Date.now() + 1_800_000) / 1000),
-          mode: 'payment',
-          success_url: this.subscriptionsConf.successUrl,
-          cancel_url: this.subscriptionsConf.cancelUrl,
-        };
+          // const subscription = await this.stripe.subscriptions.create({
+          //   customer: customer.id,
+          //   items: [
+          //     {
+          //       price: providerPriceId,
+          //       quantity: 1,
+          //     },
+          //   ],
+          //   default_payment_method: paymentMethods.data[0].id,
+          // });
 
-        const session = await this.stripe.checkout.sessions.create(
-          checkoutSession,
-        );
+          // console.log(paymentMethods, 'payment methods');
 
-        // const paymentMethods = await this.stripe.paymentMethods.list({
-        //   customer: customer.id,
-        //   type: 'card',
-        // });
-
-        // const subscription = await this.stripe.subscriptions.create({
-        //   customer: customer.id,
-        //   items: [
-        //     {
-        //       price: providerPriceId,
-        //       quantity: 1,
-        //     },
-        //   ],
-        //   default_payment_method: paymentMethods.data[0].id,
-        // });
-
-        // console.log(paymentMethods, 'payment methods');
-
-        return session.url;
-      });
+          return session.url;
+        },
+        {
+          timeout: 10_000,
+        },
+      );
     } catch (error) {
       console.log(error);
 

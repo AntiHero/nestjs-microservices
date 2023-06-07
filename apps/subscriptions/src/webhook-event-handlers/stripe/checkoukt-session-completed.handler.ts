@@ -13,19 +13,14 @@ import {
 } from '@app/common/interfaces/events.interface';
 import { CHECKOUT_SESSION_COMPLETED } from '../../constants';
 import { PrismaService } from 'apps/subscriptions/src/prisma/prisma.service';
-// import { UserRepository } from 'apps/root/src/user/repositories/user.repository';
 import { calculateSubscriptionEndDate } from '../../utils/calculate-subscription-end-date';
 import { SubscriptionsTransactionService } from 'apps/subscriptions/src/services/subscriptions-transaction.service';
 import { SubscriptionsQueryRepository } from 'apps/subscriptions/src/repositories/subscriptions.query-repository';
-// import { SubscriptionsQueryRepository } from 'apps/subscriptions/repositories/subscriptions.query-repository';
-// import { SubscriptionsTransactionService } from 'apps/subscriptions/services/subscriptions-transaction.service';
-// import { calculateSubscriptionEndDate } from 'apps/subscriptions/utils/calculate-subscription-end-date';
 
 @Injectable()
 export class CheckoutSessinCompletedEventHandler extends Handler {
   public constructor(
     private readonly prismaService: PrismaService,
-    // private readonly userRepository: UserRepository,
     private readonly subscriptionsTransactionService: SubscriptionsTransactionService,
     private readonly subscriptionsQueryRepository: SubscriptionsQueryRepository,
   ) {
@@ -108,6 +103,7 @@ export class CheckoutSessinCompletedEventHandler extends Handler {
                   endDate: newEndDate,
                 },
               ),
+              // move to rabbitmq
               // this.userRepository.updateAccountPlan(
               //   tx,
               //   userId,

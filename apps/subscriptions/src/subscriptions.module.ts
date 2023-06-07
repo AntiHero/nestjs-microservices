@@ -14,7 +14,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { RootService } from './services/root.service';
 import { subscriptionsConfig } from './config/subscriptions.config';
 import { RootServiceAdapter } from './services/root.service-adapter';
-import { globalConfig } from '@app/common/config/microservices.config';
+import { globalConfig } from '@app/common/config/global.config';
 import { StripePaymentStrategy } from './payment-strategies/stripe.strategy';
 import { PaymentServicesProvider } from './providers/payment-services.provider';
 import { StartPaymentCommandHandler } from './use-cases/start-payment.use-case';

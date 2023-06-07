@@ -1,16 +1,27 @@
 import { MessagePattern } from '@nestjs/microservices';
-import { Controller } from '@nestjs/common';
+import { ApiExcludeEndpoint } from '@nestjs/swagger';
 import { CommandBus } from '@nestjs/cqrs';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 
+import { StripeEvent } from './interfaces';
 import { Result } from '@app/common/interfaces/result.interface';
+import { StripeWebhookGuard } from './guards/stripe-webhook.guard';
 import { PaymentsQueryDto } from '@app/common/dto/payments-query.dto';
 import { StartPaymentCommand } from './use-cases/start-payment.use-case';
+import { ProcessPaymentCommand } from './use-cases/process-payment.use-case';
 import { CancelSubscriptionCommand } from './use-cases/cancel-subscription.use-case';
 import { SUBSCRIPTIONS_PATTERNS } from '@app/common/patterns/subscriptions.patterns';
 import { SubscriptionsQueryRepository } from './repositories/subscriptions.query-repository';
 import { GetCheckoutSessionUrlPayload } from '@app/common/interfaces/get-checkout-session-url-payload.interface';
 
-@Controller()
+@Controller('subscriptions')
 export class SubscriptionsController {
   public constructor(
     private readonly subscriptionsQueryRepository: SubscriptionsQueryRepository,
@@ -53,36 +64,38 @@ export class SubscriptionsController {
       return {
         data: null,
         err: {
-          errorCode: error.response.statusCode,
-          message: error.response.message,
+          errorCode: error?.response?.statusCode || 500,
+          message: error?.response?.message,
         },
       };
     }
   }
 
   @MessagePattern(SUBSCRIPTIONS_PATTERNS.CANCEL_SUBSCRIPTION())
-  public async cancelSubscripton(userId: string) {
+  public async cancelSubscripton(payload: { userId: string }) {
     try {
-      await this.commandBus.execute(new CancelSubscriptionCommand(userId));
+      await this.commandBus.execute(
+        new CancelSubscriptionCommand(payload.userId),
+      );
 
       return { data: null };
     } catch (error: any) {
       return {
         data: null,
         err: {
-          errorCode: error.response.statusCode,
-          message: error.response.message,
+          errorCode: error?.response?.statusCode || 500,
+          message: error?.response?.message,
         },
       };
     }
   }
 
   @MessagePattern(SUBSCRIPTIONS_PATTERNS.GET_CURRENT_SUBSCRIPTION())
-  public async getCurrentSubscription(userId: string) {
+  public async getCurrentSubscription(payload: { userId: string }) {
     try {
       const result =
         await this.subscriptionsQueryRepository.getUserCurrentSubscription(
-          userId,
+          payload.userId,
         );
 
       return { data: result };
@@ -90,10 +103,18 @@ export class SubscriptionsController {
       return {
         data: null,
         err: {
-          errorCode: error.response.statusCode,
-          message: error.response.message,
+          errorCode: error?.response?.statusCode || 500,
+          message: error?.response?.message,
         },
       };
     }
+  }
+
+  @ApiExcludeEndpoint()
+  @Post('stripe-webhook')
+  @UseGuards(StripeWebhookGuard)
+  @HttpCode(HttpStatus.OK)
+  async webhook(@Body() event: StripeEvent<any>) {
+    await this.commandBus.execute(new ProcessPaymentCommand(event));
   }
 }

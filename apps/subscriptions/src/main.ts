@@ -17,11 +17,10 @@ async function bootstrap() {
     },
   });
 
-  // solve the problem with CommandBus
-  app.init();
-
-  await app.startAllMicroservices().then(() => {
-    console.log('Subscriptions Microservice is running...');
-  });
+  await Promise.all([app.startAllMicroservices(), app.listen(6000)]).then(
+    () => {
+      console.log('Subscriptions Microservice is running...');
+    },
+  );
 }
 bootstrap();

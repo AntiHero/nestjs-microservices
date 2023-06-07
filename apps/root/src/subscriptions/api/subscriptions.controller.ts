@@ -61,15 +61,6 @@ export class SubscriptionsController {
     return result.data;
   }
 
-  // @ApiExcludeEndpoint()
-  // @Post('stripe-webhook')
-  // @UseGuards(StripeWebhookGuard)
-  // @HttpCode(HttpStatus.OK)
-  // async webhook(@Body() event: StripeEvent<any>) {
-  //   console.log(event);
-  //   await this.commandBus.execute(new ProcessPaymentCommand(event));
-  // }
-
   @Get('payments')
   @SubscriptionsPaymentsApiDecorator()
   @UseGuards(JwtAtGuard)
@@ -110,18 +101,5 @@ export class SubscriptionsController {
     if (!result.data) return null;
 
     return SubscriptionsMapper.toViewModel(result.data);
-
-    // return this.subscriptionsClient.send<void, any>(
-    //   SUBSCRIPTIONS_PATTERNS.GET_CURRENT_SUBSCRIPTION(),
-    //   {
-    //     userId,
-    //   },
-    // );
-    //   const subscription =
-    //     await this.subscriptionsQueryRepository.getUsersCurrentSubscription(
-    //       userId,
-    //     );
-    //   if (!subscription) return null;
-    //   return SubscriptionMapper.toViewModel(subscription);
   }
 }

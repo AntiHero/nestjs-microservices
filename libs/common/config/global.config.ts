@@ -6,14 +6,16 @@ export const globalConfig = registerAs('global', () => ({
       process.env.MODE === 'production'
         ? process.env.SUBSCRIPTIONS_HOST
         : 'localhost',
+    port: process.env.SUBSCRIPTIONS_PORT || 6000,
     tcpPort:
       process.env.MODE === 'production'
         ? parseInt(<string>process.env.SUBSCRIPTIONS_TCP_PORT)
-        : 6000,
+        : 6001,
   },
   root: {
     host:
       process.env.MODE === 'production' ? process.env.ROOT_HOST : 'localhost',
+    port: process.env.ROOT_PORT || 5000,
     tcpPort:
       process.env.MODE === 'root'
         ? parseInt(<string>process.env.ROOT_TCP_PORT)

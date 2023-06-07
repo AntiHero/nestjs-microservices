@@ -10,7 +10,7 @@ import { googleOauthConfig } from './config/google-oauth.config';
 import { TcpController } from './controllers/tcp.controller';
 import { githubOauthConfig } from './config/github-oauth.config';
 import { configValidationSchema } from './config/validation-schema';
-import { globalConfig } from '@app/common/config/microservices.config';
+import { globalConfig } from '@app/common/config/global.config';
 import { TestingModule } from './testing-remove-all-data/testing.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { DeviceSessionsModule } from './deviceSessions/device-sessions.module';

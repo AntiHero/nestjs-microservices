@@ -1,4 +1,4 @@
-import { globalConfig } from '@app/common/config/microservices.config';
+import { globalConfig } from '@app/common/config/global.config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigType } from '@nestjs/config';
 import { Module } from '@nestjs/common';

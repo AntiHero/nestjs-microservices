@@ -1,5 +1,5 @@
 import { PeriodType } from '.prisma/subscriptions';
-import { Payments, PaymentsViewModel } from '../interfaces';
+import { Payments, PaymentsViewModel } from '../interfaces/payments.interface';
 
 export class PaymentsMapper {
   public static toViewModel(model: [number, Payments[]]): PaymentsViewModel {

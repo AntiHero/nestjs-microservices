@@ -2,6 +2,7 @@ import { MessagePattern } from '@nestjs/microservices';
 import { Controller } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 
+import { PaymentsQueryDto } from '@app/common/dto/payments-query.dto';
 import { Result } from '@app/common/interfaces/result.interface';
 import { StartPaymentCommand } from './use-cases/start-payment.use-case';
 import { SUBSCRIPTIONS_PATTERNS } from '@app/common/patterns/subscriptions.patterns';
@@ -30,5 +31,36 @@ export class SubscriptionsController {
     >(new StartPaymentCommand(paymentSystem, priceId, userId));
 
     return result;
+  }
+
+  @MessagePattern(SUBSCRIPTIONS_PATTERNS.GET_PAYMENTS())
+  public async getPayments(payload: {
+    userId: string;
+    query: PaymentsQueryDto;
+  }) {
+    const { userId, query } = payload;
+    try {
+      const result = await this.subscriptionsQueryRepository.getPaymentsByQuery(
+        userId,
+        query,
+      );
+
+      return {
+        data: result,
+      };
+    } catch (error: any) {
+      return {
+        data: null,
+        err: {
+          errorCode: error.response.statusCode,
+          message: error.response.message,
+        },
+      };
+    }
+
+    // const result = await this.commandBus.execute<
+    //   StartPaymentCommand,
+    //   Result<string>
+    // >(new StartPaymentCommand(paymentSystem, priceId, userId));
   }
 }

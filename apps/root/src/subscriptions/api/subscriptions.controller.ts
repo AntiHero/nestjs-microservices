@@ -23,6 +23,7 @@ import {
 import { SubscriptionsServiceAdapter } from '../services/subscriptions.service-adapter';
 import { firstValueFrom } from 'rxjs';
 import { BaseHttpException } from '@app/common/exceptions';
+import { PaymentsMapper } from '@app/common/utils/payments.mapper';
 
 @ApiTags('Subscriptions')
 @Controller('api/subscriptions')
@@ -75,22 +76,14 @@ export class SubscriptionsController {
     @ActiveUser('userId') userId: string,
     @Query() query: PaymentsQueryDto,
   ) {
-    // const result = await firstValueFrom(
-    //   this.subscriptionsClient.send<any, any>(
-    //     SUBSCRIPTIONS_PATTERNS.GET_PAYMENTS(),
-    //     {
-    //       userId,
-    //       query,
-    //     },
-    //   ),
-    // );
-    // return PaymentsMapper.toViewModel(result);
-    // return result;
-    // const result = await this.subscriptionsQueryRepository.getPaymentsByQuery(
-    //   userId,
-    //   query,
-    // );
-    // return PaymentsMapper.toViewModel(result);
+    console.log(query);
+    const result = await firstValueFrom(
+      this.subscriptionsService.getPayments(userId, query),
+    );
+
+    if (result.err) throw new BaseHttpException(result.err);
+
+    return PaymentsMapper.toViewModel(result.data);
   }
 
   @Post('cancel')

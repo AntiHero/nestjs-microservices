@@ -8,6 +8,8 @@ import { PriceList } from '@app/common/interfaces/price-list.interface';
 import { SubscriptionsServiceAdapter } from './subscriptions.service-adapter';
 import { GetCheckoutSessionUrlPayload } from '@app/common/interfaces/get-checkout-session-url-payload.interface';
 import { Result } from '@app/common/interfaces/result.interface';
+import { Payments } from '@app/common/interfaces/payments.interface';
+import { PaymentsQueryDto } from '@app/common/dto/payments-query.dto';
 
 @Injectable()
 export class SubscriptionsService extends SubscriptionsServiceAdapter {
@@ -40,6 +42,19 @@ export class SubscriptionsService extends SubscriptionsServiceAdapter {
       userId,
       priceId,
       paymentSystem,
+    });
+  }
+
+  public getPayments(
+    userId: string,
+    query: PaymentsQueryDto,
+  ): Observable<Result<[number, Payments[]]>> {
+    return this.subscriptionsClient.send<
+      Result<[number, Payments[]]>,
+      { userId: string; query: PaymentsQueryDto }
+    >(SUBSCRIPTIONS_PATTERNS.GET_PAYMENTS(), {
+      userId,
+      query,
     });
   }
 }

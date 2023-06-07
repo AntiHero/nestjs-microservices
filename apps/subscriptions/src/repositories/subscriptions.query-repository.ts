@@ -96,6 +96,7 @@ export class SubscriptionsQueryRepository {
     userId: string,
     query: PaymentsQueryDto,
   ): Promise<[number, Payments[]]> {
+    console.log(userId, query, 'repo');
     const { page, pageSize } = query;
 
     try {

@@ -7,9 +7,10 @@ import { PaymentProvider } from '.prisma/subscriptions';
 import { PriceList } from '@app/common/interfaces/price-list.interface';
 import { SubscriptionsServiceAdapter } from './subscriptions.service-adapter';
 import { GetCheckoutSessionUrlPayload } from '@app/common/interfaces/get-checkout-session-url-payload.interface';
-import { Result } from '@app/common/interfaces/result.interface';
+import { ErrorResult, Result } from '@app/common/interfaces/result.interface';
 import { Payments } from '@app/common/interfaces/payments.interface';
 import { PaymentsQueryDto } from '@app/common/dto/payments-query.dto';
+import { CurrentSubscriptionDbType } from '@app/common/interfaces/subscriptions.interface';
 
 @Injectable()
 export class SubscriptionsService extends SubscriptionsServiceAdapter {
@@ -55,6 +56,26 @@ export class SubscriptionsService extends SubscriptionsServiceAdapter {
     >(SUBSCRIPTIONS_PATTERNS.GET_PAYMENTS(), {
       userId,
       query,
+    });
+  }
+
+  public cancelSubscription(userId: string): Observable<Result> {
+    return this.subscriptionsClient.send<Result, { userId: string }>(
+      SUBSCRIPTIONS_PATTERNS.CANCEL_SUBSCRIPTION(),
+      {
+        userId,
+      },
+    );
+  }
+
+  public getCurrentSubscription(
+    userId: string,
+  ): Observable<Result<CurrentSubscriptionDbType>> {
+    return this.subscriptionsClient.send<
+      Result<CurrentSubscriptionDbType>,
+      { userId: string }
+    >(SUBSCRIPTIONS_PATTERNS.GET_CURRENT_SUBSCRIPTION(), {
+      userId,
     });
   }
 }

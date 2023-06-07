@@ -24,6 +24,7 @@ import { SubscriptionsServiceAdapter } from '../services/subscriptions.service-a
 import { firstValueFrom } from 'rxjs';
 import { BaseHttpException } from '@app/common/exceptions';
 import { PaymentsMapper } from '@app/common/utils/payments.mapper';
+import { SubscriptionsMapper } from '@app/common/utils/subscriptions-mapper';
 
 @ApiTags('Subscriptions')
 @Controller('api/subscriptions')
@@ -76,7 +77,6 @@ export class SubscriptionsController {
     @ActiveUser('userId') userId: string,
     @Query() query: PaymentsQueryDto,
   ) {
-    console.log(query);
     const result = await firstValueFrom(
       this.subscriptionsService.getPayments(userId, query),
     );
@@ -91,18 +91,26 @@ export class SubscriptionsController {
   @CancelSubscriptionApiDecorator()
   @HttpCode(HttpStatus.NO_CONTENT)
   public async cancelSubscription(@ActiveUser('userId') userId: string) {
-    // return this.subscriptionsClient.send<void, any>(
-    //   SUBSCRIPTIONS_PATTERNS.CANCEL_SUBSCRIPTION(),
-    //   {
-    //     userId,
-    //   },
-    // );
-    // await this.commandBus.execute(new CancelSubscriptionCommand(userId));
+    const result = await firstValueFrom(
+      this.subscriptionsService.cancelSubscription(userId),
+    );
+
+    if (result.err) throw new BaseHttpException(result.err);
   }
 
   @Get('current')
   @UseGuards(JwtAtGuard)
   public async getCurrentSubscription(@ActiveUser('userId') userId: string) {
+    const result = await firstValueFrom(
+      this.subscriptionsService.getCurrentSubscription(userId),
+    );
+
+    if (result.err) throw new BaseHttpException(result.err);
+
+    if (!result.data) return null;
+
+    return SubscriptionsMapper.toViewModel(result.data);
+
     // return this.subscriptionsClient.send<void, any>(
     //   SUBSCRIPTIONS_PATTERNS.GET_CURRENT_SUBSCRIPTION(),
     //   {

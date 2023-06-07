@@ -152,7 +152,7 @@ export class SubscriptionsQueryRepository {
     }
   }
 
-  public async getUsersCurrentSubscription(userId: string) {
+  public async getUserCurrentSubscription(userId: string) {
     try {
       return this.prismaService.subscription.findFirst({
         where: {

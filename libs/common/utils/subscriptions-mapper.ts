@@ -1,7 +1,7 @@
 import {
   CurrentSubscriptionDbType,
   CurrentSubscriptionViewModelType,
-} from '../interfaces';
+} from '../interfaces/subscriptions.interface';
 
 export class SubscriptionsMapper {
   public static toViewModel(

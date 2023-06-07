@@ -46,6 +46,8 @@
     "@types/passport-google-oauth20": "^2.0.11",
     "@types/passport-jwt": "^3.0.8",
     "@types/pg": "^8.6.6",
+    "amqp-connection-manager": "^4.1.13",
+    "amqplib": "^0.10.3",
     "argon2": "^0.30.3",
     "bcrypt": "^5.1.0",
     "class-transformer": "^0.5.1",

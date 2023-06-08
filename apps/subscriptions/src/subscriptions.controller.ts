@@ -1,4 +1,4 @@
-import { MessagePattern } from '@nestjs/microservices';
+import { ClientProxy, MessagePattern } from '@nestjs/microservices';
 import { ApiExcludeEndpoint } from '@nestjs/swagger';
 import { CommandBus } from '@nestjs/cqrs';
 import {
@@ -6,6 +6,7 @@ import {
   Controller,
   HttpCode,
   HttpStatus,
+  Inject,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -20,12 +21,14 @@ import { CancelSubscriptionCommand } from './use-cases/cancel-subscription.use-c
 import { SUBSCRIPTIONS_PATTERNS } from '@app/common/patterns/subscriptions.patterns';
 import { SubscriptionsQueryRepository } from './repositories/subscriptions.query-repository';
 import { GetCheckoutSessionUrlPayload } from '@app/common/interfaces/get-checkout-session-url-payload.interface';
+import { firstValueFrom } from 'rxjs';
 
 @Controller('subscriptions')
 export class SubscriptionsController {
   public constructor(
     private readonly subscriptionsQueryRepository: SubscriptionsQueryRepository,
     private readonly commandBus: CommandBus,
+    @Inject('ROOT_RMQ') private readonly rootRmqClient: ClientProxy,
   ) {}
 
   @MessagePattern(SUBSCRIPTIONS_PATTERNS.GET_PRICES())
@@ -116,5 +119,22 @@ export class SubscriptionsController {
   @HttpCode(HttpStatus.OK)
   async webhook(@Body() event: StripeEvent<any>) {
     await this.commandBus.execute(new ProcessPaymentCommand(event));
+  }
+
+  @Post('root')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async root() {
+    const result = await this.rootRmqClient.emit('msg_from_root', {
+      data: 'success',
+    });
+
+    console.log(result);
+
+    const responseResult = await firstValueFrom(
+      this.rootRmqClient.send('msg_from_root_res', {
+        data: 'http',
+      }),
+    );
+    console.log(responseResult);
   }
 }

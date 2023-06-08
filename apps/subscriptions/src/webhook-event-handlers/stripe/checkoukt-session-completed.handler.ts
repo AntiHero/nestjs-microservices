@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   SubscriptionType,
   SubscriptionStatus,
@@ -16,6 +16,9 @@ import { PrismaService } from 'apps/subscriptions/src/prisma/prisma.service';
 import { calculateSubscriptionEndDate } from '../../utils/calculate-subscription-end-date';
 import { SubscriptionsTransactionService } from 'apps/subscriptions/src/services/subscriptions-transaction.service';
 import { SubscriptionsQueryRepository } from 'apps/subscriptions/src/repositories/subscriptions.query-repository';
+import { ClientProxy } from '@nestjs/microservices';
+import { RootPatterns } from '@app/common/patterns/root.patterns';
+import { AccountPlan } from '@prisma/client';
 
 @Injectable()
 export class CheckoutSessinCompletedEventHandler extends Handler {
@@ -23,6 +26,7 @@ export class CheckoutSessinCompletedEventHandler extends Handler {
     private readonly prismaService: PrismaService,
     private readonly subscriptionsTransactionService: SubscriptionsTransactionService,
     private readonly subscriptionsQueryRepository: SubscriptionsQueryRepository,
+    @Inject('ROOT_RMQ') private readonly rootRmqClient: ClientProxy,
   ) {
     super();
   }
@@ -110,6 +114,12 @@ export class CheckoutSessinCompletedEventHandler extends Handler {
               //   AccountPlan.BUSINESS,
               // ),
             ]);
+
+            this.rootRmqClient.emit(RootPatterns.updateUserAccountPlan, {
+              userId,
+              plan: AccountPlan.BUSINESS,
+            });
+            // this.rootRmqClient.
           }
         });
 

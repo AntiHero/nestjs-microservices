@@ -1,7 +1,7 @@
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigModule, ConfigType } from '@nestjs/config';
 import { ConfigService } from '@nestjs/config';
-import { CommandBus, CqrsModule } from '@nestjs/cqrs';
+import { CqrsModule } from '@nestjs/cqrs';
 import { Module } from '@nestjs/common';
 
 import {
@@ -31,6 +31,7 @@ import { ValidatePaymentInputCommandHandler } from './use-cases/validate-payment
 import { CreateCustomerIfNotExistsCommandHandler } from './use-cases/create-customer-if-not-exists.use-case';
 import { ProcessActiveSubscriptionPaymentCommandHandler } from './use-cases/process-active-subscription-payment.use-case';
 import { ProcessPendingSubscriptionPaymentCommandHandler } from './use-cases/process-pending-subscription-payment.use-case';
+import { RmqModule } from '@app/common/src/rmq/rmq.module';
 
 const commandHandlers = [
   StartPaymentCommandHandler,
@@ -65,6 +66,9 @@ const commandHandlers = [
       load: [stripeConfig, subscriptionsConfig, globalConfig],
     }),
     PrismaModule,
+    RmqModule.register({
+      name: 'ROOT_RMQ',
+    }),
     ClientsModule.registerAsync([
       {
         name: 'ROOT',

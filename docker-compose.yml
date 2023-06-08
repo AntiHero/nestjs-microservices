@@ -22,3 +22,6 @@ services:
     environment:
       - MODE=production
     image: z3r0c0d3r/subscriptions:0.0.4
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: always

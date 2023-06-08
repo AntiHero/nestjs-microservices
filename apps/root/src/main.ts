@@ -9,6 +9,7 @@ import { setupSwagger } from './config/swagger.config';
 import { PrismaService } from './prisma/prisma.service';
 import { useGlobalPipes } from './common/pipes/global.pipe';
 import { useGlobalFilters } from './common/filters/global.filter';
+import { RmqService } from '@app/common/src';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { rawBody: true });
@@ -37,7 +38,6 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
 
-  console.log(configService.get('global.root.tcpPort'));
   app.connectMicroservice({
     transport: Transport.TCP,
     options: {
@@ -46,9 +46,13 @@ async function bootstrap() {
     },
   });
 
+  const rmqService = app.get<RmqService>(RmqService);
+  // find connection options by queue
+  app.connectMicroservice(rmqService.getOptions('main'));
+
   await Promise.all([
     app.startAllMicroservices(),
-    app.listen(process.env.PORT || 5000),
+    app.listen(process.env.PORT || 5002),
   ]).then(() => console.log(`Root Microservice is running...`));
 }
 bootstrap();

@@ -10,8 +10,6 @@ import {
   UserWithEmailConfirmation,
 } from '../types';
 import { UpdateOrCreateOauthAccountPaylod } from 'apps/root/src/auth/types';
-import { PrismaTransactionType } from 'apps/subscriptions/src/interfaces/prisma-transaction.interface';
-// import { PrismaTransactionType } from 'apps/root/src/common/types';
 
 @Injectable()
 export class UserRepository {
@@ -328,18 +326,14 @@ export class UserRepository {
     }
   }
 
-  // public updateAccountPlan(
-  //   prisma: PrismaTransactionType | PrismaService,
-  //   id: string,
-  //   accountPlan: AccountPlan,
-  // ) {
-  //   return prisma.user.update({
-  //     where: {
-  //       id,
-  //     },
-  //     data: {
-  //       accountPlan,
-  //     },
-  //   });
-  // }
+  public updateAccountPlan(id: string, accountPlan: AccountPlan) {
+    return this.prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        accountPlan,
+      },
+    });
+  }
 }

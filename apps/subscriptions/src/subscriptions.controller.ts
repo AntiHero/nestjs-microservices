@@ -4,6 +4,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Inject,
@@ -21,9 +22,8 @@ import { CancelSubscriptionCommand } from './use-cases/cancel-subscription.use-c
 import { SUBSCRIPTIONS_PATTERNS } from '@app/common/patterns/subscriptions.patterns';
 import { SubscriptionsQueryRepository } from './repositories/subscriptions.query-repository';
 import { GetCheckoutSessionUrlPayload } from '@app/common/interfaces/get-checkout-session-url-payload.interface';
-import { firstValueFrom } from 'rxjs';
 
-@Controller('subscriptions')
+@Controller()
 export class SubscriptionsController {
   public constructor(
     private readonly subscriptionsQueryRepository: SubscriptionsQueryRepository,
@@ -121,20 +121,8 @@ export class SubscriptionsController {
     await this.commandBus.execute(new ProcessPaymentCommand(event));
   }
 
-  @Post('root')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async root() {
-    const result = await this.rootRmqClient.emit('msg_from_root', {
-      data: 'success',
-    });
-
-    console.log(result);
-
-    const responseResult = await firstValueFrom(
-      this.rootRmqClient.send('msg_from_root_res', {
-        data: 'http',
-      }),
-    );
-    console.log(responseResult);
+  @Get('health-check')
+  async healthCheck() {
+    return;
   }
 }

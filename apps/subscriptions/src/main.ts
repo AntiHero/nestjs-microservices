@@ -3,15 +3,10 @@ import { NestFactory } from '@nestjs/core';
 
 import { SubscriptionsModule } from './subscriptions.module';
 import { ConfigService } from '@nestjs/config';
-// import { RmqService } from '@app/common/src';
 
 async function bootstrap() {
-  const app = await NestFactory.create(SubscriptionsModule);
+  const app = await NestFactory.create(SubscriptionsModule, { rawBody: true });
   const configService = app.get(ConfigService);
-
-  // const rmq = app.get(RmqService);
-
-  // app.connectMicroservice(rmq.getOptions('main'));
 
   app.setGlobalPrefix('api');
 

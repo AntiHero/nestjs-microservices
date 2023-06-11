@@ -11,9 +11,7 @@ export class RmqService {
       { global: ReturnType<typeof globalConfig> },
       true
     >,
-  ) {
-    console.log('here');
-  }
+  ) {}
   public getOptions(queue: string, noAck = false): RmqOptions {
     return {
       transport: Transport.RMQ,

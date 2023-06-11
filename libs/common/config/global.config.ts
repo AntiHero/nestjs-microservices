@@ -11,10 +11,10 @@ export const globalConfig = registerAs('global', () => ({
   },
   root: {
     host: setEnvVariable(process.env.ROOT_HOST, 'localhost'),
-    port: setEnvVariable(parseInt(process.env.ROOT_PORT || '5002')),
-    tcpPort: setEnvVariable(parseInt(process.env.ROOT_TCP_PORT || '5003')),
+    port: setEnvVariable(parseInt(process.env.ROOT_PORT || '5000')),
+    tcpPort: setEnvVariable(parseInt(process.env.ROOT_TCP_PORT || '5001')),
   },
   rabbit: {
-    uri: setEnvVariable(process.env.RABBIT_MQ_URI, 'amqp://localhost:5672'),
+    uri: setEnvVariable(process.env.RABBIT_MQ_URI, 'amqp://rabbitmq:5672'),
   },
 }));

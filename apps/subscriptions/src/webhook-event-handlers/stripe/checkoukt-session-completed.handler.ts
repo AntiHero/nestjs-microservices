@@ -40,88 +40,95 @@ export class CheckoutSessinCompletedEventHandler extends Handler {
       if (paymentStatus === 'paid' && mode === 'payment') {
         const { subscriptionId, paymentId } = event.data.object.metadata;
 
-        await this.prismaService.$transaction(async (tx) => {
-          const currentPendingSubscription =
-            await this.subscriptionsQueryRepository.getSubscriptionByQuery({
-              id: subscriptionId,
-              status: SubscriptionStatus.PENDING,
-            });
-
-          if (currentPendingSubscription) {
-            const { userId } = currentPendingSubscription;
-
-            const currentActiveSubscription =
+        await this.prismaService.$transaction(
+          async (tx) => {
+            const currentPendingSubscription =
               await this.subscriptionsQueryRepository.getSubscriptionByQuery({
-                userId,
-                status: SubscriptionStatus.ACTIVE,
+                id: subscriptionId,
+                status: SubscriptionStatus.PENDING,
               });
 
-            if (currentActiveSubscription?.type === SubscriptionType.ONETIME) {
-              await this.subscriptionsTransactionService.cancelSubscription(
-                tx,
-                currentActiveSubscription.id,
-              );
-            }
+            if (currentPendingSubscription) {
+              const { userId } = currentPendingSubscription;
 
-            const { subscriptionPayment } =
-              await this.subscriptionsTransactionService.updatePayments(
-                tx,
-                paymentId,
-                {
-                  status: PaymentStatus.CONFIRMED,
-                },
-              );
-
-            const subscriptionPriceId = <string>(
-              subscriptionPayment?.pricingPlan.priceId
-            );
-
-            const currentDate = new Date();
-            let currentEndDate =
-              currentActiveSubscription?.endDate || currentDate;
-
-            currentEndDate =
-              currentEndDate && currentEndDate > currentDate
-                ? currentEndDate
-                : currentDate;
-
-            const { period, periodType } = <SubscriptionPrice>(
-              await this.subscriptionsQueryRepository.getPriceById(
-                subscriptionPriceId,
-              )
-            );
-
-            const newEndDate = calculateSubscriptionEndDate(
-              currentEndDate,
-              period,
-              periodType,
-            );
-
-            await Promise.all([
-              this.subscriptionsTransactionService.updateSubscription(
-                tx,
-                subscriptionId,
-                {
+              const currentActiveSubscription =
+                await this.subscriptionsQueryRepository.getSubscriptionByQuery({
+                  userId,
                   status: SubscriptionStatus.ACTIVE,
-                  createdAt: new Date(),
-                  endDate: newEndDate,
-                },
-              ),
-              // move to rabbitmq
-              // this.userRepository.updateAccountPlan(
-              //   tx,
-              //   userId,
-              //   AccountPlan.BUSINESS,
-              // ),
-            ]);
+                });
 
-            this.rootRmqClient.emit(RootPatterns.updateUserAccountPlan, {
-              userId,
-              plan: AccountPlan.BUSINESS,
-            });
-            // this.rootRmqClient.
-          }
-        });
+              if (
+                currentActiveSubscription?.type === SubscriptionType.ONETIME
+              ) {
+                await this.subscriptionsTransactionService.cancelSubscription(
+                  tx,
+                  currentActiveSubscription.id,
+                );
+              }
+
+              const { subscriptionPayment } =
+                await this.subscriptionsTransactionService.updatePayments(
+                  tx,
+                  paymentId,
+                  {
+                    status: PaymentStatus.CONFIRMED,
+                  },
+                );
+
+              const subscriptionPriceId = <string>(
+                subscriptionPayment?.pricingPlan.priceId
+              );
+
+              const currentDate = new Date();
+              let currentEndDate =
+                currentActiveSubscription?.endDate || currentDate;
+
+              currentEndDate =
+                currentEndDate && currentEndDate > currentDate
+                  ? currentEndDate
+                  : currentDate;
+
+              const { period, periodType } = <SubscriptionPrice>(
+                await this.subscriptionsQueryRepository.getPriceById(
+                  subscriptionPriceId,
+                )
+              );
+
+              const newEndDate = calculateSubscriptionEndDate(
+                currentEndDate,
+                period,
+                periodType,
+              );
+
+              await Promise.all([
+                this.subscriptionsTransactionService.updateSubscription(
+                  tx,
+                  subscriptionId,
+                  {
+                    status: SubscriptionStatus.ACTIVE,
+                    createdAt: new Date(),
+                    endDate: newEndDate,
+                  },
+                ),
+                // move to rabbitmq
+                // this.userRepository.updateAccountPlan(
+                //   tx,
+                //   userId,
+                //   AccountPlan.BUSINESS,
+                // ),
+              ]);
+
+              this.rootRmqClient.emit(RootPatterns.updateUserAccountPlan, {
+                userId,
+                plan: AccountPlan.BUSINESS,
+              });
+              // this.rootRmqClient.
+            }
+          },
+          {
+            timeout: 10_000,
+          },
+        );
 
         return false;
       }

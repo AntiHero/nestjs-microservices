@@ -46,7 +46,6 @@ export class GoogleAuthAdaptor {
     const userInfoResponse = await userInfoClient.get({
       auth: this.oauthClient,
     });
-    console.log(userInfoResponse);
     return userInfoResponse.data;
   }
 }

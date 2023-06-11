@@ -12,7 +12,7 @@ import { useGlobalFilters } from './common/filters/global.filter';
 import { RmqService } from '@app/common/src';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { rawBody: true });
+  const app = await NestFactory.create(AppModule);
   app.enableCors({
     origin: [
       process.env.FRONTEND_LOCAL_DOMAIN as string,
@@ -52,7 +52,7 @@ async function bootstrap() {
 
   await Promise.all([
     app.startAllMicroservices(),
-    app.listen(process.env.PORT || 5002),
+    app.listen(configService.get<string>('PORT') || 5000),
   ]).then(() => console.log(`Root Microservice is running...`));
 }
 bootstrap();

@@ -8,7 +8,10 @@ import {
 } from '@nestjs/microservices';
 
 import { RmqService } from '@app/common/src';
-import { ROOT_PATTERNS } from '@app/common/patterns/root.patterns';
+import {
+  RootPatterns,
+  ROOT_PATTERNS,
+} from '@app/common/patterns/root.patterns';
 import { UserRepository } from '../user/repositories/user.repository';
 import { GetUserInfoResult } from '@app/common/interfaces/get-user-info-result.interface';
 
@@ -32,14 +35,15 @@ export class TcpController {
     return { username: user.username, email: user.email };
   }
 
-  @MessagePattern('msg_from_root')
+  @MessagePattern(RootPatterns.updateUserAccountPlan)
   public async updateUserAccountPlan(
     @Payload() data: { userId: string; plan: AccountPlan },
     @Ctx() context: RmqContext,
   ) {
-    const { userId } = data;
+    const { userId, plan } = data;
+    console.log(userId, plan);
 
-    await this.userRepository.updateAccountPlan(userId, AccountPlan.BUSINESS);
+    await this.userRepository.updateAccountPlan(userId, plan);
     this.rmqService.ack(context);
   }
 }

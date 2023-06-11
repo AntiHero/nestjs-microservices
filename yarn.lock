@@ -6570,6 +6570,13 @@ nestjs-config@^1.4.10:
     reflect-metadata "^0.1.12"
     rxjs "^6.0.0"
 
+nestjs-paypal@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/nestjs-paypal/-/nestjs-paypal-0.0.4.tgz#890925ce5b5ded4ed3f9c641449b997deeae1a4a"
+  integrity sha512-3hmHvaPvCZgcr1EHrFhgQZZlQUHUu8x3ZFG41eq5LsBACfgGMwWVrKg8OtVTOkYBdvEPYFKlMoXt4URpbJQMvg==
+  dependencies:
+    "@paypal/checkout-server-sdk" "^1.0.3"
+
 netmask@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/netmask/-/netmask-2.0.2.tgz#8b01a07644065d536383835823bc52004ebac5e7"

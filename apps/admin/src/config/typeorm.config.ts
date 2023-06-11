@@ -14,6 +14,7 @@ export const postgresConfigFactory = async (
     autoLoadEntities: true,
     logging: MODE === 'production' ? false : 'all',
     ssl: true,
-    migrations: ['./dist/apps/admin/migrations/**/*{.ts,.js}'],
+    // migrations: ['./dist/apps/admin/migrations/**/*{.ts,.js}'],
+    migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
   };
 };

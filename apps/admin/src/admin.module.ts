@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module } from '@nestjs/common';
 
 import { AdminService } from './admin.service';
+import { AuthModule } from './auth/auth.module';
 import { AdminController } from './admin.controller';
 import { postgresConfigFactory } from './config/typeorm.config';
 
@@ -15,6 +16,7 @@ import { postgresConfigFactory } from './config/typeorm.config';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    AuthModule,
   ],
   controllers: [AdminController],
   providers: [AdminService],

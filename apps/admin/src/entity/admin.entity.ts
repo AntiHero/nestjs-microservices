@@ -12,5 +12,5 @@ export class Admin extends BaseEntity {
   email: string;
 
   @Column()
-  passwordHash: string;
+  password: string;
 }

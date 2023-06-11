@@ -5,6 +5,7 @@
 .yarn
 .env
 .env.test
+.env.subscriptions-db
 *.excalidraw
 # Logs
 logs
@@ -38,4 +39,9 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# kubernetes
 k8s
+
+# docker
+data

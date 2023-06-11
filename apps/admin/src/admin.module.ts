@@ -1,10 +1,12 @@
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { GraphQLModule } from '@nestjs/graphql';
 import { Module } from '@nestjs/common';
 
 import { AdminService } from './admin.service';
 import { AuthModule } from './auth/auth.module';
-import { AdminController } from './admin.controller';
+import { AdminResolver } from './admin.resolver';
 import { postgresConfigFactory } from './config/typeorm.config';
 
 @Module({
@@ -16,9 +18,13 @@ import { postgresConfigFactory } from './config/typeorm.config';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      // provides root type?
+      autoSchemaFile: true,
+    }),
     AuthModule,
   ],
-  controllers: [AdminController],
-  providers: [AdminService],
+  providers: [AdminResolver, AdminService],
 })
 export class AdminModule {}

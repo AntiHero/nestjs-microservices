@@ -8,9 +8,12 @@
     "@nestjs/apollo": "^11.0.6",
     "@nestjs/graphql": "^11.0.6",
     "@nestjs/passport": "^9.0.3",
+    "@nestjs/typeorm": "^9.0.1",
     "graphql": "^16.6.0",
     "passport": "^0.6.0",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "pg": "^8.11.0",
+    "typeorm": "^0.3.16"
   },
   "devDependencies": {
     "@types/passport-local": "^1.0.35"

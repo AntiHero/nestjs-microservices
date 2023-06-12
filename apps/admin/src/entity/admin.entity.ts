@@ -4,7 +4,7 @@ import { BaseEntity } from './base';
 @Entity({
   name: 'admins',
 })
-export class Admin extends BaseEntity {
+export class AdminEntity extends BaseEntity {
   @Column()
   username: string;
 

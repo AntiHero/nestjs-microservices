@@ -12,5 +12,5 @@ export class BaseEntity {
   createdAt: Date;
 
   @UpdateDateColumn({ name: 'updatedAt' })
-  updated_at: Date;
+  updatedAt: Date;
 }

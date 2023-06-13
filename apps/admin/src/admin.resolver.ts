@@ -3,14 +3,16 @@ import { UseGuards } from '@nestjs/common';
 
 import { AdminService } from './admin.service';
 import { Admin } from './auth/model/admin.model';
-import { BasicAuthGuard } from './@core/guards/local.guard';
+import { BasicAuthGuard } from './@core/guards/basic.guard';
 import { CreateAdminInput } from './auth/input/create-admin.input';
+import { Public } from '@app/common/decorators/public.decorator';
 
 @UseGuards(BasicAuthGuard)
 @Resolver()
 export class AdminResolver {
   public constructor(private readonly adminService: AdminService) {}
 
+  @Public()
   @Query(() => String)
   public healthCheck() {
     return 'ok';

@@ -11,7 +11,7 @@ import {
 
 import { Payments } from '../interfaces';
 import { PrismaService } from 'apps/subscriptions/src/prisma/prisma.service';
-import { DatabaseException } from 'apps/root/src/common/exceptions/database.exception';
+import { DatabaseException } from '@app/common/exceptions/database.exception';
 import { PaymentsQueryDto } from '@app/common/dto/payments-query.dto';
 
 @Injectable()

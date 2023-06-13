@@ -8,6 +8,7 @@ import { join } from 'path';
 import { AdminService } from './admin.service';
 import { AuthModule } from './auth/auth.module';
 import { AdminResolver } from './admin.resolver';
+import { globalConfig } from './config/global.config';
 import { postgresConfigFactory } from './config/typeorm.config';
 
 @Module({
@@ -18,6 +19,7 @@ import { postgresConfigFactory } from './config/typeorm.config';
     }),
     ConfigModule.forRoot({
       isGlobal: true,
+      load: [globalConfig],
       envFilePath: [process.cwd() + '/apps/admin/.env'],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({

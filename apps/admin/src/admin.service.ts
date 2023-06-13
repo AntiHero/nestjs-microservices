@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { DeepPartial } from 'typeorm';
 
 import { AdminEntity } from './entity/admin.entity';
 import { AbstractRepository } from './database/abstract.repository';
-import { DeepPartial } from 'typeorm';
 
 @Injectable()
 export class AdminService {
@@ -11,6 +11,7 @@ export class AdminService {
   ) {}
 
   public createAdmin(data: DeepPartial<AdminEntity>) {
+    console.log;
     return this.repository.create(data);
   }
 }

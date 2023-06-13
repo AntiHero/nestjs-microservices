@@ -1,5 +1,11 @@
-import { DataSource, DeepPartial, EntityTarget, Repository } from 'typeorm';
 import { Inject } from '@nestjs/common';
+import {
+  DataSource,
+  DeepPartial,
+  EntityTarget,
+  FindOptionsWhere,
+  Repository,
+} from 'typeorm';
 
 import { BaseEntity } from '../entity/base';
 import { DatabaseException } from '@app/common/exceptions/database.exception';
@@ -13,7 +19,7 @@ export abstract class AbstractRepository<
 
   protected repository: Repository<K>;
 
-  public async onModuleInit() {
+  private async onModuleInit() {
     this.repository = this.dataSource.getRepository(
       this.entity as unknown as EntityTarget<K>,
     );
@@ -21,11 +27,25 @@ export abstract class AbstractRepository<
 
   public constructor(private readonly entity: T) {}
 
-  public async create(data: DeepPartial<K>): Promise<any> {
+  public async create(data: DeepPartial<K>): Promise<K> {
     try {
       const result = (await this.repository.save(
         data,
       )) as unknown as Promise<K>;
+
+      return result;
+    } catch (error) {
+      console.log(error);
+
+      throw new DatabaseException();
+    }
+  }
+
+  public async getOneByQuery(data: DeepPartial<K>): Promise<K | null> {
+    try {
+      const result = await this.repository.findOne({
+        where: data as unknown as FindOptionsWhere<K>,
+      });
 
       return result;
     } catch (error) {

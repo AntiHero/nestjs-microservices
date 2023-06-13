@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+
 import { AdminEntity } from '../entity/admin.entity';
 import { AbstractRepository } from './abstract.repository';
 

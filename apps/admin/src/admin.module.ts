@@ -8,9 +8,7 @@ import { join } from 'path';
 import { AdminService } from './admin.service';
 import { AuthModule } from './auth/auth.module';
 import { AdminResolver } from './admin.resolver';
-import { AdminRepository } from './database/admin.repository';
 import { postgresConfigFactory } from './config/typeorm.config';
-import { AbstractRepository } from './database/abstract.repository';
 
 @Module({
   imports: [
@@ -29,10 +27,6 @@ import { AbstractRepository } from './database/abstract.repository';
     }),
     AuthModule,
   ],
-  providers: [
-    AdminResolver,
-    AdminService,
-    { provide: AbstractRepository, useClass: AdminRepository },
-  ],
+  providers: [AdminResolver, AdminService],
 })
 export class AdminModule {}

@@ -18,6 +18,9 @@ export class AdminResolver {
     return 'ok';
   }
 
+  @Query()
+  public getUserList() {}
+
   @Mutation(() => Admin)
   async createAdmin(@Args('input') createAdminInput: CreateAdminInput) {
     const result = await this.adminService.createAdmin(createAdminInput);

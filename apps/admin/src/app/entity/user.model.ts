@@ -1,13 +1,15 @@
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 import { prop } from '@typegoose/typegoose';
+
 import { AccountPlan, OauthProvider } from '@app/common/enums';
+import type { User } from '@prisma/client';
 
 export class EmailConfirmationModel extends TimeStamps {
   @prop()
   public confirmation: string;
 
   @prop({ type: () => Date })
-  public exprationDate: Date;
+  public expirationDate: Date;
 
   @prop()
   public confirmationCode: string;
@@ -105,7 +107,10 @@ export class PasswordRecoveryModel {
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface UserModel extends Base {}
-export class UserModel extends TimeStamps {
+export class UserModel
+  extends TimeStamps
+  implements Record<Exclude<keyof User, 'createdAt' | 'updatedAt'>, any>
+{
   @prop({ unique: true })
   public id: string;
 

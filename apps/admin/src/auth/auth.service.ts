@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
-import { AdminEntity } from '../entity/admin.entity';
-import { AbstractRepository } from '../database/abstract.repository';
+import { AdminEntity } from '../app/entity/admin.entity';
+import { SqlRepository } from '../database/abstracts/sql.repository';
 
 @Injectable()
 export class AuthService {
   public constructor(
-    private readonly adminsRepository: AbstractRepository<AdminEntity>,
+    private readonly adminsRepository: SqlRepository<AdminEntity>,
   ) {}
 
   public async validate(email: string, password: string) {

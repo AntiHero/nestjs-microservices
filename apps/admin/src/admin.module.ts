@@ -9,9 +9,11 @@ import { join } from 'path';
 import { AdminService } from './admin.service';
 import { AuthModule } from './auth/auth.module';
 import { AdminResolver } from './admin.resolver';
+import { UserModel } from './app/entity/user.model';
 import { globalConfig } from './config/global.config';
 import { postgresConfigFactory } from './config/typeorm.config';
 import { mongooseConfigFactory } from './config/mongoose.config';
+import { UsersQueryRepositoryProvider } from './database/users.query-repository';
 
 @Module({
   imports: [
@@ -23,6 +25,14 @@ import { mongooseConfigFactory } from './config/mongoose.config';
       useFactory: mongooseConfigFactory,
       inject: [ConfigService],
     }),
+    TypegooseModule.forFeature([
+      {
+        typegooseClass: UserModel,
+        schemaOptions: {
+          collection: 'users',
+        },
+      },
+    ]),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [globalConfig],
@@ -35,6 +45,6 @@ import { mongooseConfigFactory } from './config/mongoose.config';
     }),
     AuthModule,
   ],
-  providers: [AdminResolver, AdminService],
+  providers: [AdminResolver, AdminService, UsersQueryRepositoryProvider],
 })
 export class AdminModule {}

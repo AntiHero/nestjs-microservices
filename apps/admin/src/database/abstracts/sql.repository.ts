@@ -7,13 +7,10 @@ import {
   Repository,
 } from 'typeorm';
 
-import { BaseEntity } from '../entity/base';
+import { BaseEntity } from '../../app/entity/base';
 import { DatabaseException } from '@app/common/exceptions/database.exception';
 
-export abstract class AbstractRepository<
-  K extends BaseEntity,
-  T = new () => any,
-> {
+export abstract class SqlRepository<K extends BaseEntity, T = new () => any> {
   @Inject(DataSource)
   private dataSource: DataSource;
 

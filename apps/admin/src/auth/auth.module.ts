@@ -3,17 +3,17 @@ import { Module } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
 import { AuthResolver } from './auth.resolver';
-import { AdminEntity } from '../entity/admin.entity';
+import { AdminEntity } from '../app/entity/admin.entity';
 import { AdminRepository } from '../database/admin.repository';
-import { AbstractRepository } from '../database/abstract.repository';
+import { SqlRepository } from '../database/abstracts/sql.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([AdminEntity])],
   providers: [
     AuthResolver,
     AuthService,
-    { provide: AbstractRepository, useClass: AdminRepository },
+    { provide: SqlRepository, useClass: AdminRepository },
   ],
-  exports: [AuthService, AbstractRepository],
+  exports: [AuthService, SqlRepository],
 })
 export class AuthModule {}

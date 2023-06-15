@@ -47,7 +47,7 @@ async function bootstrap() {
   });
 
   const rmqService = app.get<RmqService>(RmqService);
-  // find connection options by queue
+  // find connection options by queue name
   app.connectMicroservice(rmqService.getOptions('main'));
 
   await Promise.all([

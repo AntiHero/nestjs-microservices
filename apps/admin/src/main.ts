@@ -1,7 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+// import { RmqService } from '@app/common/src';
 import { NestFactory } from '@nestjs/core';
-import { Transport } from '@nestjs/microservices';
 
 import { AdminModule } from './admin.module';
 
@@ -10,20 +10,18 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
 
-  app.connectMicroservice({
-    transport: Transport.TCP,
-    options: {
-      host: '0.0.0.0',
-      port: configService.get<string>('global.tcpPort'),
-    },
-  });
-
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
     }),
   );
 
-  await app.listen(configService.get<string>('global.port') || 7000);
+  // const rmqService = app.get<RmqService>(RmqService);
+  // app.connectMicroservice(rmqService.getOptions('admin'));
+
+  await Promise.all([
+    app.startAllMicroservices(),
+    app.listen(configService.get<string>('global.port') || 7000),
+  ]).then(() => 'Admin microserivces is running...');
 }
 bootstrap();

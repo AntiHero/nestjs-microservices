@@ -69,7 +69,6 @@ export class GithubUsersService {
     );
 
     if (!responseFromGithubUserUrl.ok) {
-      console.log(await responseFromGithubUserUrl.json(), 'user data');
       throw new UnauthorizedException();
     }
 

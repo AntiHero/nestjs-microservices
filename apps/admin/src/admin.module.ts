@@ -10,9 +10,12 @@ import { AdminService } from './admin.service';
 import { AuthModule } from './auth/auth.module';
 import { AdminResolver } from './admin.resolver';
 import { UserModel } from './app/entity/user.model';
-import { globalConfig } from './config/global.config';
+import { localConfig } from './config/global.config';
+import { RmqModule } from '@app/common/src/rmq/rmq.module';
 import { postgresConfigFactory } from './config/typeorm.config';
+import { globalConfig } from '@app/common/config/global.config';
 import { mongooseConfigFactory } from './config/mongoose.config';
+import { UsersRepositoryProvider } from './database/users.repository';
 import { UsersQueryRepositoryProvider } from './database/users.query-repository';
 
 @Module({
@@ -35,8 +38,11 @@ import { UsersQueryRepositoryProvider } from './database/users.query-repository'
     ]),
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [globalConfig],
-      envFilePath: [process.cwd() + '/apps/admin/.env'],
+      load: [localConfig, globalConfig],
+      envFilePath: [
+        `${process.cwd()}/apps/admin/.env`,
+        `${process.cwd()}/.env.global`,
+      ],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -44,7 +50,16 @@ import { UsersQueryRepositoryProvider } from './database/users.query-repository'
       autoSchemaFile: join(__dirname, 'schema/schema.gql'),
     }),
     AuthModule,
+    RmqModule.register({
+      name: 'ROOT_RMQ',
+      queue: 'main',
+    }),
   ],
-  providers: [AdminResolver, AdminService, UsersQueryRepositoryProvider],
+  providers: [
+    AdminResolver,
+    AdminService,
+    UsersQueryRepositoryProvider,
+    UsersRepositoryProvider,
+  ],
 })
 export class AdminModule {}

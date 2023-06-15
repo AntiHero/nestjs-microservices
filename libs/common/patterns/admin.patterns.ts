@@ -1,3 +1,5 @@
-const root = 'admin';
+const issuer = 'admin';
 
-export const getUserList = `${root}:get_user_list`;
+export const getUserList = `${issuer}:get_user_list`;
+
+export const deleteUser = `${issuer}:delete_user`;

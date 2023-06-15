@@ -2,22 +2,23 @@ import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 
 import { AdminService } from './admin.service';
-import { Admin } from './app/graphql/model/admin.model';
 import { UserModel } from './app/entity/user.model';
+import { Admin } from './app/graphql/model/admin.model';
 import { BasicAuthGuard } from './@core/guards/basic.guard';
-import { MongoRepository } from './database/abstracts/mongo.repository';
-import { UserOutput } from './app/graphql/output/user-output.model';
 import { Public } from '@app/common/decorators/public.decorator';
-import { PaginationQuery } from './app/graphql/input/get-userlist.input';
-import { CreateAdminInput } from './app/graphql/input/create-admin.input';
 import { toUserViewModel } from './utils/user-list-view.mapper';
+import { UserOutput } from './app/graphql/output/user-output.model';
+import { PaginationQuery } from './app/graphql/args/get-userlist.args';
+import { CreateAdminInput } from './app/graphql/input/create-admin.input';
+import { DeleteUserInput } from './app/graphql/input/delete-user.input';
+import { MongoQueryRepository } from './database/abstracts/mongo.query-repository';
 
 @UseGuards(BasicAuthGuard)
 @Resolver()
 export class AdminResolver {
   public constructor(
     private readonly adminService: AdminService,
-    private readonly usersQueryRepository: MongoRepository<UserModel>,
+    private readonly usersQueryRepository: MongoQueryRepository<UserModel>,
   ) {}
 
   @Public()
@@ -27,13 +28,18 @@ export class AdminResolver {
   }
 
   @Query(() => [UserOutput])
-  public async getUserList(@Args('input') paginationQuery: PaginationQuery) {
+  public async getUserList(@Args() paginationQuery: PaginationQuery) {
     const result =
       (await this.usersQueryRepository.getByQuery(paginationQuery))?.map(
         toUserViewModel,
       ) || [];
 
     return result;
+  }
+
+  @Mutation(() => Boolean)
+  public async deleteUser(@Args('input') input: DeleteUserInput) {
+    return this.adminService.deleteUser(input.id);
   }
 
   @Mutation(() => Admin)

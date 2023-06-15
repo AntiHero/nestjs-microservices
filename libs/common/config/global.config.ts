@@ -15,6 +15,6 @@ export const globalConfig = registerAs('global', () => ({
     tcpPort: setEnvVariable(parseInt(process.env.ROOT_TCP_PORT || '5001')),
   },
   rabbit: {
-    uri: setEnvVariable(process.env.RABBIT_MQ_URI, 'amqp://rabbitmq:5672'),
+    uri: setEnvVariable(process.env.RABBIT_MQ_URI, 'amqp://localhost:5672'),
   },
 }));

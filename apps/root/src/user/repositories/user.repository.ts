@@ -96,32 +96,6 @@ export class UserRepository {
     });
   }
 
-  // public async createOauthUser(userInfo: Oauth20UserData): Promise<User> {
-  //   try {
-  //     return this.prisma.user.create({
-  //       data: {
-  //         username: userInfo.displayName,
-  //         email: userInfo.email,
-  //         oauthAccount: {
-  //           create: { clientId: userInfo.oauthClientId },
-  //         },
-  //         emailConfirmation: {
-  //           create: {
-  //             confirmationCode: randomUUID(),
-  //             expirationDate: add(new Date(), {
-  //               minutes: 1,
-  //             }).toISOString(),
-  //             isConfirmed: true,
-  //           },
-  //         },
-  //       },
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //     throw error;
-  //   }
-  // }
-
   public async findUserByEmail(email: string) {
     return this.prisma.user.findUnique({
       where: { email: email },
@@ -335,5 +309,20 @@ export class UserRepository {
         accountPlan,
       },
     });
+  }
+
+  public async delete(id: string) {
+    try {
+      const result = { id: 0 };
+      // const result = await this.prisma.user.delete({
+      //   where: {
+      //     id,
+      //   },
+      // });
+
+      return result.id ? true : false;
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

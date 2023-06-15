@@ -25,7 +25,7 @@ export class AvatarModel extends TimeStamps {
   @prop()
   public id: string;
 
-  @prop()
+  @prop({ type: () => String, default: null })
   public url: string | null;
 
   @prop({ type: () => String, default: null })

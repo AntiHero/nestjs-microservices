@@ -1,8 +1,8 @@
 import { BanSearchStatus, SortDirection } from '@app/common/enums';
-import { registerEnumType } from '@nestjs/graphql';
-import { InputType, Field } from '@nestjs/graphql';
+import { ArgsType, registerEnumType } from '@nestjs/graphql';
 import { Transform } from 'class-transformer';
 import { IsNumber } from 'class-validator';
+import { Field } from '@nestjs/graphql';
 
 registerEnumType(SortDirection, {
   name: 'SortDirectionType',
@@ -14,7 +14,7 @@ registerEnumType(BanSearchStatus, {
   description: '[all, active, banned]',
 });
 
-@InputType()
+@ArgsType()
 export class PaginationQuery {
   @Field()
   @IsNumber()

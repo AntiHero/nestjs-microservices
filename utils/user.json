@@ -1,0 +1,746 @@
+[
+  {
+    "id": "76075d78-763a-43bf-a56b-488ce44541a1",
+    "username": "fefelov-danil",
+    "email": "fefelov.danil@gmail.com",
+    "hash": null,
+    "createdAt": "2023-05-27T15:43:33.931Z",
+    "updatedAt": "2023-05-27T15:43:33.931Z",
+    "accountPlan": "PERSONAL",
+    "emailConfirmation": {
+      "confirmationCode": "",
+      "expirationDate": "2023-05-27T15:43:33.929Z",
+      "isConfirmed": true,
+      "createdAt": "2023-05-27T15:43:33.931Z",
+      "updatedAt": "2023-05-27T15:43:33.931Z",
+      "userEmail": "fefelov.danil@gmail.com"
+    },
+    "avatar": {
+      "id": "9be2205c-6db1-489c-a796-9ab8f306fc47",
+      "url": "https://avatars.githubusercontent.com/u/109024996?v=4",
+      "previewUrl": "https://avatars.githubusercontent.com/u/109024996?v=4",
+      "size": 30792,
+      "height": 460,
+      "width": 460,
+      "userId": "76075d78-763a-43bf-a56b-488ce44541a1",
+      "createdAt": "2023-05-27T15:43:33.931Z",
+      "updatedAt": "2023-05-27T15:43:33.931Z"
+    },
+    "oauthAccount": [
+      {
+        "id": "e594b047-5efb-4f6d-9ef0-05df4efdc169",
+        "clientId": "115672838770513434300",
+        "type": "GOOGLE",
+        "linked": false,
+        "mergeCode": "fa0116b5-ac1d-4574-b399-d288dc8aa59a",
+        "mergeCodeExpDate": "2023-05-30T10:38:39.944Z",
+        "userId": "76075d78-763a-43bf-a56b-488ce44541a1"
+      },
+      {
+        "id": "a05f4db3-23b1-47cb-8400-4c6cb1a41fd7",
+        "clientId": "109024996",
+        "type": "GITHUB",
+        "linked": true,
+        "mergeCode": null,
+        "mergeCodeExpDate": null,
+        "userId": "76075d78-763a-43bf-a56b-488ce44541a1"
+      }
+    ],
+    "profile": {
+      "id": "99e18b18-b790-47fc-9e53-155f1ef3f236",
+      "name": null,
+      "surname": null,
+      "birthday": null,
+      "city": null,
+      "aboutMe": null,
+      "userId": "76075d78-763a-43bf-a56b-488ce44541a1",
+      "createdAt": "2023-05-27T15:43:33.931Z",
+      "updatedAt": "2023-05-27T15:43:33.931Z"
+    },
+    "passwordRecovery": {
+      "recoveryCode": null,
+      "expirationDate": null,
+      "createdAt": "2023-05-27T15:43:33.931Z",
+      "updatedAt": "2023-05-27T15:43:33.931Z",
+      "userId": "76075d78-763a-43bf-a56b-488ce44541a1"
+    }
+  },
+  {
+    "id": "279bf07e-b0c5-456b-b1d5-69a01e62fa54",
+    "username": "George",
+    "email": "Georgii070684@gmail.com",
+    "hash": "$2b$10$A.sTsSmAGFdT2dKQgaRd2.dZcv.8Qyjgb/325yMLC9XTKWur/AsA6",
+    "createdAt": "2023-05-30T14:38:00.266Z",
+    "updatedAt": "2023-05-30T14:38:00.266Z",
+    "accountPlan": "PERSONAL",
+    "emailConfirmation": {
+      "confirmationCode": "b082b101-6c80-4f29-8d5e-a18220c19137",
+      "expirationDate": "2023-05-30T14:43:00.264Z",
+      "isConfirmed": true,
+      "createdAt": "2023-05-30T14:38:00.266Z",
+      "updatedAt": "2023-05-30T14:38:25.452Z",
+      "userEmail": "Georgii070684@gmail.com"
+    },
+    "avatar": {
+      "id": "e8261f06-1718-4a4c-bb4f-cff1dc9b6535",
+      "url": "https://inctagram.storage.yandexcloud.net/content/users/279bf07e-b0c5-456b-b1d5-69a01e62fa54/avatar/15d8227d-a175-465a-9477-f43a08cbbfeb.jpg",
+      "previewUrl": "https://inctagram.storage.yandexcloud.net/content/users/279bf07e-b0c5-456b-b1d5-69a01e62fa54/avatar/.preivew.9ba8c974-8544-4479-864a-f1e2d4617c5c.jpg",
+      "size": 71223,
+      "height": 800,
+      "width": 800,
+      "userId": "279bf07e-b0c5-456b-b1d5-69a01e62fa54",
+      "createdAt": "2023-06-01T13:04:35.696Z",
+      "updatedAt": "2023-06-01T13:04:35.696Z"
+    },
+    "oauthAccount": [],
+    "profile": {
+      "id": "6f192eba-7afd-4422-b37f-3b7e680b422c",
+      "name": null,
+      "surname": null,
+      "birthday": null,
+      "city": null,
+      "aboutMe": null,
+      "userId": "279bf07e-b0c5-456b-b1d5-69a01e62fa54",
+      "createdAt": "2023-05-30T14:38:00.266Z",
+      "updatedAt": "2023-05-30T14:38:00.266Z"
+    },
+    "passwordRecovery": {
+      "recoveryCode": "572b7256-02a6-44ef-b279-c76220bcbeb5",
+      "expirationDate": "2023-05-31T10:56:55.341Z",
+      "createdAt": "2023-05-30T14:38:00.266Z",
+      "updatedAt": "2023-05-31T10:46:55.342Z",
+      "userId": "279bf07e-b0c5-456b-b1d5-69a01e62fa54"
+    }
+  },
+  {
+    "id": "a0f1f72c-670d-4581-892c-021e1ad29c45",
+    "username": "geoer777@gmail.com",
+    "email": "geoer777@gmail.com",
+    "hash": "$2b$10$LvzS.GFunTjmsxYZ56Ftx.3WDZZ9SaSNHl2Z0QifamLwVoGgR9xbK",
+    "createdAt": "2023-05-30T14:45:13.061Z",
+    "updatedAt": "2023-05-30T14:45:13.061Z",
+    "accountPlan": "PERSONAL",
+    "emailConfirmation": {
+      "confirmationCode": "3577cc1a-e568-476a-8e81-f7f13bf56d0b",
+      "expirationDate": "2023-05-30T14:50:13.058Z",
+      "isConfirmed": true,
+      "createdAt": "2023-05-30T14:45:13.061Z",
+      "updatedAt": "2023-05-30T14:45:24.768Z",
+      "userEmail": "geoer777@gmail.com"
+    },
+    "avatar": null,
+    "oauthAccount": [
+      {
+        "id": "0eaece64-24b3-459a-8db7-74c5c0ec853b",
+        "clientId": "116188314223631401163",
+        "type": "GOOGLE",
+        "linked": true,
+        "mergeCode": null,
+        "mergeCodeExpDate": null,
+        "userId": "a0f1f72c-670d-4581-892c-021e1ad29c45"
+      }
+    ],
+    "profile": {
+      "id": "adcaa9ea-5390-4c8c-958c-2bb38241cbd1",
+      "name": null,
+      "surname": null,
+      "birthday": null,
+      "city": null,
+      "aboutMe": null,
+      "userId": "a0f1f72c-670d-4581-892c-021e1ad29c45",
+      "createdAt": "2023-05-30T14:45:13.061Z",
+      "updatedAt": "2023-05-30T14:45:13.061Z"
+    },
+    "passwordRecovery": {
+      "recoveryCode": null,
+      "expirationDate": null,
+      "createdAt": "2023-05-30T14:45:13.061Z",
+      "updatedAt": "2023-05-30T14:45:13.061Z",
+      "userId": "a0f1f72c-670d-4581-892c-021e1ad29c45"
+    }
+  },
+  {
+    "id": "607e0bf8-82a1-47fe-ac50-8e228f39196d",
+    "username": "Georhii",
+    "email": "erokhinheorhii@gmail.com",
+    "hash": "$2b$10$voWwziDJ9as89Q08o7cnbOZvSAZjnBokjwB6YUa2p/xBHvkeihUi.",
+    "createdAt": "2023-05-30T14:56:15.387Z",
+    "updatedAt": "2023-05-30T14:56:15.387Z",
+    "accountPlan": "PERSONAL",
+    "emailConfirmation": {
+      "confirmationCode": "932fbccd-ceda-42f8-9359-4a932da54cc8",
+      "expirationDate": "2023-05-30T15:01:15.386Z",
+      "isConfirmed": true,
+      "createdAt": "2023-05-30T14:56:15.387Z",
+      "updatedAt": "2023-05-30T14:56:27.698Z",
+      "userEmail": "erokhinheorhii@gmail.com"
+    },
+    "avatar": null,
+    "oauthAccount": [
+      {
+        "id": "23319576-4038-4a51-9e83-01228599ecbc",
+        "clientId": "101875347979125144166",
+        "type": "GOOGLE",
+        "linked": true,
+        "mergeCode": null,
+        "mergeCodeExpDate": null,
+        "userId": "607e0bf8-82a1-47fe-ac50-8e228f39196d"
+      }
+    ],
+    "profile": {
+      "id": "4506f486-a63c-4593-ba7f-ca0ae24b6bd3",
+      "name": null,
+      "surname": null,
+      "birthday": null,
+      "city": null,
+      "aboutMe": null,
+      "userId": "607e0bf8-82a1-47fe-ac50-8e228f39196d",
+      "createdAt": "2023-05-30T14:56:15.387Z",
+      "updatedAt": "2023-05-30T14:56:15.387Z"
+    },
+    "passwordRecovery": {
+      "recoveryCode": null,
+      "expirationDate": null,
+      "createdAt": "2023-05-30T14:56:15.387Z",
+      "updatedAt": "2023-05-30T14:56:15.387Z",
+      "userId": "607e0bf8-82a1-47fe-ac50-8e228f39196d"
+    }
+  },
+  {
+    "id": "48113e59-6b87-4659-aebd-2d6c19e2175c",
+    "username": "ggg837413@gmail.com",
+    "email": "ggg837413@gmail.com",
+    "hash": "$2b$10$Gsh/NUdhDDIMS4hyGetbhuagOX/QZgHqSI9JS9iRujzE7W8zz6IvO",
+    "createdAt": "2023-05-30T15:25:27.857Z",
+    "updatedAt": "2023-05-30T15:25:27.857Z",
+    "accountPlan": "PERSONAL",
+    "emailConfirmation": {
+      "confirmationCode": "7f4296f7-a8b0-443b-a859-6b79534668ae",
+      "expirationDate": "2023-05-30T15:30:27.856Z",
+      "isConfirmed": true,
+      "createdAt": "2023-05-30T15:25:27.857Z",
+      "updatedAt": "2023-05-30T15:26:23.760Z",
+      "userEmail": "ggg837413@gmail.com"
+    },
+    "avatar": null,
+    "oauthAccount": [
+      {
+        "id": "e9863864-f367-407c-a03e-4b5535e15d8d",
+        "clientId": "115372218827611026453",
+        "type": "GOOGLE",
+        "linked": true,
+        "mergeCode": null,
+        "mergeCodeExpDate": null,
+        "userId": "48113e59-6b87-4659-aebd-2d6c19e2175c"
+      }
+    ],
+    "profile": {
+      "id": "c3b813b3-de83-4efa-82fa-b7e1587530c8",
+      "name": null,
+      "surname": null,
+      "birthday": null,
+      "city": null,
+      "aboutMe": null,
+      "userId": "48113e59-6b87-4659-aebd-2d6c19e2175c",
+      "createdAt": "2023-05-30T15:25:27.857Z",
+      "updatedAt": "2023-05-30T15:25:27.857Z"
+    },
+    "passwordRecovery": {
+      "recoveryCode": null,
+      "expirationDate": null,
+      "createdAt": "2023-05-30T15:25:27.857Z",
+      "updatedAt": "2023-05-30T15:25:27.857Z",
+      "userId": "48113e59-6b87-4659-aebd-2d6c19e2175c"
+    }
+  },
+  {
+    "id": "3cb13a23-9368-4d85-9148-92a48d981b59",
+    "username": "dfyzgjkbyf549@gmail.com",
+    "email": "dfyzgjkbyf549@gmail.com",
+    "hash": "$2b$10$eXOt5XwdGzqNzWnF3LFe0um8hPK775QzepuJXQRDPHGWV2hTvzXmS",
+    "createdAt": "2023-05-30T15:57:49.549Z",
+    "updatedAt": "2023-05-30T15:57:49.549Z",
+    "accountPlan": "PERSONAL",
+    "emailConfirmation": {
+      "confirmationCode": "9ec47614-011f-49a1-9fcd-aa1ea209d127",
+      "expirationDate": "2023-05-30T16:02:49.547Z",
+      "isConfirmed": true,
+      "createdAt": "2023-05-30T15:57:49.549Z",
+      "updatedAt": "2023-05-30T15:58:47.309Z",
+      "userEmail": "dfyzgjkbyf549@gmail.com"
+    },
+    "avatar": null,
+    "oauthAccount": [
+      {
+        "id": "9397e82f-5cdb-4963-922c-7b24b1577e70",
+        "clientId": "113340371992331270156",
+        "type": "GOOGLE",
+        "linked": true,
+        "mergeCode": null,
+        "mergeCodeExpDate": null,
+        "userId": "3cb13a23-9368-4d85-9148-92a48d981b59"
+      }
+    ],
+    "profile": {
+      "id": "b82cb1c0-f4f7-4b68-9524-6a7671126da9",
+      "name": null,
+      "surname": null,
+      "birthday": null,
+      "city": null,
+      "aboutMe": null,
+      "userId": "3cb13a23-9368-4d85-9148-92a48d981b59",
+      "createdAt": "2023-05-30T15:57:49.549Z",
+      "updatedAt": "2023-05-30T15:57:49.549Z"
+    },
+    "passwordRecovery": {
+      "recoveryCode": null,
+      "expirationDate": null,
+      "createdAt": "2023-05-30T15:57:49.549Z",
+      "updatedAt": "2023-05-30T15:57:49.549Z",
+      "userId": "3cb13a23-9368-4d85-9148-92a48d981b59"
+    }
+  },
+  {
+    "id": "23f213f3-8c22-4e7b-9752-f50c56f4b1d1",
+    "username": "GEOssaca",
+    "email": "georgii070684@gmail.com",
+    "hash": null,
+    "createdAt": "2023-05-30T14:40:24.100Z",
+    "updatedAt": "2023-05-31T10:46:19.510Z",
+    "accountPlan": "PERSONAL",
+    "emailConfirmation": {
+      "confirmationCode": "",
+      "expirationDate": "2023-05-30T14:40:24.098Z",
+      "isConfirmed": true,
+      "createdAt": "2023-05-30T14:40:24.100Z",
+      "updatedAt": "2023-05-30T14:40:24.100Z",
+      "userEmail": "georgii070684@gmail.com"
+    },
+    "avatar": {
+      "id": "66883608-e598-4852-a50e-1f07d305c72a",
+      "url": "https://inctagram.storage.yandexcloud.net/content/users/23f213f3-8c22-4e7b-9752-f50c56f4b1d1/avatar/355648e8-738c-4e4e-9dc5-9965677d78b8.jpg",
+      "previewUrl": "https://inctagram.storage.yandexcloud.net/content/users/23f213f3-8c22-4e7b-9752-f50c56f4b1d1/avatar/.preivew.353880fb-dbe0-45a9-af91-4773c39c1a9f.jpg",
+      "size": 43932,
+      "height": 755,
+      "width": 755,
+      "userId": "23f213f3-8c22-4e7b-9752-f50c56f4b1d1",
+      "createdAt": "2023-05-30T14:40:24.100Z",
+      "updatedAt": "2023-05-31T10:46:14.815Z"
+    },
+    "oauthAccount": [
+      {
+        "id": "2c9caaab-9463-4cd7-907c-ae0f4ad7e56c",
+        "clientId": "115642541256456812022",
+        "type": "GOOGLE",
+        "linked": true,
+        "mergeCode": "cddb9196-088d-4006-9e5f-f097385a9fe8",
+        "mergeCodeExpDate": "2023-05-30T14:50:24.098Z",
+        "userId": "23f213f3-8c22-4e7b-9752-f50c56f4b1d1"
+      },
+      {
+        "id": "0c73014c-c72a-4cde-a0b5-3e2df372f3aa",
+        "clientId": "88659732",
+        "type": "GITHUB",
+        "linked": false,
+        "mergeCode": "7934c8ea-ec2f-4712-8cca-f54d97d8937a",
+        "mergeCodeExpDate": "2023-05-31T10:25:04.925Z",
+        "userId": "23f213f3-8c22-4e7b-9752-f50c56f4b1d1"
+      }
+    ],
+    "profile": {
+      "id": "f6a1c497-08ee-4797-a1d8-a8db3e12c1eb",
+      "name": "s",
+      "surname": "s",
+      "birthday": "2023-05-02T00:00:00.000Z",
+      "city": "s",
+      "aboutMe": "s",
+      "userId": "23f213f3-8c22-4e7b-9752-f50c56f4b1d1",
+      "createdAt": "2023-05-30T14:40:24.100Z",
+      "updatedAt": "2023-05-31T10:46:19.510Z"
+    },
+    "passwordRecovery": {
+      "recoveryCode": null,
+      "expirationDate": null,
+      "createdAt": "2023-05-30T14:40:24.100Z",
+      "updatedAt": "2023-05-30T14:40:24.100Z",
+      "userId": "23f213f3-8c22-4e7b-9752-f50c56f4b1d1"
+    }
+  },
+  {
+    "id": "a2102b44-1ffd-415d-9985-a46dc7aa4185",
+    "username": "winter",
+    "email": "winter@gmail.com",
+    "hash": "$2b$10$kkfPClL6mz.RUC1FTEVFPeMXHh7ERy2MHEND6TB/WturzOPfvQ91K",
+    "createdAt": "2023-06-01T09:04:23.542Z",
+    "updatedAt": "2023-06-01T09:04:23.542Z",
+    "accountPlan": "PERSONAL",
+    "emailConfirmation": {
+      "confirmationCode": "dc97c506-ceb7-4c29-92b3-ab6188383a70",
+      "expirationDate": "2023-06-01T09:09:23.540Z",
+      "isConfirmed": true,
+      "createdAt": "2023-06-01T09:04:23.542Z",
+      "updatedAt": "2023-06-01T09:04:55.203Z",
+      "userEmail": "winter@gmail.com"
+    },
+    "avatar": null,
+    "oauthAccount": [],
+    "profile": {
+      "id": "754234a5-633a-4697-8c2e-acfca6a96c8f",
+      "name": null,
+      "surname": null,
+      "birthday": null,
+      "city": null,
+      "aboutMe": null,
+      "userId": "a2102b44-1ffd-415d-9985-a46dc7aa4185",
+      "createdAt": "2023-06-01T09:04:23.542Z",
+      "updatedAt": "2023-06-01T09:04:23.542Z"
+    },
+    "passwordRecovery": {
+      "recoveryCode": null,
+      "expirationDate": null,
+      "createdAt": "2023-06-01T09:04:23.542Z",
+      "updatedAt": "2023-06-01T09:04:23.542Z",
+      "userId": "a2102b44-1ffd-415d-9985-a46dc7aa4185"
+    }
+  },
+  {
+    "id": "c5536084-675c-4307-b963-a1fcc33c62bc",
+    "username": "yaaau!",
+    "email": "yau1heni@gmail.com",
+    "hash": "$2b$10$Lf5vf4rGLmPJInnsMpHii.F7w1ihSi6a/Slydnuhg5WbpDoE4Byu.",
+    "createdAt": "2023-05-22T11:16:41.160Z",
+    "updatedAt": "2023-05-28T20:09:21.214Z",
+    "accountPlan": "PERSONAL",
+    "emailConfirmation": {
+      "confirmationCode": "c213a70c-414f-4bcc-ae97-6084ffc7a3e0",
+      "expirationDate": "2023-05-22T11:21:41.159Z",
+      "isConfirmed": true,
+      "createdAt": "2023-05-22T11:16:41.160Z",
+      "updatedAt": "2023-05-22T11:17:09.404Z",
+      "userEmail": "yau1heni@gmail.com"
+    },
+    "avatar": {
+      "id": "21b95d5a-8c7a-4e23-92c6-e08ed4b3fc03",
+      "url": "https://inctagram.storage.yandexcloud.net/content/users/c5536084-675c-4307-b963-a1fcc33c62bc/avatar/31b4495c-d346-41f8-a46c-aaa423aee31d.jpg",
+      "previewUrl": "https://inctagram.storage.yandexcloud.net/content/users/c5536084-675c-4307-b963-a1fcc33c62bc/avatar/.preivew.3efd8cd1-fc06-4bf9-b807-7e226cf00505.jpg",
+      "size": 74143,
+      "height": 480,
+      "width": 480,
+      "userId": "c5536084-675c-4307-b963-a1fcc33c62bc",
+      "createdAt": "2023-05-28T20:04:53.752Z",
+      "updatedAt": "2023-05-28T20:04:53.752Z"
+    },
+    "oauthAccount": [],
+    "profile": {
+      "id": "ef9d7b4a-2999-488d-8a04-aafaa93ed662",
+      "name": "Yau",
+      "surname": "heni",
+      "birthday": null,
+      "city": null,
+      "aboutMe": null,
+      "userId": "c5536084-675c-4307-b963-a1fcc33c62bc",
+      "createdAt": "2023-05-22T11:16:41.160Z",
+      "updatedAt": "2023-05-28T20:09:21.214Z"
+    },
+    "passwordRecovery": {
+      "recoveryCode": null,
+      "expirationDate": null,
+      "createdAt": "2023-05-22T11:16:41.160Z",
+      "updatedAt": "2023-05-22T11:16:41.160Z",
+      "userId": "c5536084-675c-4307-b963-a1fcc33c62bc"
+    }
+  },
+  {
+    "id": "9cb26fec-9caf-40eb-9aa4-fcb2be1c9929",
+    "username": "fefelov.d.v@yandex.ru",
+    "email": "fefelov.d.v@yandex.ru",
+    "hash": "$2b$10$.mN0AI/WwGg.RcapaUOJ3u9ih1UQZQJzMplymXdV1NHS8GXhsqpXa",
+    "createdAt": "2023-06-07T14:22:30.164Z",
+    "updatedAt": "2023-06-07T14:22:30.164Z",
+    "accountPlan": "PERSONAL",
+    "emailConfirmation": {
+      "confirmationCode": "5d51fcd6-108e-4ab3-a884-826403f08d36",
+      "expirationDate": "2023-06-07T14:55:53.023Z",
+      "isConfirmed": true,
+      "createdAt": "2023-06-07T14:22:30.164Z",
+      "updatedAt": "2023-06-07T14:46:24.920Z",
+      "userEmail": "fefelov.d.v@yandex.ru"
+    },
+    "avatar": null,
+    "oauthAccount": [],
+    "profile": {
+      "id": "d40253ea-f2f9-4436-baeb-c3ae4b08c3c0",
+      "name": null,
+      "surname": null,
+      "birthday": null,
+      "city": null,
+      "aboutMe": null,
+      "userId": "9cb26fec-9caf-40eb-9aa4-fcb2be1c9929",
+      "createdAt": "2023-06-07T14:22:30.164Z",
+      "updatedAt": "2023-06-07T14:22:30.164Z"
+    },
+    "passwordRecovery": {
+      "recoveryCode": null,
+      "expirationDate": null,
+      "createdAt": "2023-06-07T14:22:30.164Z",
+      "updatedAt": "2023-06-07T14:22:30.164Z",
+      "userId": "9cb26fec-9caf-40eb-9aa4-fcb2be1c9929"
+    }
+  },
+  {
+    "id": "398d500e-2b08-43e1-a78b-781c5b146267",
+    "username": "String",
+    "email": "aloalo293484@gmail.com",
+    "hash": "$2b$10$ACYv2EcrMxA1B4DFGEaKPudKpAkcFgnADtpmSbMN4ldtX4EfD8B3a",
+    "createdAt": "2023-05-22T10:13:28.663Z",
+    "updatedAt": "2023-06-08T20:40:43.531Z",
+    "accountPlan": "BUSINESS",
+    "emailConfirmation": {
+      "confirmationCode": "bfa6cf58-961d-40fe-8124-a19cd5a62f12",
+      "expirationDate": "2023-05-22T10:18:28.661Z",
+      "isConfirmed": true,
+      "createdAt": "2023-05-22T10:13:28.663Z",
+      "updatedAt": "2023-05-22T10:13:55.481Z",
+      "userEmail": "aloalo293484@gmail.com"
+    },
+    "avatar": null,
+    "oauthAccount": [],
+    "profile": {
+      "id": "ab901004-e9b3-4c94-b1dd-519d9c3e2344",
+      "name": null,
+      "surname": null,
+      "birthday": null,
+      "city": null,
+      "aboutMe": null,
+      "userId": "398d500e-2b08-43e1-a78b-781c5b146267",
+      "createdAt": "2023-05-22T10:13:28.663Z",
+      "updatedAt": "2023-05-22T10:13:28.663Z"
+    },
+    "passwordRecovery": {
+      "recoveryCode": null,
+      "expirationDate": null,
+      "createdAt": "2023-05-22T10:13:28.663Z",
+      "updatedAt": "2023-05-22T10:13:28.663Z",
+      "userId": "398d500e-2b08-43e1-a78b-781c5b146267"
+    }
+  },
+  {
+    "id": "d07d7ec7-c157-4579-bca9-3b693889d45e",
+    "username": "fefelov",
+    "email": "inctagram112@yandex.ru",
+    "hash": "$2b$10$8TwvE4D.aQFg8eVeQHZqpOX6C8vNpiJzhW01sBHWLtDA5H1sb2Tbe",
+    "createdAt": "2023-05-22T11:14:52.096Z",
+    "updatedAt": "2023-06-13T08:39:54.139Z",
+    "accountPlan": "BUSINESS",
+    "emailConfirmation": {
+      "confirmationCode": "ce07f966-fe79-466c-a1d8-b90dc42818c1",
+      "expirationDate": "2023-05-22T11:19:52.095Z",
+      "isConfirmed": true,
+      "createdAt": "2023-05-22T11:14:52.096Z",
+      "updatedAt": "2023-05-22T11:15:52.584Z",
+      "userEmail": "inctagram112@yandex.ru"
+    },
+    "avatar": {
+      "id": "9aff9d22-e5c7-4000-a452-648cd4fcb4cd",
+      "url": "https://inctagram.storage.yandexcloud.net/content/users/d07d7ec7-c157-4579-bca9-3b693889d45e/avatar/e0fd0a49-ba2b-46bc-bf63-8ca24e08859f.jpg",
+      "previewUrl": "https://inctagram.storage.yandexcloud.net/content/users/d07d7ec7-c157-4579-bca9-3b693889d45e/avatar/.preivew.cc158636-2d41-492d-ad16-dbf9de155a56.jpg",
+      "size": 45556,
+      "height": 800,
+      "width": 800,
+      "userId": "d07d7ec7-c157-4579-bca9-3b693889d45e",
+      "createdAt": "2023-05-24T14:07:39.793Z",
+      "updatedAt": "2023-05-29T13:03:00.627Z"
+    },
+    "oauthAccount": [
+      {
+        "id": "ff898e10-3574-46df-91bf-a6be241b0be3",
+        "clientId": "134810137",
+        "type": "GITHUB",
+        "linked": true,
+        "mergeCode": null,
+        "mergeCodeExpDate": null,
+        "userId": "d07d7ec7-c157-4579-bca9-3b693889d45e"
+      }
+    ],
+    "profile": {
+      "id": "0ca6f910-00f5-484e-b813-33d02425cdce",
+      "name": "Danil",
+      "surname": "Fefelov",
+      "birthday": "1990-12-11T00:00:00.000Z",
+      "city": "Kobuleti",
+      "aboutMe": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+      "userId": "d07d7ec7-c157-4579-bca9-3b693889d45e",
+      "createdAt": "2023-05-22T11:14:52.096Z",
+      "updatedAt": "2023-06-10T07:16:07.191Z"
+    },
+    "passwordRecovery": {
+      "recoveryCode": null,
+      "expirationDate": null,
+      "createdAt": "2023-05-22T11:14:52.096Z",
+      "updatedAt": "2023-05-22T15:08:06.964Z",
+      "userId": "d07d7ec7-c157-4579-bca9-3b693889d45e"
+    }
+  },
+  {
+    "id": "111211b0-84cb-408d-8115-7edf3c6767d7",
+    "username": "testuser",
+    "email": "test@gmail.com",
+    "hash": "$2b$10$dWbfXf1bGiB12EOZ2kPojuGDRw6isWfDjQvBk6pVjWBTeUknlVFCm",
+    "createdAt": "2023-06-15T16:35:01.716Z",
+    "updatedAt": "2023-06-15T16:35:01.716Z",
+    "accountPlan": "PERSONAL",
+    "emailConfirmation": {
+      "confirmationCode": "dca649d1-6177-4bef-8dfb-55bb783217ca",
+      "expirationDate": "2023-06-15T16:40:01.712Z",
+      "isConfirmed": false,
+      "createdAt": "2023-06-15T16:35:01.716Z",
+      "updatedAt": "2023-06-15T16:35:01.716Z",
+      "userEmail": "test@gmail.com"
+    },
+    "avatar": null,
+    "oauthAccount": [],
+    "profile": {
+      "id": "15edd5fc-f5ac-44f3-a29b-5249a642907b",
+      "name": null,
+      "surname": null,
+      "birthday": null,
+      "city": null,
+      "aboutMe": null,
+      "userId": "111211b0-84cb-408d-8115-7edf3c6767d7",
+      "createdAt": "2023-06-15T16:35:01.716Z",
+      "updatedAt": "2023-06-15T16:35:01.716Z"
+    },
+    "passwordRecovery": {
+      "recoveryCode": null,
+      "expirationDate": null,
+      "createdAt": "2023-06-15T16:35:01.716Z",
+      "updatedAt": "2023-06-15T16:35:01.716Z",
+      "userId": "111211b0-84cb-408d-8115-7edf3c6767d7"
+    }
+  },
+  {
+    "id": "f754df51-032e-43c3-9a9d-810eaaa058ad",
+    "username": "eve",
+    "email": "eve@gmail.com",
+    "hash": null,
+    "createdAt": "2023-05-22T09:43:32.846Z",
+    "updatedAt": "2023-05-22T09:43:32.846Z",
+    "accountPlan": "PERSONAL",
+    "emailConfirmation": null,
+    "avatar": null,
+    "oauthAccount": [],
+    "profile": null,
+    "passwordRecovery": null
+  },
+  {
+    "id": "1000d7d7-0904-4110-b55d-c1e7fb0b2f6f",
+    "username": "solib56387@favilu.com",
+    "email": "solib56387@favilu.com",
+    "hash": "$2b$10$KX3g16nRoJb1dO0psbHdzerv6E602hTv1DPgsQb9N8sDO3arPPWv6",
+    "createdAt": "2023-05-22T12:50:15.643Z",
+    "updatedAt": "2023-05-22T12:56:42.362Z",
+    "accountPlan": "PERSONAL",
+    "emailConfirmation": {
+      "confirmationCode": "62c074d8-37a9-4a9e-98bc-c76f478eafe5",
+      "expirationDate": "2023-05-22T12:55:15.641Z",
+      "isConfirmed": true,
+      "createdAt": "2023-05-22T12:50:15.643Z",
+      "updatedAt": "2023-05-22T12:50:51.770Z",
+      "userEmail": "solib56387@favilu.com"
+    },
+    "avatar": null,
+    "oauthAccount": [],
+    "profile": {
+      "id": "e5c4428e-2f18-43cd-9bcd-d98ce90c83e7",
+      "name": null,
+      "surname": null,
+      "birthday": null,
+      "city": null,
+      "aboutMe": null,
+      "userId": "1000d7d7-0904-4110-b55d-c1e7fb0b2f6f",
+      "createdAt": "2023-05-22T12:50:15.643Z",
+      "updatedAt": "2023-05-22T12:50:15.643Z"
+    },
+    "passwordRecovery": {
+      "recoveryCode": null,
+      "expirationDate": null,
+      "createdAt": "2023-05-22T12:50:15.643Z",
+      "updatedAt": "2023-05-22T12:56:42.362Z",
+      "userId": "1000d7d7-0904-4110-b55d-c1e7fb0b2f6f"
+    }
+  },
+  {
+    "id": "b2dc4cca-fea5-42d4-9944-3ad5e16a7ec3",
+    "username": "leskevich",
+    "email": "leskevichtema@gmail.com",
+    "hash": "$2b$10$Nm6ftQXrPmUnL7Sv6j/BAeVf7hHsvMyPXzwfi5TtkaLiUxQKF5XQG",
+    "createdAt": "2023-05-23T19:33:50.591Z",
+    "updatedAt": "2023-05-23T19:33:50.591Z",
+    "accountPlan": "PERSONAL",
+    "emailConfirmation": {
+      "confirmationCode": "d4755c2d-05c6-41d0-b96a-2506de7d92f1",
+      "expirationDate": "2023-05-23T19:38:50.590Z",
+      "isConfirmed": true,
+      "createdAt": "2023-05-23T19:33:50.591Z",
+      "updatedAt": "2023-05-23T19:34:22.068Z",
+      "userEmail": "leskevichtema@gmail.com"
+    },
+    "avatar": null,
+    "oauthAccount": [],
+    "profile": {
+      "id": "c3da7c8e-bf9d-4e1d-a0ef-73e0da8cc4fe",
+      "name": null,
+      "surname": null,
+      "birthday": null,
+      "city": null,
+      "aboutMe": null,
+      "userId": "b2dc4cca-fea5-42d4-9944-3ad5e16a7ec3",
+      "createdAt": "2023-05-23T19:33:50.591Z",
+      "updatedAt": "2023-05-23T19:33:50.591Z"
+    },
+    "passwordRecovery": {
+      "recoveryCode": null,
+      "expirationDate": null,
+      "createdAt": "2023-05-23T19:33:50.591Z",
+      "updatedAt": "2023-05-23T19:33:50.591Z",
+      "userId": "b2dc4cca-fea5-42d4-9944-3ad5e16a7ec3"
+    }
+  },
+  {
+    "id": "77867829-c23f-4c67-b548-f5f6325f7b8e",
+    "username": "inctagram111@yandex.ru",
+    "email": "inctagram111@yandex.ru",
+    "hash": "$2b$10$6ms8wwvXxMDMO.yzUS34jOeM/6K8uQX/fN0Lwz6H1aEHMc3L8apbG",
+    "createdAt": "2023-05-25T15:39:02.075Z",
+    "updatedAt": "2023-05-25T15:59:27.304Z",
+    "accountPlan": "PERSONAL",
+    "emailConfirmation": {
+      "confirmationCode": "97dd67db-0c4d-483d-884c-98914b977d24",
+      "expirationDate": "2023-05-25T15:44:02.073Z",
+      "isConfirmed": true,
+      "createdAt": "2023-05-25T15:39:02.075Z",
+      "updatedAt": "2023-05-25T15:40:33.193Z",
+      "userEmail": "inctagram111@yandex.ru"
+    },
+    "avatar": null,
+    "oauthAccount": [],
+    "profile": {
+      "id": "1418dc40-2cf7-4342-8acd-77e355add5b8",
+      "name": null,
+      "surname": null,
+      "birthday": null,
+      "city": null,
+      "aboutMe": null,
+      "userId": "77867829-c23f-4c67-b548-f5f6325f7b8e",
+      "createdAt": "2023-05-25T15:39:02.075Z",
+      "updatedAt": "2023-05-25T15:39:02.075Z"
+    },
+    "passwordRecovery": {
+      "recoveryCode": null,
+      "expirationDate": null,
+      "createdAt": "2023-05-25T15:39:02.075Z",
+      "updatedAt": "2023-05-25T15:59:27.304Z",
+      "userId": "77867829-c23f-4c67-b548-f5f6325f7b8e"
+    }
+  }
+]

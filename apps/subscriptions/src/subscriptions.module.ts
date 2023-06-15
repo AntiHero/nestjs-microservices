@@ -68,6 +68,7 @@ const commandHandlers = [
     PrismaModule,
     RmqModule.register({
       name: 'ROOT_RMQ',
+      queue: 'main',
     }),
     ClientsModule.registerAsync([
       {

@@ -14,6 +14,7 @@ import {
 } from '@app/common/patterns/root.patterns';
 import { UserRepository } from '../user/repositories/user.repository';
 import { GetUserInfoResult } from '@app/common/interfaces/get-user-info-result.interface';
+import { AdminPatterns } from '@app/common/patterns';
 
 @Controller()
 export class TcpController {
@@ -44,6 +45,16 @@ export class TcpController {
     console.log(userId, plan);
 
     await this.userRepository.updateAccountPlan(userId, plan);
+    this.rmqService.ack(context);
+  }
+
+  @MessagePattern(AdminPatterns.deleteUser)
+  public async deleteUser(
+    @Payload() userId: string,
+    @Ctx() context: RmqContext,
+  ) {
+    await this.userRepository.delete(userId);
+
     this.rmqService.ack(context);
   }
 }

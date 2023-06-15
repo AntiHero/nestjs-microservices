@@ -8,8 +8,9 @@ export const ROOT_PATTERNS = {
   },
 };
 
-const root = 'root';
-const createPattern = (msg: string) => `${root}:${msg}`;
+const issuer = 'root';
+
+const createPattern = (msg: string) => `${issuer}:${msg}`;
 
 export const RootPatterns = {
   updateUserAccountPlan: createPattern('update_user_account_plan'),

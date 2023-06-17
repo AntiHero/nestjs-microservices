@@ -23,10 +23,8 @@ export class AdminService {
   public async deleteUser(id: string) {
     const result = await this.usersRepository.delete(id);
 
-    console.log(result);
     if (result) {
       this.rootClient.emit(AdminPatterns.deleteUser, id);
-      /* send message to queue */
     }
 
     return result;

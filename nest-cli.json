@@ -3,12 +3,8 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "apps/root/src",
   "compilerOptions": {
-    "plugins": [
-      "@nestjs/swagger"
-    ],
-    "assets": [
-      "mail/templates*.hbs"
-    ],
+    "plugins": ["@nestjs/swagger"],
+    "assets": ["mail/templates*.hbs"],
     "deleteOutDir": true,
     "webpack": true,
     "tsConfigPath": "apps/root/tsconfig.app.json"
@@ -49,7 +45,8 @@
       "entryFile": "main",
       "sourceRoot": "apps/admin/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/admin/tsconfig.app.json"
+        "tsConfigPath": "apps/admin/tsconfig.app.json",
+        "plugins": ["@nestjs/graphql"]
       }
     }
   }

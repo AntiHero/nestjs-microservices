@@ -34,12 +34,6 @@ export class PaginationQuery {
   })
   pageSize = 9;
 
-  @Field(() => String)
-  @Transform(({ value }) => {
-    return value ? new RegExp(value, 'i') : /.*/;
-  })
-  searchUsernameTerm = '';
-
   @Field(() => SortDirection, {
     defaultValue: SortDirection.Desc,
   })

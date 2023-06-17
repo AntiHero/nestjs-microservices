@@ -1,9 +1,5 @@
 import { UserModel } from '../app/entity/user.model';
-
-export interface AvatarViewModel {
-  url: string | null;
-  previewUrl: string | null;
-}
+import { type AvatarViewModel } from './common.interfaces';
 
 export interface UserInfoViewModel {
   userId: string;

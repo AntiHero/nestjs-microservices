@@ -2,20 +2,22 @@ import { ModelType } from '@typegoose/typegoose/lib/types';
 
 import { SortDirection } from '@app/common/enums';
 import { DatabaseException } from '@app/common/exceptions/database.exception';
-import { PaginationQuery } from '../../app/graphql/args/get-userlist.args';
+import { PaginationQuery } from '../../app/graphql/args/pagination-query.args';
 
 export abstract class MongoQueryRepository<M> {
   public constructor(protected readonly repository: ModelType<M>) {}
 
-  public async getByQuery(paginationQuery: PaginationQuery) {
+  public async findByQuery(
+    filter: Partial<M>,
+    selection: any, //{ [key in keyof M]: M[key] },
+    paginationQuery: PaginationQuery,
+  ) {
     try {
-      const { page, pageSize, sortDirection, searchUsernameTerm } =
-        paginationQuery;
+      const { page, pageSize, sortDirection } = paginationQuery;
 
       const result = await this.repository
-        .find({
-          username: { $regex: searchUsernameTerm },
-        })
+        .find(filter)
+        .select(selection)
         .skip(pageSize * (page - 1))
         .limit(pageSize)
         .sort({

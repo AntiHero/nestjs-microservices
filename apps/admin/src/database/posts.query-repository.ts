@@ -12,7 +12,7 @@ export class PostsQueryRepository extends MongoQueryRepository<PostModel> {
   }
 }
 
-export const UsersQueryRepositoryProvider: Provider = {
+export const PostsQueryRepositoryProvider: Provider = {
   provide: MongoQueryRepository,
   useClass: PostsQueryRepository,
 };

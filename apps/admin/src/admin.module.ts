@@ -16,7 +16,9 @@ import { postgresConfigFactory } from './config/typeorm.config';
 import { globalConfig } from '@app/common/config/global.config';
 import { mongooseConfigFactory } from './config/mongoose.config';
 import { UsersRepositoryProvider } from './database/users.repository';
+import { PostsQueryRepositoryProvider } from './database/posts.query-repository';
 import { UsersQueryRepositoryProvider } from './database/users.query-repository';
+import { PostModel } from './app/entity/post.model';
 
 @Module({
   imports: [
@@ -33,6 +35,12 @@ import { UsersQueryRepositoryProvider } from './database/users.query-repository'
         typegooseClass: UserModel,
         schemaOptions: {
           collection: 'users',
+        },
+      },
+      {
+        typegooseClass: PostModel,
+        schemaOptions: {
+          collection: 'posts',
         },
       },
     ]),
@@ -61,6 +69,7 @@ import { UsersQueryRepositoryProvider } from './database/users.query-repository'
     AdminService,
     UsersQueryRepositoryProvider,
     UsersRepositoryProvider,
+    PostsQueryRepositoryProvider,
   ],
 })
 export class AdminModule {}

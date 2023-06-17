@@ -3,7 +3,6 @@ import { Injectable, Provider } from '@nestjs/common';
 
 import { InjectModel } from 'nestjs-typegoose';
 import { UserModel } from '../app/entity/user.model';
-import { MongoQueryRepository } from './abstracts/mongo.query-repository';
 import { AbstractUsersQueryRepository } from './abstracts/users.query-repository';
 
 @Injectable()

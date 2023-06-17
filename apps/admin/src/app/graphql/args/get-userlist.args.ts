@@ -1,5 +1,5 @@
 import { BanSearchStatus, SortDirection } from '@app/common/enums';
-import { ArgsType, registerEnumType } from '@nestjs/graphql';
+import { ArgsType, Int, registerEnumType } from '@nestjs/graphql';
 import { IsEnum, IsNumber, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { Field } from '@nestjs/graphql';
@@ -16,23 +16,23 @@ registerEnumType(BanSearchStatus, {
 
 @ArgsType()
 export class PaginationQuery {
-  @Field()
+  @Field(() => Int)
   @IsNumber()
   @Transform(({ value }) => {
     const parsedValue = parseInt(value);
 
     return parsedValue > 0 ? parsedValue : 1;
   })
-  page: number;
+  page = 1;
 
-  @Field()
+  @Field(() => Int)
   @IsNumber()
   @Transform(({ value }) => {
     const parsedValue = parseInt(value);
 
     return parsedValue > 0 ? parsedValue : 9;
   })
-  pageSize: number;
+  pageSize = 9;
 
   @Field(() => String)
   @Transform(({ value }) => {

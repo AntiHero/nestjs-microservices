@@ -4,12 +4,12 @@ export interface UserViewModel {
   userId: string;
   username: string;
   profileLink: string;
-  dataAdded: Date;
+  dataAdded: string;
 }
 
 export const toUserViewModel = (input: UserModel): UserViewModel => ({
   userId: input.id,
   username: input.username,
   profileLink: `${process.env.FRONTEND_DOMAIN}/users/${input.username}`,
-  dataAdded: <Date>input.createdAt,
+  dataAdded: input.createdAt as unknown as string,
 });

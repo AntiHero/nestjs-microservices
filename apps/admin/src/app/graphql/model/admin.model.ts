@@ -7,13 +7,10 @@ export class Admin implements AdminEntity {
   @Field(() => Int)
   public id: number;
 
-  @Field()
   public username: string;
 
-  @Field()
   public email: string;
 
-  @Field()
   public password: string;
 
   @Field(() => Date)

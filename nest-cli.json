@@ -45,8 +45,7 @@
       "entryFile": "main",
       "sourceRoot": "apps/admin/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/admin/tsconfig.app.json",
-        "plugins": ["@nestjs/graphql"]
+        "tsConfigPath": "apps/admin/tsconfig.app.json"
       }
     }
   }

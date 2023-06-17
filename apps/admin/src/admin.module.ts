@@ -48,6 +48,7 @@ import { UsersQueryRepositoryProvider } from './database/users.query-repository'
       driver: ApolloDriver,
       // provides root type?
       autoSchemaFile: join(__dirname, 'schema/schema.gql'),
+      plugins: [],
     }),
     AuthModule,
     RmqModule.register({

@@ -6,5 +6,6 @@
 
 6/17/2023
 
-- [] transform post shape to mongoose model
+- [x] transform post shape to mongoose model
+- [] UC-27
 - [] transform subscription shape to mongoose model

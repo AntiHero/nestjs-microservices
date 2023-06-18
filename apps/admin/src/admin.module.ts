@@ -1,26 +1,27 @@
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypegooseModule } from 'nestjs-typegoose';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { GraphQLModule } from '@nestjs/graphql';
-import { Module } from '@nestjs/common';
-import { join } from 'path';
-
-import { AdminService } from './admin.service';
-import { AuthModule } from './auth/auth.module';
-import { AdminResolver } from './admin.resolver';
-import { UserModel } from './app/entity/user.model';
-import { localConfig } from './config/global.config';
-import { RmqModule } from '@app/common/src/rmq/rmq.module';
-import { postgresConfigFactory } from './config/typeorm.config';
 import { globalConfig } from '@app/common/config/global.config';
+import { RmqModule } from '@app/common/src/rmq/rmq.module';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { GraphQLModule } from '@nestjs/graphql';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypegooseModule } from 'nestjs-typegoose';
+import { join } from 'path';
+import { AdminController } from './admin.controller';
+
+import { AdminResolver } from './admin.resolver';
+import { AdminService } from './admin.service';
+import { PostModel } from './app/entity/post.model';
+import { PaymentModel } from './app/entity/subscriptions.model';
+import { UserModel } from './app/entity/user.model';
+import { AuthModule } from './auth/auth.module';
+import { localConfig } from './config/global.config';
 import { mongooseConfigFactory } from './config/mongoose.config';
-import { UsersRepositoryProvider } from './database/users.repository';
+import { postgresConfigFactory } from './config/typeorm.config';
+import { PaymentsQueryRepositoryProvider } from './database/payments.query-repository';
 import { PostsQueryRepositoryProvider } from './database/posts.query-repository';
 import { UsersQueryRepositoryProvider } from './database/users.query-repository';
-import { PostModel } from './app/entity/post.model';
-import { PaymentsQueryRepositoryProvider } from './database/payments.query-repository';
-import { PaymentModel } from './app/entity/subscriptions.model';
+import { UsersRepositoryProvider } from './database/users.repository';
 
 @Module({
   imports: [
@@ -72,6 +73,7 @@ import { PaymentModel } from './app/entity/subscriptions.model';
       queue: 'main',
     }),
   ],
+  controllers: [AdminController],
   providers: [
     AdminResolver,
     AdminService,

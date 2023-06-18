@@ -16,5 +16,8 @@ module.exports = {
     jest: true,
   },
   ignorePatterns: ['.eslintrc.js'],
-  rules: {},
+  rules: {
+    // 'arca/import-align': 2,
+    // 'arca/import-ordering': 2,
+  },
 };

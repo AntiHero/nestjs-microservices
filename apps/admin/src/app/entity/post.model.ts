@@ -3,27 +3,27 @@ import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 import type { ImageMetadata, Image, Post } from '@prisma/client';
 import { prop } from '@typegoose/typegoose';
 
-export interface MetadataModel extends Base {}
-export class MetadataModel
-  extends TimeStamps
-  implements
-    Record<Exclude<keyof ImageMetadata, 'createdAt' | 'updatedAt'>, any>
-{
-  @prop({ unique: true })
-  public id: string;
+// export interface MetadataModel extends Base {}
+// export class MetadataModel
+//   extends TimeStamps
+//   implements
+//     Record<Exclude<keyof ImageMetadata, 'createdAt' | 'updatedAt'>, any>
+// {
+//   @prop({ unique: true })
+//   public id: string;
 
-  @prop()
-  public size: number;
+//   @prop()
+//   public size: number;
 
-  @prop()
-  public height: number;
+//   @prop()
+//   public height: number;
 
-  @prop()
-  public width: number;
+//   @prop()
+//   public width: number;
 
-  @prop()
-  public imageId: string;
-}
+//   @prop()
+//   public imageId: string;
+// }
 
 export interface ImageModel extends Base {}
 export class ImageModel
@@ -42,8 +42,8 @@ export class ImageModel
   @prop()
   public postId: string;
 
-  @prop(() => MetadataModel)
-  public metadata: MetadataModel;
+  // @prop(() => MetadataModel)
+  // public metadata: MetadataModel;
 }
 
 export interface PostModel extends Base {}

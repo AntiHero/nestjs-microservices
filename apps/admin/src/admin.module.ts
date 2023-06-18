@@ -19,6 +19,8 @@ import { UsersRepositoryProvider } from './database/users.repository';
 import { PostsQueryRepositoryProvider } from './database/posts.query-repository';
 import { UsersQueryRepositoryProvider } from './database/users.query-repository';
 import { PostModel } from './app/entity/post.model';
+import { PaymentsQueryRepositoryProvider } from './database/payments.query-repository';
+import { PaymentModel } from './app/entity/subscriptions.model';
 
 @Module({
   imports: [
@@ -41,6 +43,12 @@ import { PostModel } from './app/entity/post.model';
         typegooseClass: PostModel,
         schemaOptions: {
           collection: 'posts',
+        },
+      },
+      {
+        typegooseClass: PaymentModel,
+        schemaOptions: {
+          collection: 'payments',
         },
       },
     ]),
@@ -70,6 +78,7 @@ import { PostModel } from './app/entity/post.model';
     UsersQueryRepositoryProvider,
     UsersRepositoryProvider,
     PostsQueryRepositoryProvider,
+    PaymentsQueryRepositoryProvider,
   ],
 })
 export class AdminModule {}

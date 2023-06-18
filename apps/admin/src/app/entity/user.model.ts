@@ -4,22 +4,22 @@ import { prop } from '@typegoose/typegoose';
 import { AccountPlan, OauthProvider } from '@app/common/enums';
 import type { User } from '@prisma/client';
 
-export class EmailConfirmationModel extends TimeStamps {
-  @prop()
-  public confirmation: string;
+// export class EmailConfirmationModel extends TimeStamps {
+//   @prop()
+//   public confirmation: string;
 
-  @prop({ type: () => Date })
-  public expirationDate: Date;
+//   @prop({ type: () => Date })
+//   public expirationDate: Date;
 
-  @prop()
-  public confirmationCode: string;
+//   @prop()
+//   public confirmationCode: string;
 
-  @prop()
-  public isConfirmed: boolean;
+//   @prop()
+//   public isConfirmed: boolean;
 
-  @prop({ unique: true })
-  public userEmail: string;
-}
+//   @prop({ unique: true })
+//   public userEmail: string;
+// }
 
 export class AvatarModel extends TimeStamps {
   @prop()
@@ -45,29 +45,29 @@ export class AvatarModel extends TimeStamps {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface OauthAccountModel extends Base {}
-export class OauthAccountModel {
-  @prop()
-  public id: string;
+// export interface OauthAccountModel extends Base {}
+// export class OauthAccountModel {
+//   @prop()
+//   public id: string;
 
-  @prop()
-  public clientId: string;
+//   @prop()
+//   public clientId: string;
 
-  @prop({ enum: OauthProvider, type: () => String })
-  public type: OauthProvider;
+//   @prop({ enum: OauthProvider, type: () => String })
+//   public type: OauthProvider;
 
-  @prop()
-  public linked: boolean;
+//   @prop()
+//   public linked: boolean;
 
-  @prop({ type: () => String, default: null })
-  public mergeCode: string | null;
+//   @prop({ type: () => String, default: null })
+//   public mergeCode: string | null;
 
-  @prop({ type: () => Date, default: null })
-  public mergeCodeExpDate: Date | null;
+//   @prop({ type: () => Date, default: null })
+//   public mergeCodeExpDate: Date | null;
 
-  @prop()
-  public userId: string;
-}
+//   @prop()
+//   public userId: string;
+// }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ProfileModel extends Base {}
@@ -94,16 +94,16 @@ export class ProfileModel extends TimeStamps {
   public userId: string;
 }
 
-export class PasswordRecoveryModel {
-  @prop({ type: () => String, default: null })
-  public recoveryCode: string | null;
+// export class PasswordRecoveryModel {
+//   @prop({ type: () => String, default: null })
+//   public recoveryCode: string | null;
 
-  @prop({ type: () => String, default: null })
-  public expirationDate: string | null;
+//   @prop({ type: () => String, default: null })
+//   public expirationDate: string | null;
 
-  @prop()
-  public userId: string;
-}
+//   @prop()
+//   public userId: string;
+// }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface UserModel extends Base {}
@@ -126,20 +126,20 @@ export class UserModel
   @prop({ enum: AccountPlan, type: () => String })
   public accountPlan: AccountPlan;
 
-  @prop({ type: () => EmailConfirmationModel })
-  public emailConfirmation: EmailConfirmationModel;
+  // @prop({ type: () => EmailConfirmationModel })
+  // public emailConfirmation: EmailConfirmationModel;
 
   @prop({ type: () => AvatarModel })
   public avatar: AvatarModel;
 
-  @prop({ type: () => [OauthAccountModel] })
-  public ouathAccount: OauthAccountModel[];
+  // @prop({ type: () => [OauthAccountModel] })
+  // public ouathAccount: OauthAccountModel[];
 
   @prop({ type: () => ProfileModel })
   public profile: ProfileModel;
 
-  @prop({ type: () => PasswordRecoveryModel })
-  public passwordRecovery: PasswordRecoveryModel;
+  // @prop({ type: () => PasswordRecoveryModel })
+  // public passwordRecovery: PasswordRecoveryModel;
 
   @prop()
   public isDeleted: boolean;

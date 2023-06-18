@@ -6,12 +6,12 @@ import { Field } from '@nestjs/graphql';
 
 registerEnumType(SortDirection, {
   name: 'SortDirectionType',
-  description: '[asc, desc]',
+  description: `${Object.keys(SortDirection)}`,
 });
 
 registerEnumType(BanSearchStatus, {
   name: 'BanSearchStatusType',
-  description: '[all, active, banned]',
+  description: `${Object.keys(BanSearchStatus)}`,
 });
 
 @ArgsType()

@@ -1,26 +1,31 @@
 import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
-import { UseGuards } from '@nestjs/common';
+import { Inject, UseGuards } from '@nestjs/common';
 
+import { Token } from './@core/tokens';
+import {
+  PostImagesInput,
+  toPostImagesViewModel,
+} from './utils/post-images-view.mapper';
 import { AdminService } from './admin.service';
+import { PaymentStatus } from '@app/common/enums';
 import { PostModel } from './app/entity/post.model';
 import { Admin } from './app/graphql/model/admin.model';
 import { BasicAuthGuard } from './@core/guards/basic.guard';
 import { UserOutput } from './app/graphql/output/user.output';
 import { toUserViewModel } from './utils/user-list-view.mapper';
 import { Public } from '@app/common/decorators/public.decorator';
+import { PaymentModel } from './app/entity/subscriptions.model';
+import { AvatarOutput } from './app/graphql/output/avatar.output';
+import { toPaymentsViewModel } from './utils/payments-view.mapper';
+import { PaymentOutput } from './app/graphql/output/payments.output';
 import { toUserInfoViewModel } from './utils/user-info-view.mapper';
 import { UserInfoOutput } from './app/graphql/output/user-info.outpul';
 import { DeleteUserInput } from './app/graphql/input/delete-user.input';
 import { UserPaginationQuery } from './app/graphql/args/pagination-query';
 import { CreateAdminInput } from './app/graphql/input/create-admin.input';
+import { PaginationQuery } from './app/graphql/args/pagination-query.args';
 import { AbstractUsersQueryRepository } from './database/abstracts/users.query-repository';
 import { MongoQueryRepository } from './database/abstracts/mongo.query-repository';
-import { PaginationQuery } from './app/graphql/args/pagination-query.args';
-import {
-  PostImagesInput,
-  toPostImagesViewModel,
-} from './utils/post-images-view.mapper';
-import { AvatarOutput } from './app/graphql/output/avatar.output';
 
 @UseGuards(BasicAuthGuard)
 @Resolver()
@@ -28,7 +33,10 @@ export class AdminResolver {
   public constructor(
     private readonly adminService: AdminService,
     private readonly usersQueryRepository: AbstractUsersQueryRepository,
+    @Inject(Token.PostsQueryRepository)
     private readonly postsQueryRepository: MongoQueryRepository<PostModel>,
+    @Inject(Token.PaymentsQueryRepository)
+    private readonly paymentQueryRepository: MongoQueryRepository<PaymentModel>,
   ) {}
 
   @Public()
@@ -87,5 +95,22 @@ export class AdminResolver {
     return (result as unknown as PostImagesInput[])
       .map(toPostImagesViewModel)
       .flat();
+  }
+
+  @Query(() => [PaymentOutput], { name: 'payments', nullable: true })
+  public async getPayments(
+    @Args('id', { type: () => ID }) id: string,
+    @Args() paginationQuery: PaginationQuery,
+  ) {
+    const result = await this.paymentQueryRepository.findByQuery(
+      {
+        userId: id,
+        status: PaymentStatus.CONFIRMED,
+      },
+      {},
+      paginationQuery,
+    );
+
+    return result.map(toPaymentsViewModel);
   }
 }

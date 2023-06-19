@@ -17,7 +17,7 @@ import { calculateSubscriptionEndDate } from '../../utils/calculate-subscription
 import { SubscriptionsTransactionService } from 'apps/subscriptions/src/services/subscriptions-transaction.service';
 import { SubscriptionsQueryRepository } from 'apps/subscriptions/src/repositories/subscriptions.query-repository';
 import { ClientProxy } from '@nestjs/microservices';
-import { RootPatterns } from '@app/common/patterns/root.patterns';
+import { RootEvents } from '@app/common/patterns/root.patterns';
 import { AccountPlan } from '@prisma/client';
 
 @Injectable()
@@ -118,7 +118,7 @@ export class CheckoutSessinCompletedEventHandler extends Handler {
                 // ),
               ]);
 
-              this.rootRmqClient.emit(RootPatterns.updateUserAccountPlan, {
+              this.rootRmqClient.emit(RootEvents.updateUserAccountPlan, {
                 userId,
                 plan: AccountPlan.BUSINESS,
               });

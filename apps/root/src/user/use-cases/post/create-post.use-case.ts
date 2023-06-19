@@ -13,6 +13,10 @@ import {
   POST_PREVIEW_HEIGHT,
   POST_PREVIEW_WIDTH,
 } from 'apps/root/src/common/constants';
+import { createdPostMessageCreator } from '@app/common/message-creators/created-post.message-creator';
+import { EventEmitter2 as EventEmitter } from '@nestjs/event-emitter';
+import { NOTIFY_ADMIN_EVENT } from 'apps/root/src/common/services/event-handler.service';
+import { RootEvents } from '@app/common/patterns/root.patterns';
 
 export class CreatePostCommand {
   public constructor(
@@ -28,6 +32,7 @@ export class CreatePostUseCase implements ICommandHandler {
     private readonly cloudService: CloudStrategy,
     private readonly imageService: ImageService,
     private readonly prismaService: PrismaService,
+    private readonly eventEmitter: EventEmitter,
   ) {}
 
   public async execute(command: CreatePostCommand): Promise<CreatePostResult> {
@@ -87,7 +92,7 @@ export class CreatePostUseCase implements ICommandHandler {
           };
         });
 
-        return prisma.post.create({
+        const result = await prisma.post.create({
           data: {
             id: postId,
             userId,
@@ -114,6 +119,26 @@ export class CreatePostUseCase implements ICommandHandler {
             },
           },
         });
+
+        const { id, createdAt, images: postImages } = result;
+
+        const message = createdPostMessageCreator({
+          id,
+          description,
+          userId,
+          createdAt,
+          images: postImages.map(({ url, previewUrl }) => ({
+            url,
+            previewUrl,
+          })),
+        });
+
+        this.eventEmitter.emit(NOTIFY_ADMIN_EVENT, [
+          RootEvents.CreatedPost,
+          message,
+        ]);
+
+        return result;
       });
     } catch (error) {
       console.log(error);

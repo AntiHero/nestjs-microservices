@@ -1,12 +1,13 @@
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 
+import { RmqModule } from './rmq/rmq.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { AppController } from './app.controller';
 import { PrismaModule } from './prisma/prisma.module';
 import { AdaptorModule } from './adaptors/adaptor.module';
-import { RmqModule } from '@app/common/src/rmq/rmq.module';
 import { TcpController } from './controllers/message.controller';
 import { githubOauthConfig } from './config/github-oauth.config';
 import { googleOauthConfig } from './config/google-oauth.config';
@@ -31,6 +32,14 @@ import { DeviceSessionsModule } from './deviceSessions/device-sessions.module';
     TestingModule,
     SubscriptionsModule,
     RmqModule,
+    EventEmitterModule.forRoot({
+      wildcard: true,
+      delimiter: ':',
+    }),
+    // RmqModule.register({
+    //   name: 'ADMIN_RMQ',
+    //   queue: 'admin',
+    // }),
   ],
   controllers: [AppController, TcpController],
 })

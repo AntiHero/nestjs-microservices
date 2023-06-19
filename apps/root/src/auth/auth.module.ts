@@ -23,6 +23,8 @@ import { SignInUserWithGithubUseCase } from './use-cases/sign-in-user-with-githu
 import { SignUpUserWithGithubUseCase } from './use-cases/sign-up-user-with-github.use-case';
 import { RegistrationEmailResendingUseCase } from './use-cases/registration-email-resending-use-case';
 import { MergeAccountsUseCase } from './use-cases/merge-account.use-case';
+import { AdminRmqClient } from '../common/services/admin-rmq-client.service';
+import { EventHandlerService } from '../common/services/event-handler.service';
 
 const useCases = [
   RegistrationEmailResendingUseCase,
@@ -57,6 +59,8 @@ const useCases = [
       provide: ImageService,
       useClass: SharpService,
     },
+    AdminRmqClient,
+    EventHandlerService,
     ...useCases,
   ],
   exports: [],

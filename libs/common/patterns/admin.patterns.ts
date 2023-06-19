@@ -1,5 +1,5 @@
 const issuer = 'admin';
 
-export const getUserList = `${issuer}:get_user_list`;
+export const GetUserList = `${issuer}:get_user_list`;
 
-export const deleteUser = `${issuer}:delete_user`;
+export const DeleteUser = `${issuer}:delete_user`;

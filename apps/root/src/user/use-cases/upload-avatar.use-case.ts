@@ -5,12 +5,16 @@ import { randomUUID } from 'crypto';
 import { PREVIEW_HEIGHT, PREVIEW_WIDTH } from 'apps/root/src/common/constants';
 import { ImageService } from 'apps/root/src/common/services/image.service';
 import { CloudStrategy } from 'apps/root/src/common/strategies/cloud.strategy';
+import { EventEmitter2 as EventEmitter } from '@nestjs/event-emitter';
 import {
   AvatarCreationError,
   FILE_UPLOAD_ERROR,
 } from 'apps/root/src/common/errors';
 import { ImagesQueryRepositoryAdapter } from '../repositories/adapters/images-query-repository.adapter';
 import { ImagesRepositoryAdapter } from '../repositories/adapters/images-repository.adapter';
+import { NOTIFY_ADMIN_EVENT } from '../../common/services/event-handler.service';
+import { RootEvents } from '@app/common/patterns/root.patterns';
+import { updatedAvatarMessageCreator } from '@app/common/message-creators/updated-avatar.message-creator';
 
 export class UploadAvatarCommand {
   public constructor(public userId: string, public file: Express.Multer.File) {}
@@ -23,6 +27,7 @@ export class UploadAvatarUseCase implements ICommandHandler {
     private readonly avatarsRepository: ImagesRepositoryAdapter<Avatar>,
     private readonly cloudService: CloudStrategy,
     private readonly imageService: ImageService,
+    private readonly eventEmitter: EventEmitter,
   ) {}
 
   public async execute(command: UploadAvatarCommand): Promise<Avatar | null> {
@@ -70,6 +75,17 @@ export class UploadAvatarUseCase implements ICommandHandler {
       if (existingUrl && existingPreviewUrl) {
         await this.cloudService.remove([existingUrl, existingPreviewUrl]);
       }
+
+      const message = updatedAvatarMessageCreator({
+        userId,
+        url,
+        previewUrl,
+      });
+
+      this.eventEmitter.emit(NOTIFY_ADMIN_EVENT, [
+        RootEvents.UpdatedAvatar,
+        message,
+      ]);
 
       return avatar;
     } catch (error) {

@@ -17,7 +17,7 @@ type UserOutput {
   id: ID!
   username: String!
   profileLink: String!
-  dataAdded: String!
+  dateAdded: String!
 }
 
 type ImageOutput {

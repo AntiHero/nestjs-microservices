@@ -14,5 +14,5 @@ export class UserOutput implements UserViewModel {
   public profileLink: string;
 
   @Field()
-  public dataAdded: string;
+  public dateAdded: string;
 }

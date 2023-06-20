@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "migration:run": "yarn typeorm-ts-node-commonjs migration:run -d ./ormconfig.ts"
+    "migration:run": "yarn typeorm-ts-node-commonjs migration:run -d ./ormconfig.ts",
+    "test:e2e": "dotenv -e .env.test  -- jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
     "@apollo/server": "^4.7.3",

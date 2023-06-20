@@ -5,7 +5,7 @@ import { UserViewModel } from 'apps/admin/src/utils/user-list-view.mapper';
 @ObjectType()
 export class UserOutput implements UserViewModel {
   @Field(() => ID)
-  public userId: string;
+  public id: string;
 
   @Field()
   public username: string;

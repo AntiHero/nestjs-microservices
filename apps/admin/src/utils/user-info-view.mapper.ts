@@ -2,7 +2,7 @@ import { UserModel } from '../app/entity/user.model';
 import { type AvatarViewModel } from './common.interfaces';
 
 export interface UserInfoViewModel {
-  userId: string;
+  id: string;
   username: string;
   profileLink: string;
   dateAdded: string;
@@ -10,7 +10,7 @@ export interface UserInfoViewModel {
 }
 
 export const toUserInfoViewModel = (input: UserModel): UserInfoViewModel => ({
-  userId: input.id,
+  id: input.id,
   username: input.username,
   profileLink: `${process.env.FRONTEND_DOMAIN}/users/${input.username}`,
   dateAdded: input.createdAt as unknown as string,

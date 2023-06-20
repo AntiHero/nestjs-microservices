@@ -12,7 +12,8 @@ import {
 export interface SubscriptionModel extends Base {}
 export class PaymentModel
   extends TimeStamps
-  implements Record<keyof Omit<Payment, 'createdAt' | 'updatedAt'>, any>
+  implements
+    Record<keyof Omit<Payment, 'createdAt' | 'updatedAt' | 'reference'>, any>
 {
   @prop({ unique: true })
   public id: string;
@@ -38,8 +39,8 @@ export class PaymentModel
   @prop({ type: () => String, enum: PaymentProvider })
   public provider: PaymentProvider;
 
-  @prop()
-  public reference: 'SUBSCRIPTIONS';
+  // @prop()
+  // public reference: 'SUBSCRIPTIONS';
 
   @prop({ type: () => String, enum: SubscriptionType })
   public type: SubscriptionType;

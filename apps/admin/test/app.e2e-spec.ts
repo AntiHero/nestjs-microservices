@@ -15,6 +15,10 @@ describe('AdminController (e2e)', () => {
     await app.init();
   });
 
+  afterAll(() => {
+    app.close();
+  });
+
   it('/ (GET)', () => {
     return request(app.getHttpServer()).get('/').expect(200);
   });

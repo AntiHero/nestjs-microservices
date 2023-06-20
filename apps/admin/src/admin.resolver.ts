@@ -76,12 +76,12 @@ export class AdminResolver {
 
   @Query(() => [ImageOutput], { nullable: true, name: 'userPhotos' })
   public async getPostImages(
-    @Args('id', { type: () => ID }) id: string,
+    @Args('userId', { type: () => ID }) userId: string,
     @Args() paginationQuery: PaginationQuery,
   ) {
     const result = await this.postsQueryRepository.findByQuery(
       {
-        userId: id,
+        userId,
       },
       {
         images: {
@@ -99,12 +99,12 @@ export class AdminResolver {
 
   @Query(() => [PaymentOutput], { name: 'payments', nullable: true })
   public async getPayments(
-    @Args('id', { type: () => ID }) id: string,
+    @Args('userId', { type: () => ID }) userId: string,
     @Args() paginationQuery: PaginationQuery,
   ) {
     const result = await this.paymentQueryRepository.findByQuery(
       {
-        userId: id,
+        userId,
         status: PaymentStatus.CONFIRMED,
       },
       {},

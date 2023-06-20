@@ -6,7 +6,7 @@ import { ImageOutput } from './avatar.output';
 @ObjectType()
 export class UserInfoOutput implements UserInfoViewModel {
   @Field(() => ID)
-  public userId: string;
+  public id: string;
 
   @Field()
   public username: string;

@@ -1,14 +1,16 @@
-import { SortDirection } from '@app/common/enums';
 import { UserModel } from '../../app/entity/user.model';
 import { MongoQueryRepository } from './mongo.query-repository';
+import { SortDirection, UserSortFields } from '@app/common/enums';
 import { UserPaginationQuery } from '../../app/graphql/args/pagination-query';
 import { DatabaseException } from '@app/common/exceptions/database.exception';
 
 export abstract class AbstractUsersQueryRepository extends MongoQueryRepository<UserModel> {
   public async getByQuery(paginationQuery: UserPaginationQuery) {
     try {
-      const { page, pageSize, sortDirection, searchUsernameTerm } =
-        paginationQuery;
+      const { page, pageSize, searchUsernameTerm, sortField } = paginationQuery;
+
+      const sortDirection =
+        paginationQuery.sortDirection === SortDirection.Asc ? 1 : -1;
 
       const result = await this.repository
         .find({
@@ -16,9 +18,11 @@ export abstract class AbstractUsersQueryRepository extends MongoQueryRepository<
         })
         .skip(pageSize * (page - 1))
         .limit(pageSize)
-        .sort({
-          createdAt: sortDirection === SortDirection.Asc ? 1 : -1,
-        })
+        .sort(
+          sortField === UserSortFields.DateAdded
+            ? { createdAt: sortDirection }
+            : { username: sortDirection },
+        )
         .lean();
 
       return result;

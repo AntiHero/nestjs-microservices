@@ -1,0 +1,21 @@
+version: 3.8
+services:
+  root:
+    build:
+      context: .
+      dockerfile: ./apps/root/Dockerfile
+    ports:
+      - 5000
+    env_file:
+      - .env
+    environment:
+      - MODE=production
+    image: z3r0c0d3r/root:0.0.3
+    depends_on:
+      - rabbitmq
+    command: yarn test:root app.e2e
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - 5672
+      - 15672:15672

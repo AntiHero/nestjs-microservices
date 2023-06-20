@@ -1,5 +1,6 @@
 export * from './ban-search-status.enum';
 export * from './subscription-type.enum';
+export * from './user-sort-fields.enum';
 export * from './sort-direction.enum';
 export * from './oauth-provider.enum';
 export * from './payment-status.enum';

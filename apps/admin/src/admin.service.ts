@@ -24,7 +24,7 @@ export class AdminService {
     const result = await this.usersRepository.delete(id);
 
     if (result) {
-      this.rootClient.emit(AdminPatterns.deleteUser, id);
+      this.rootClient.emit(AdminPatterns.DeleteUser, id);
     }
 
     return result;

@@ -33,5 +33,5 @@ export class UserPaginationQuery extends PaginationQuery {
   searchUsernameTerm = '';
 
   @Field(() => UserSortFields)
-  searchField = 'createdAt';
+  sortField = 'createdAt';
 }

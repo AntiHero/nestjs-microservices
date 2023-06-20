@@ -1,8 +1,8 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { AvatarViewModel } from 'apps/admin/src/utils/common.interfaces';
+import { AvatarViewModel as ImageViewModel } from 'apps/admin/src/utils/common.interfaces';
 
 @ObjectType()
-export class AvatarOutput implements AvatarViewModel {
+export class ImageOutput implements ImageViewModel {
   @Field(() => String, { nullable: true })
   public url: string | null;
 

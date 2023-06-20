@@ -1,7 +1,7 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 import { UserInfoViewModel } from 'apps/admin/src/utils/user-info-view.mapper';
-import { AvatarOutput } from './avatar.output';
+import { ImageOutput } from './avatar.output';
 
 @ObjectType()
 export class UserInfoOutput implements UserInfoViewModel {
@@ -17,6 +17,6 @@ export class UserInfoOutput implements UserInfoViewModel {
   @Field()
   public dateAdded: string;
 
-  @Field(() => AvatarOutput)
-  public avatar: AvatarOutput;
+  @Field(() => ImageOutput)
+  public avatar: ImageOutput;
 }

@@ -15,7 +15,7 @@ import { UserOutput } from './app/graphql/output/user.output';
 import { toUserViewModel } from './utils/user-list-view.mapper';
 import { Public } from '@app/common/decorators/public.decorator';
 import { PaymentModel } from './app/entity/subscriptions.model';
-import { AvatarOutput } from './app/graphql/output/avatar.output';
+import { ImageOutput } from './app/graphql/output/avatar.output';
 import { toPaymentsViewModel } from './utils/payments-view.mapper';
 import { PaymentOutput } from './app/graphql/output/payments.output';
 import { toUserInfoViewModel } from './utils/user-info-view.mapper';
@@ -74,7 +74,7 @@ export class AdminResolver {
     return result && toUserInfoViewModel(result);
   }
 
-  @Query(() => [AvatarOutput], { nullable: true, name: 'userPhotos' })
+  @Query(() => [ImageOutput], { nullable: true, name: 'userPhotos' })
   public async getPostImages(
     @Args('id', { type: () => ID }) id: string,
     @Args() paginationQuery: PaginationQuery,

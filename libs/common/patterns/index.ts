@@ -1,1 +1,3 @@
-export * as AdminPatterns from './admin.patterns';
+export * from './subscriptions.pattern';
+export * from './admin.pattern';
+export * from './root.pattern';

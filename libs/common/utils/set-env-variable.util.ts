@@ -1,5 +1,3 @@
-export const setEnvVariable = <T>(prod: T, dev?: T) => {
-  if (process.env.MODE === 'production') return prod;
-
-  return dev ?? prod;
+export const setEnvVariable = <T>(prod: T, dev?: T): T => {
+  return process.env.MODE === 'production' ? prod : dev ?? prod;
 };

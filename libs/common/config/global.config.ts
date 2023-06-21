@@ -1,4 +1,5 @@
-import { registerAs } from '@nestjs/config';
+import { registerAs }     from '@nestjs/config';
+
 import { setEnvVariable } from '../utils/set-env-variable.util';
 
 export const globalConfig = registerAs('global', () => ({

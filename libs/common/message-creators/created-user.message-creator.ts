@@ -1,4 +1,5 @@
-import { type User } from '@prisma/client';
+import { type User }   from '@prisma/client';
+
 import { AccountPlan } from '../enums';
 
 export interface CreatedUserType
@@ -8,15 +9,17 @@ export interface CreatedUserType
   isDeleted?: false;
   avatar?: null;
   profile?: null;
+  isEmailConfirmed?: boolean;
 }
 
 export const createdUserMessageCreator = (
   data: CreatedUserType,
 ): CreatedUserType => ({
-  ...data,
   accountPlan: AccountPlan.PERSONAL,
   avatar: null,
   profile: null,
   isBanned: false,
   isDeleted: false,
+  isEmailConfirmed: false,
+  ...data,
 });

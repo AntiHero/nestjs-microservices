@@ -1,8 +1,9 @@
 import { type Profile } from '@prisma/client';
 
 export type UpdatedProfileType = Partial<
-  Pick<Profile, 'aboutMe' | 'birthday' | 'city' | 'name' | 'surname' | 'userId'>
->;
+  Pick<Profile, 'aboutMe' | 'birthday' | 'city' | 'name' | 'surname'>
+> &
+  Pick<Profile, 'userId'>;
 
 export const updatedProfileMessageCreator = ({
   userId,

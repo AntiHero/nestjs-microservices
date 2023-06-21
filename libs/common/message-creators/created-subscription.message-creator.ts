@@ -1,8 +1,8 @@
-import { Subscription, Payment } from '.prisma/subscriptions';
+import { Payment, Subscription } from '.prisma/subscriptions';
 
 type CreatedSubscriptinType = Pick<
   Subscription,
-  'userId' | 'endDate' | 'startDate' | 'type'
+  'userId' | 'endDate' | 'startDate' | 'type' | 'id'
 > &
   Pick<Payment, 'currency' | 'price' | 'provider' | 'status'>;
 

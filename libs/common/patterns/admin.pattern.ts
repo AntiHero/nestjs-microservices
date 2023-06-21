@@ -1,7 +1,12 @@
-const issuer = 'admin';
+class AdminCommand {
+  private static patternIssuer = 'admin';
 
-export namespace AdminCommand {
-  export const GetUserList = `${issuer}:get_user_list`;
+  private static createPattern = (message: string) =>
+    `${AdminCommand.patternIssuer}:${message}`;
 
-  export const DeleteUser = `${issuer}:delete_user`;
+  public static GetUserList = AdminCommand.createPattern('get_user_list');
+
+  public static DeleteUser = AdminCommand.createPattern('delete_user');
 }
+
+export { AdminCommand };

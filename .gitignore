@@ -1,10 +1,13 @@
 # compiled output
 /dist
 /node_modules
+**/node_modules
+utils/*
 
 .yarn
 .env
 .env.test
+.env.subscriptions-db
 *.excalidraw
 # Logs
 logs
@@ -38,4 +41,9 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# kubernetes
 k8s
+
+# docker
+data

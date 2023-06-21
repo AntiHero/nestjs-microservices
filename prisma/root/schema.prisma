@@ -27,6 +27,7 @@ model User {
   profile           Profile?
   post              Post[]
   oauthAccount      OauthAccount[]
+  isBanned          Boolean            @default(false)
 }
 
 enum OauthProvider {

@@ -10,15 +10,32 @@ services:
       - .env
     environment:
       - MODE=production
-    image: z3r0c0d3r/root:0.0.2
+    image: z3r0c0d3r/root:0.0.3
     depends_on:
+      - rabbitmq
       - subscriptions
   subscriptions:
     build:
       context: .
       dockerfile: ./apps/subscriptions/Dockerfile
+    ports:
+      - 6000:6000
     env_file:
       - .env
     environment:
       - MODE=production
-    image: z3r0c0d3r/subscriptions:0.0.4
+    image: z3r0c0d3r/subscriptions:0.0.5
+    depends_on:
+      - subscriptions-db
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - 5672
+      - 15672:15672
+  subscriptions-db:
+    image: postgres
+    restart: always
+    env_file:
+      - .env.subscriptions-db
+    volumes:
+      - ./data:/var/lib/postgresql/data

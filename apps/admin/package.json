@@ -1,0 +1,29 @@
+{
+  "name": "admin",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "migration:run": "yarn typeorm-ts-node-commonjs migration:run -d ./ormconfig.ts",
+    "test:e2e": "dotenv -e .env.test  -- jest --config ./test/jest-e2e.json"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.7.3",
+    "@nestjs/apollo": "^11.0.6",
+    "@nestjs/graphql": "^11.0.6",
+    "@nestjs/passport": "^9.0.3",
+    "@nestjs/typeorm": "^9.0.1",
+    "@typegoose/typegoose": "^11.2.0",
+    "graphql": "^16.6.0",
+    "mongoose": "^7.2.4",
+    "nestjs-typegoose": "^7.1.38",
+    "passport": "^0.6.0",
+    "passport-local": "^1.0.0",
+    "pg": "^8.11.0",
+    "typeorm": "^0.3.16"
+  },
+  "devDependencies": {
+    "@types/mongoose": "^5.11.97",
+    "@types/passport-local": "^1.0.35"
+  }
+}

@@ -15,18 +15,6 @@ RUN yarn prisma generate --schema=prisma/subscriptions/schema.prisma
 
 RUN yarn build root
 
+EXPOSE 5001
+
 CMD sh -c "yarn migrate:deploy:root && node ./dist/apps/root/main" 
-# FROM node:18
-
-# WORKDIR /usr/src/app
-
-# COPY package.json yarn.lock ./
-# COPY prisma ./prisma/
-
-# RUN yarn install
-
-# COPY . .
-
-# RUN yarn build
-
-# CMD yarn start:prod 

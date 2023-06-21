@@ -1,12 +1,13 @@
-import { PassportStrategy } from '@nestjs/passport';
-import { ExtractJwt, Strategy } from 'passport-jwt';
-import { ConfigService } from '@nestjs/config';
-
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Request as RequestType } from 'express';
-import { ActiveUserData } from '../../user/types';
-import { JwtAdaptor } from '../../adaptors/jwt/jwt.adaptor';
-import { ModuleRef } from '@nestjs/core';
+import { ConfigService }                   from '@nestjs/config';
+import { ModuleRef }                       from '@nestjs/core';
+import { PassportStrategy }                from '@nestjs/passport';
+import { Request as RequestType }          from 'express';
+import { ExtractJwt, Strategy }            from 'passport-jwt';
+
+import { JwtAdaptor }                      from '../../adaptors/jwt/jwt.adaptor';
+import { ActiveUserData }                  from '../../user/types';
+
 @Injectable()
 export class RtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
   constructor(

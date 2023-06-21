@@ -1,11 +1,11 @@
 import { DynamicModule, Global, Module, Provider } from '@nestjs/common';
 
+import { PAYPAL_OPTIONS_TOKEN, PAYPAL_TOKEN } from './constants';
 import type {
-  PaypalOptions,
   PaypalAsyncOptions,
+  PaypalOptions,
   PaypalOptionsFactory,
 } from './interfaces';
-import { PAYPAL_TOKEN, PAYPAL_OPTIONS_TOKEN } from './constants';
 import { createPaypalClient } from './utils/create-paypal-client';
 
 @Global()

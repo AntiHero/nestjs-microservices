@@ -1,18 +1,21 @@
+import { Queue } from '@app/common/queues';
+import { RmqService } from '@app/common/src';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import cookieParser from 'cookie-parser';
+import { Transport } from '@nestjs/microservices';
 import compression from 'compression';
+import cookieParser from 'cookie-parser';
 
 import { AppModule } from './app.module';
+import { useGlobalFilters } from './common/filters/global.filter';
+import { useGlobalPipes } from './common/pipes/global.pipe';
 import { setupSwagger } from './config/swagger.config';
 import { PrismaService } from './prisma/prisma.service';
-import { useGlobalPipes } from './common/pipes/global.pipe';
-import { useGlobalFilters } from './common/filters/global.filter';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { rawBody: true });
+  const app = await NestFactory.create(AppModule);
   app.enableCors({
     origin: [
-      // 'http://0.0.0.0:3000',
       process.env.FRONTEND_LOCAL_DOMAIN as string,
       process.env.FRONTEND_DOMAIN as string,
     ],
@@ -34,6 +37,23 @@ async function bootstrap() {
   const prismaService = app.get(PrismaService);
   await prismaService.enableShutdownHooks(app);
 
-  await app.listen(process.env.PORT || 5000);
+  const configService = app.get(ConfigService);
+
+  app.connectMicroservice({
+    transport: Transport.TCP,
+    options: {
+      host: '0.0.0.0',
+      port: configService.get<string>('global.root.tcpPort'),
+    },
+  });
+
+  const rmqService = app.get<RmqService>(RmqService);
+  // find connection options by queue name
+  app.connectMicroservice(rmqService.getOptions(Queue.Root));
+
+  await Promise.all([
+    app.startAllMicroservices(),
+    app.listen(configService.get<string>('PORT') || 5000),
+  ]).then(() => console.log(`Root Microservice is running...`));
 }
 bootstrap();

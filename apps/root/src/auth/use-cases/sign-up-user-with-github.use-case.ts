@@ -1,21 +1,27 @@
-import { BadRequestException, UnauthorizedException } from '@nestjs/common';
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { User } from '@prisma/client';
-import { randomUUID } from 'crypto';
-import { add } from 'date-fns';
-import Joi from 'joi';
+import { randomUUID }                                 from 'crypto';
 
-import type { OauthCommandData } from '../types';
-import { MailService } from 'apps/root/src/mail/mail.service';
-import { OauthProvider } from 'apps/root/src/common/constants';
-import { JwtAdaptor } from '../../adaptors/jwt/jwt.adaptor';
-import { DevicesSessionsService } from '../services/devices.service';
-import { GithubUsersService } from '../services/github-users.service';
-import { UserRepository } from '../../user/repositories/user.repository';
+import { createdUserMessageCreator }                  from '@app/common/message-creators/created-user.message-creator';
+import { RootEvent }                                  from '@app/common/patterns';
+import { BadRequestException, UnauthorizedException } from '@nestjs/common';
+import { CommandHandler, ICommandHandler }            from '@nestjs/cqrs';
+import { EventEmitter2 as EventEmitter }              from '@nestjs/event-emitter';
+import { User }                                       from '@prisma/client';
+import { add }                                        from 'date-fns';
+import Joi                                            from 'joi';
+
+import { OauthProvider }                              from 'apps/root/src/common/constants';
+import { MailService }                                from 'apps/root/src/mail/mail.service';
 import {
   AvatarPayload,
   CreateUserWithOauthAccountData,
-} from 'apps/root/src/user/types';
+}                                                     from 'apps/root/src/user/types';
+
+import { JwtAdaptor }                                 from '../../adaptors/jwt/jwt.adaptor';
+import { NOTIFY_ADMIN_EVENT }                         from '../../common/event-router';
+import { UserRepository }                             from '../../user/repositories/user.repository';
+import { DevicesSessionsService }                     from '../services/devices.service';
+import { GithubUsersService }                         from '../services/github-users.service';
+import type { OauthCommandData }                      from '../types';
 
 export class SignUpWithGithubCommand {
   public constructor(public readonly data: OauthCommandData) {
@@ -41,6 +47,7 @@ export class SignUpUserWithGithubUseCase
     private readonly userRepository: UserRepository,
     private readonly emailService: MailService,
     private readonly jwtAdaptor: JwtAdaptor,
+    private readonly eventEmitter: EventEmitter,
   ) {}
 
   private readonly type = OauthProvider.GITHUB;
@@ -55,7 +62,7 @@ export class SignUpUserWithGithubUseCase
 
       const { email } = githubUserData;
 
-      let user: Pick<User, 'username' | 'id' | 'email'> | null =
+      let user: Pick<User, 'username' | 'id' | 'email' | 'createdAt'> | null =
         await this.userRepository.findUserByEmail(email);
 
       const { id: clientId } = githubUserData;
@@ -104,6 +111,20 @@ export class SignUpUserWithGithubUseCase
         user = await this.userRepository.createUserWithOauthAccount(
           createUserData,
         );
+
+        const { id, createdAt } = user;
+
+        const message = createdUserMessageCreator({
+          id,
+          username: uniqueUsername,
+          email,
+          createdAt,
+        });
+
+        this.eventEmitter.emit(NOTIFY_ADMIN_EVENT, [
+          RootEvent.CreatedUser,
+          message,
+        ]);
 
         await this.emailService.sendOauthAccountCreationConfirmation(user);
       } else {

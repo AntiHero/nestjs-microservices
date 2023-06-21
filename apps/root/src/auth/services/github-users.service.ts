@@ -46,7 +46,6 @@ export class GithubUsersService {
     );
 
     if (!responseFromGithubTokenUrl.ok) {
-      console.log(await responseFromGithubTokenUrl.json(), 'token');
       throw new UnauthorizedException();
     }
 
@@ -70,7 +69,6 @@ export class GithubUsersService {
     );
 
     if (!responseFromGithubUserUrl.ok) {
-      console.log(await responseFromGithubUserUrl.json(), 'user data');
       throw new UnauthorizedException();
     }
 
@@ -89,7 +87,6 @@ export class GithubUsersService {
     );
 
     if (!responseFromGithubUserEmailsUrl.ok) {
-      console.log(await responseFromGithubUserEmailsUrl.json(), 'emails');
       throw new UnauthorizedException();
     }
 

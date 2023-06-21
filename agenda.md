@@ -1,5 +1,0 @@
-- [x] split subscriptions and root
-- [x] spin up subscriptions
-- [x] integrate root with subscriptions locally
-- [x] spin up microservices in docker
-- [x] deploy microservices to google cloud using kubernetes engine

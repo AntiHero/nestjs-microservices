@@ -1,9 +1,11 @@
-import { globalConfig } from '@app/common/config/microservices.config';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import { ConfigType } from '@nestjs/config';
+import { globalConfig } from '@app/common/config/global.config';
 import { Module } from '@nestjs/common';
+import { ConfigType } from '@nestjs/config';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 import { SubscriptionsController } from './api/subscriptions.controller';
+import { SubscriptionsService } from './services/subscriptions.service';
+import { SubscriptionsServiceAdapter } from './services/subscriptions.service-adapter';
 
 @Module({
   imports: [
@@ -11,10 +13,7 @@ import { SubscriptionsController } from './api/subscriptions.controller';
       {
         name: 'SUBSCRIPTIONS',
         useFactory: (config: ConfigType<typeof globalConfig>) => {
-          console.log(config);
-          const { host, port } = config.subscriptions;
-          // const port = config.subscriptions.port;
-          console.log(host);
+          const { host, tcpPort: port } = config.subscriptions;
 
           return {
             transport: Transport.TCP,
@@ -29,5 +28,11 @@ import { SubscriptionsController } from './api/subscriptions.controller';
     ]),
   ],
   controllers: [SubscriptionsController],
+  providers: [
+    {
+      provide: SubscriptionsServiceAdapter,
+      useClass: SubscriptionsService,
+    },
+  ],
 })
 export class SubscriptionsModule {}

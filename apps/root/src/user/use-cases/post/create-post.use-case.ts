@@ -1,18 +1,24 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { randomUUID } from 'crypto';
 
-import { PrismaService } from 'apps/root/src/prisma/prisma.service';
-import { ImageService } from 'apps/root/src/common/services/image.service';
-import { CloudStrategy } from 'apps/root/src/common/strategies/cloud.strategy';
-import type { CreatePostResult, ImageCreationData } from '../../types';
-import {
-  PostCreationError,
-  POST_CREATION_ERROR,
-} from 'apps/root/src/common/errors';
+import { createdPostMessageCreator } from '@app/common/message-creators/created-post.message-creator';
+import { RootEvent } from '@app/common/patterns/root.pattern';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { EventEmitter2 as EventEmitter } from '@nestjs/event-emitter';
+
 import {
   POST_PREVIEW_HEIGHT,
   POST_PREVIEW_WIDTH,
 } from 'apps/root/src/common/constants';
+import {
+  POST_CREATION_ERROR,
+  PostCreationError,
+} from 'apps/root/src/common/errors';
+import { NOTIFY_ADMIN_EVENT } from 'apps/root/src/common/event-router';
+import { ImageService } from 'apps/root/src/common/services/image.service';
+import { CloudStrategy } from 'apps/root/src/common/strategies/cloud.strategy';
+import { PrismaService } from 'apps/root/src/prisma/prisma.service';
+
+import type { CreatePostResult, ImageCreationData } from '../../types';
 
 export class CreatePostCommand {
   public constructor(
@@ -28,6 +34,7 @@ export class CreatePostUseCase implements ICommandHandler {
     private readonly cloudService: CloudStrategy,
     private readonly imageService: ImageService,
     private readonly prismaService: PrismaService,
+    private readonly eventEmitter: EventEmitter,
   ) {}
 
   public async execute(command: CreatePostCommand): Promise<CreatePostResult> {
@@ -87,7 +94,7 @@ export class CreatePostUseCase implements ICommandHandler {
           };
         });
 
-        return prisma.post.create({
+        const result = await prisma.post.create({
           data: {
             id: postId,
             userId,
@@ -114,6 +121,26 @@ export class CreatePostUseCase implements ICommandHandler {
             },
           },
         });
+
+        const { id, createdAt, images: postImages } = result;
+
+        const message = createdPostMessageCreator({
+          id,
+          description,
+          userId,
+          createdAt,
+          images: postImages.map(({ url, previewUrl }) => ({
+            url,
+            previewUrl,
+          })),
+        });
+
+        this.eventEmitter.emit(NOTIFY_ADMIN_EVENT, [
+          RootEvent.CreatedPost,
+          message,
+        ]);
+
+        return result;
       });
     } catch (error) {
       console.log(error);

@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common';
 import {
   Payment,
   PaymentStatus,
@@ -6,13 +5,14 @@ import {
   SubscriptionPayment,
   SubscriptionPricingPlan,
   SubscriptionStatus,
-  // SubscriptionType,
 } from '.prisma/subscriptions';
+import { PaymentsQueryDto } from '@app/common/dtos/payments-query.dto';
+import { DatabaseException } from '@app/common/exceptions/database.exception';
+import { Injectable } from '@nestjs/common';
+
+import { PrismaService } from 'apps/subscriptions/src/prisma/prisma.service';
 
 import { Payments } from '../interfaces';
-import { PrismaService } from 'apps/subscriptions/src/prisma/prisma.service';
-import { DatabaseException } from 'apps/root/src/common/exceptions/database.exception';
-import { PaymentsQueryDto } from '@app/common/dto/payments-query.dto';
 
 @Injectable()
 export class SubscriptionsQueryRepository {
@@ -22,9 +22,12 @@ export class SubscriptionsQueryRepository {
     query: Partial<SubscriptionPricingPlan>,
   ) {
     try {
-      return this.prismaService.subscriptionPricingPlan.findFirstOrThrow({
-        where: query,
-      });
+      const result =
+        this.prismaService.subscriptionPricingPlan.findFirstOrThrow({
+          where: query,
+        });
+
+      return result;
     } catch (error) {
       console.log(error);
 
@@ -34,11 +37,13 @@ export class SubscriptionsQueryRepository {
 
   public async getSubscriptionPriceById(id: string) {
     try {
-      return this.prismaService.subscriptionPrice.findUnique({
+      const result = this.prismaService.subscriptionPrice.findUnique({
         where: {
           id,
         },
       });
+
+      return result;
     } catch (error) {
       console.log(error);
 
@@ -50,9 +55,11 @@ export class SubscriptionsQueryRepository {
     query: Partial<Pick<Payment, 'id' | 'userId' | 'status'>>,
   ) {
     try {
-      return this.prismaService.payment.findFirstOrThrow({
+      const result = this.prismaService.payment.findFirstOrThrow({
         where: query,
       });
+
+      return result;
     } catch (error) {
       console.log(error);
 
@@ -62,11 +69,13 @@ export class SubscriptionsQueryRepository {
 
   public async getPriceById(id: string) {
     try {
-      return this.prismaService.subscriptionPrice.findUniqueOrThrow({
+      const result = this.prismaService.subscriptionPrice.findUniqueOrThrow({
         where: {
           id,
         },
       });
+
+      return result;
     } catch (error) {
       console.log(error);
 
@@ -76,7 +85,7 @@ export class SubscriptionsQueryRepository {
 
   public async getPriceList() {
     try {
-      return this.prismaService.subscriptionPrice.findMany({
+      const result = this.prismaService.subscriptionPrice.findMany({
         select: {
           id: true,
           currency: true,
@@ -85,6 +94,8 @@ export class SubscriptionsQueryRepository {
           periodType: true,
         },
       });
+
+      return result;
     } catch (error) {
       console.log(error);
 
@@ -96,6 +107,7 @@ export class SubscriptionsQueryRepository {
     userId: string,
     query: PaymentsQueryDto,
   ): Promise<[number, Payments[]]> {
+    console.log(userId, query, 'repo');
     const { page, pageSize } = query;
 
     try {
@@ -151,9 +163,9 @@ export class SubscriptionsQueryRepository {
     }
   }
 
-  public async getUsersCurrentSubscription(userId: string) {
+  public async getUserCurrentSubscription(userId: string) {
     try {
-      return this.prismaService.subscription.findFirst({
+      const result = this.prismaService.subscription.findFirst({
         where: {
           userId,
           status: SubscriptionStatus.ACTIVE,
@@ -176,6 +188,8 @@ export class SubscriptionsQueryRepository {
           },
         },
       });
+
+      return result;
     } catch (error) {
       console.log(error);
 
@@ -185,7 +199,7 @@ export class SubscriptionsQueryRepository {
 
   public async getSubscriptionByQuery(query: Partial<Subscription>) {
     try {
-      return this.prismaService.subscription.findFirst({
+      const result = this.prismaService.subscription.findFirst({
         where: query,
         include: {
           subscriptionPayment: {
@@ -196,6 +210,8 @@ export class SubscriptionsQueryRepository {
           },
         },
       });
+
+      return result;
     } catch (error) {
       console.log(error);
 
@@ -207,13 +223,47 @@ export class SubscriptionsQueryRepository {
     query: Partial<Pick<SubscriptionPayment, 'id' | 'paymentId'>>,
   ) {
     try {
-      return this.prismaService.subscriptionPayment.findFirstOrThrow({
-        where: query,
-      });
+      const result =
+        await this.prismaService.subscriptionPayment.findFirstOrThrow({
+          where: query,
+        });
+
+      return result;
     } catch (error) {
       console.log(error);
 
       throw new DatabaseException();
     }
+  }
+
+  public async getOverallPaymentInformation(id: string) {
+    try {
+      const result = await this.prismaService.payment.findUnique({
+        where: {
+          id,
+        },
+        select: {
+          id: true,
+          userId: true,
+          price: true,
+          provider: true,
+          currency: true,
+          status: true,
+          subscriptionPayment: {
+            select: {
+              subscription: {
+                select: {
+                  endDate: true,
+                  startDate: true,
+                  type: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      return result;
+    } catch (error) {}
   }
 }

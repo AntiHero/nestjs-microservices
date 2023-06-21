@@ -1,0 +1,11 @@
+{
+  "name": "root",
+  "version": "1.0.0",
+  "main": "index.js",
+  "private": "true",
+  "license": "MIT",
+  "scripts": {
+    "test:e2e": "jest --config ./test/jest-e2e.json"
+  },
+  "dependencies": {}
+}

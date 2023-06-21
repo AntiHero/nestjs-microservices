@@ -1,9 +1,10 @@
 import { PaymentProvider } from '.prisma/subscriptions';
-import { InternalServerErrorException } from '@nestjs/common';
+import { InternalServerErrorException, Provider } from '@nestjs/common';
 import Stripe from 'stripe';
 
 import { PaymentProviderService } from './payment-provider.service';
 import { InjectStripeClient } from '@app/common/decorators/inject-stripe-client.decorator';
+import { STRIPE_PAYMENT_SERVICE } from '../constants';
 
 export class StripePaymentService extends PaymentProviderService {
   public constructor(@InjectStripeClient() private readonly stripe: Stripe) {
@@ -38,3 +39,8 @@ export class StripePaymentService extends PaymentProviderService {
     return customer;
   }
 }
+
+export const StripePaymentServiceProvider: Provider = {
+  provide: STRIPE_PAYMENT_SERVICE,
+  useClass: StripePaymentService,
+};

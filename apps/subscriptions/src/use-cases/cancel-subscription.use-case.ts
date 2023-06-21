@@ -1,10 +1,11 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { SubscriptionStatus } from '.prisma/subscriptions';
+import { InjectStripeService } from '@app/common/decorators/inject-stripe-service.decorator';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 import { PrismaService } from 'apps/subscriptions/src/prisma/prisma.service';
-import { PaymentProviderService } from '../services/payment-provider.service';
-import { InjectStripeService } from '@app/common/decorators/inject-stripe-service.decorator';
+
 import { SubscriptionsQueryRepository } from '../repositories/subscriptions.query-repository';
+import { PaymentProviderService } from '../services/payment-provider.service';
 import { SubscriptionsTransactionService } from '../services/subscriptions-transaction.service';
 
 export class CancelSubscriptionCommand {

@@ -1,5 +1,5 @@
-import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { SubscriptionStatus, SubscriptionType } from '.prisma/subscriptions';
+import { Result } from '@app/common/interfaces/result.interface';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 import { SubscriptionsQueryRepository } from '../repositories/subscriptions.query-repository';
@@ -19,7 +19,9 @@ export class ValidatePaymentInputCommandHandler
     private readonly subscriptionsQueryRepository: SubscriptionsQueryRepository,
   ) {}
 
-  public async execute(command: ValidatePaymentInputCommand) {
+  public async execute(
+    command: ValidatePaymentInputCommand,
+  ): Promise<Result | void> {
     const { userId, priceId } = command;
 
     const [price, currentActiveSubscription] = await Promise.all([
@@ -32,12 +34,22 @@ export class ValidatePaymentInputCommandHandler
     ]);
 
     if (!price)
-      throw new NotFoundException('Price for subscription was not found');
+      return {
+        data: null,
+        err: {
+          errorCode: 404,
+          message: 'Price for subscription was not found',
+        },
+      };
 
     if (currentActiveSubscription?.endDate || new Date() > new Date()) {
-      throw new ForbiddenException(
-        'Cancel auto renew of your current subscription',
-      );
+      return {
+        data: null,
+        err: {
+          errorCode: 403,
+          message: 'Cancel auto renew of your current subscription',
+        },
+      };
     }
   }
 }

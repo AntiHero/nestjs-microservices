@@ -1,7 +1,10 @@
-import { AccountPlan, EmailConfirmation, OauthAccount } from '@prisma/client';
-import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
+
+import { Injectable } from '@nestjs/common';
+import { AccountPlan, EmailConfirmation, OauthAccount } from '@prisma/client';
 import { add } from 'date-fns';
+
+import { UpdateOrCreateOauthAccountPaylod } from 'apps/root/src/auth/types';
 
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateUserDto } from '../dto/create.user.dto';
@@ -9,9 +12,6 @@ import {
   CreateUserWithOauthAccountData,
   UserWithEmailConfirmation,
 } from '../types';
-import { UpdateOrCreateOauthAccountPaylod } from 'apps/root/src/auth/types';
-import { PrismaTransactionType } from 'apps/subscriptions/src/interfaces/prisma-transaction.interface';
-// import { PrismaTransactionType } from 'apps/root/src/common/types';
 
 @Injectable()
 export class UserRepository {
@@ -89,6 +89,7 @@ export class UserRepository {
         id: true,
         email: true,
         username: true,
+        createdAt: true,
         oauthAccount: {
           select: {
             mergeCode: true,
@@ -97,32 +98,6 @@ export class UserRepository {
       },
     });
   }
-
-  // public async createOauthUser(userInfo: Oauth20UserData): Promise<User> {
-  //   try {
-  //     return this.prisma.user.create({
-  //       data: {
-  //         username: userInfo.displayName,
-  //         email: userInfo.email,
-  //         oauthAccount: {
-  //           create: { clientId: userInfo.oauthClientId },
-  //         },
-  //         emailConfirmation: {
-  //           create: {
-  //             confirmationCode: randomUUID(),
-  //             expirationDate: add(new Date(), {
-  //               minutes: 1,
-  //             }).toISOString(),
-  //             isConfirmed: true,
-  //           },
-  //         },
-  //       },
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //     throw error;
-  //   }
-  // }
 
   public async findUserByEmail(email: string) {
     return this.prisma.user.findUnique({
@@ -201,7 +176,7 @@ export class UserRepository {
     });
   }
 
-  public async updateEmailConfirmationCode(
+  public async confirmRegistration(
     userEmail: string,
   ): Promise<EmailConfirmation> {
     return this.prisma.emailConfirmation.update({
@@ -328,18 +303,28 @@ export class UserRepository {
     }
   }
 
-  // public updateAccountPlan(
-  //   prisma: PrismaTransactionType | PrismaService,
-  //   id: string,
-  //   accountPlan: AccountPlan,
-  // ) {
-  //   return prisma.user.update({
-  //     where: {
-  //       id,
-  //     },
-  //     data: {
-  //       accountPlan,
-  //     },
-  //   });
-  // }
+  public updateAccountPlan(id: string, accountPlan: AccountPlan) {
+    return this.prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        accountPlan,
+      },
+    });
+  }
+
+  public async delete(id: string) {
+    try {
+      const result = await this.prisma.user.delete({
+        where: {
+          id,
+        },
+      });
+
+      return result.id ? true : false;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }

@@ -1,13 +1,13 @@
 import { DynamicModule, Global, Module, Provider } from '@nestjs/common';
 import Stripe from 'stripe';
 
+import { API_VERSION, STRIPE_OPTIONS_TOKEN, STRIPE_TOKEN } from './constants';
 import {
-  StripeOptions,
   StripeAsyncOptions,
+  StripeOptions,
   StripeOptionsFactory,
 } from './interfaces';
 import { createStripeClient } from './utils/create-stripe-client';
-import { STRIPE_TOKEN, API_VERSION, STRIPE_OPTIONS_TOKEN } from './constants';
 
 @Global()
 @Module({})

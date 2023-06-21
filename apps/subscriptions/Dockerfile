@@ -14,21 +14,6 @@ COPY . .
 
 RUN yarn build subscriptions 
 
-EXPOSE 5001
+EXPOSE 6001
 
 CMD sh -c "yarn migrate:deploy:subscriptions && node ./dist/apps/subscriptions/main" 
-# CMD ["node", "dist/apps/subscriptions/main"]
-# FROM node:18
-
-# WORKDIR /usr/src/app
-
-# COPY package.json yarn.lock ./
-# COPY prisma ./prisma/
-
-# RUN yarn install
-
-# COPY . .
-
-# RUN yarn build
-
-# CMD ["node", "dist/apps/subscriptions/main"]

@@ -1,11 +1,11 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { PaymentProvider } from '.prisma/subscriptions';
-
 import { Inject } from '@nestjs/common';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { firstValueFrom } from 'rxjs';
 
 import { PAYMENT_SERVICES } from '../constants';
-// import { UserRepository } from 'apps/root/src/user/repositories/user.repository';
 import { PaymentProviderService } from '../services/payment-provider.service';
+import { RootServiceAdapter } from '../services/root.service-adapter';
 
 export class CreateCustomerIfNotExistsCommand {
   public constructor(
@@ -27,6 +27,7 @@ export class CreateCustomerIfNotExistsCommandHandler
   public constructor(
     @Inject(PAYMENT_SERVICES)
     private readonly paymentServices: PaymentProviderService[], // private readonly usersRepository: UserRepository,
+    private readonly rootService: RootServiceAdapter,
   ) {
     this.paymentServicesMap = Object.fromEntries(
       this.paymentServices.map((service) => [service.provider, service]),
@@ -36,13 +37,13 @@ export class CreateCustomerIfNotExistsCommandHandler
   public async execute(command: CreateCustomerIfNotExistsCommand) {
     const { userId, provider } = command;
 
-    // const { email, username } = <User>(
-    //   await this.usersRepository.findUserById(userId)
-    // );
+    const result = await firstValueFrom(this.rootService.getUserInfo(userId));
 
-    // return this.paymentServicesMap[provider]?.createCustomerIfNotExists(
-    //   email,
-    //   username,
-    // );
+    if (!result) return;
+
+    return this.paymentServicesMap[provider]?.createCustomerIfNotExists(
+      result.email,
+      result.username,
+    );
   }
 }

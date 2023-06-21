@@ -1,60 +1,42 @@
 import { ApiTags } from '@nestjs/swagger';
-// import { CommandBus } from '@nestjs/cqrs';
 import {
   Body,
   Controller,
   Get,
   HttpCode,
   HttpStatus,
-  Inject,
   Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
 
 import { CheckoutDto } from '../dto/checkout.dto';
-// import { PaymentsMapper } from '../../../../subscriptions/utils/payments.mapper';
-import { PaymentsQueryDto } from '@app/common/dto/payments-query.dto';
+import { PaymentsQueryDto } from '@app/common/dtos/payments-query.dto';
 import { JwtAtGuard } from 'apps/root/src/common/guards/jwt-auth.guard';
-// import type { StripeEvent } from '@app/common/interfaces/events.interface';
 import { ActiveUser } from 'apps/root/src/common/decorators/active-user.decorator';
-// import { StartPaymentCommand } from '../../../../subscriptions/use-cases/start-payment.use-case';
-// import { StripeWebhookGuard } from 'apps/root/src/common/guards/stripe-webhook.guard';
 import {
   PriceListApiDecorator,
   CancelSubscriptionApiDecorator,
   CheckoutSessionApiDecorator,
   SubscriptionsPaymentsApiDecorator,
 } from 'apps/subscriptions/src/decorators/swagger/subscriptions.decorator';
-import { ClientProxy } from '@nestjs/microservices';
-import { SUBSCRIPTIONS_PATTERNS } from '@app/common/patterns/subscriptions.patterns';
-import { PriceList } from '@app/common/interfaces/price-list.interface';
+import { SubscriptionsServiceAdapter } from '../services/subscriptions.service-adapter';
 import { firstValueFrom } from 'rxjs';
-import { PaymentsMapper } from 'apps/subscriptions/src/utils/payments.mapper';
-// import { ProcessPaymentCommand } from '../../../../subscriptions/use-cases/process-payment.use-case';
-// import { CancelSubscriptionCommand } from '../../../../subscriptions/use-cases/cancel-subscription.use-case';
-// import { SubscriptionsQueryRepository } from '../../../../subscriptions/repositories/subscriptions.query-repository';
+import { BaseHttpException } from '@app/common/exceptions';
+import { PaymentsMapper } from '@app/common/utils/payments.mapper';
+import { SubscriptionsMapper } from '@app/common/utils/subscriptions-mapper';
 
 @ApiTags('Subscriptions')
 @Controller('api/subscriptions')
 export class SubscriptionsController {
   public constructor(
-    @Inject('SUBSCRIPTIONS') private readonly subscriptionsClient: ClientProxy,
+    private readonly subscriptionsService: SubscriptionsServiceAdapter,
   ) {}
-  // public constructor()
-  // private readonly subscriptionsQueryRepository: SubscriptionsQueryRepository,
-  // private readonly commandBus: CommandBus,
-  // {}
 
   @Get('price-list')
   @PriceListApiDecorator()
   public async prices() {
-    return this.subscriptionsClient.send<PriceList[]>(
-      SUBSCRIPTIONS_PATTERNS.GET_PRICES(),
-      {},
-    );
-
-    // return this.subscriptionsQueryRepository.getPriceList();
+    return this.subscriptionsService.getPriceList();
   }
 
   @Post('checkout-session')
@@ -66,33 +48,18 @@ export class SubscriptionsController {
     @Body() checkoutDto: CheckoutDto,
   ) {
     const { priceId, paymentSystem } = checkoutDto;
-
-    return this.subscriptionsClient.send<string, any>(
-      SUBSCRIPTIONS_PATTERNS.GET_CHECKOUT_SESSION_URL(),
-      {
-        userId,
+    const result = await firstValueFrom(
+      this.subscriptionsService.getCheckoutSessionUrl({
         priceId,
         paymentSystem,
-      },
+        userId,
+      }),
     );
 
-    // const url = await this.commandBus.execute<
-    //   StartPaymentCommand,
-    //   string | null
-    // >(new StartPaymentCommand(paymentSystem, priceId, userId));
-    // const url = '';
+    if (result.err) throw new BaseHttpException(result.err);
 
-    // return url;
+    return result.data;
   }
-
-  // @ApiExcludeEndpoint()
-  // @Post('stripe-webhook')
-  // @UseGuards(StripeWebhookGuard)
-  // @HttpCode(HttpStatus.OK)
-  // async webhook(@Body() event: StripeEvent<any>) {
-  //   console.log(event);
-  //   await this.commandBus.execute(new ProcessPaymentCommand(event));
-  // }
 
   @Get('payments')
   @SubscriptionsPaymentsApiDecorator()
@@ -102,23 +69,12 @@ export class SubscriptionsController {
     @Query() query: PaymentsQueryDto,
   ) {
     const result = await firstValueFrom(
-      this.subscriptionsClient.send<any, any>(
-        SUBSCRIPTIONS_PATTERNS.GET_PAYMENTS(),
-        {
-          userId,
-          query,
-        },
-      ),
+      this.subscriptionsService.getPayments(userId, query),
     );
 
-    return PaymentsMapper.toViewModel(result);
-    // return result;
+    if (result.err) throw new BaseHttpException(result.err);
 
-    // const result = await this.subscriptionsQueryRepository.getPaymentsByQuery(
-    //   userId,
-    //   query,
-    // );
-    // return PaymentsMapper.toViewModel(result);
+    return PaymentsMapper.toViewModel(result.data);
   }
 
   @Post('cancel')
@@ -126,29 +82,24 @@ export class SubscriptionsController {
   @CancelSubscriptionApiDecorator()
   @HttpCode(HttpStatus.NO_CONTENT)
   public async cancelSubscription(@ActiveUser('userId') userId: string) {
-    return this.subscriptionsClient.send<void, any>(
-      SUBSCRIPTIONS_PATTERNS.CANCEL_SUBSCRIPTION(),
-      {
-        userId,
-      },
+    const result = await firstValueFrom(
+      this.subscriptionsService.cancelSubscription(userId),
     );
-    // await this.commandBus.execute(new CancelSubscriptionCommand(userId));
+
+    if (result.err) throw new BaseHttpException(result.err);
   }
 
   @Get('current')
   @UseGuards(JwtAtGuard)
   public async getCurrentSubscription(@ActiveUser('userId') userId: string) {
-    return this.subscriptionsClient.send<void, any>(
-      SUBSCRIPTIONS_PATTERNS.GET_CURRENT_SUBSCRIPTION(),
-      {
-        userId,
-      },
+    const result = await firstValueFrom(
+      this.subscriptionsService.getCurrentSubscription(userId),
     );
-    //   const subscription =
-    //     await this.subscriptionsQueryRepository.getUsersCurrentSubscription(
-    //       userId,
-    //     );
-    //   if (!subscription) return null;
-    //   return SubscriptionMapper.toViewModel(subscription);
+
+    if (result.err) throw new BaseHttpException(result.err);
+
+    if (!result.data) return null;
+
+    return SubscriptionsMapper.toViewModel(result.data);
   }
 }

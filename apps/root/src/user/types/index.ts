@@ -7,7 +7,6 @@ import type {
   Profile,
   User,
 } from '@prisma/client';
-import { CreateUserDto } from '../dto/create.user.dto';
 
 export interface UserWithEmailConfirmation extends User {
   emailConfirmation: {
@@ -70,7 +69,7 @@ export type ImageCreationData = Pick<Image, 'previewUrl' | 'url'> & {
 };
 
 export interface CreateUserWithOauthAccountData
-  extends Pick<CreateUserDto, 'email' | 'username'>,
+  extends Pick<User, 'email' | 'username'>,
     Partial<Pick<Profile, 'name' | 'surname'>>,
     Partial<{
       avatarPayload: Pick<

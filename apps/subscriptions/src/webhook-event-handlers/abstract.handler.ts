@@ -9,7 +9,8 @@ export abstract class Handler {
 
   public async handle(event: any): Promise<void | null | boolean> {
     try {
-      if (!(await this.doHandle(event))) return;
+      const handled = await this.doHandle(event);
+      if (!handled) return;
 
       return this.nextHandler?.handle(event) || null;
     } catch (error) {

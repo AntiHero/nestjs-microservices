@@ -1,6 +1,3 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { InternalServerErrorException } from '@nestjs/common';
-import Stripe from 'stripe';
 import {
   Payment,
   PaymentProvider,
@@ -8,12 +5,16 @@ import {
   SubscriptionPrice,
   SubscriptionStatus,
 } from '.prisma/subscriptions';
+import { InjectStripeClient } from '@app/common/decorators/inject-stripe-client.decorator';
+import { InternalServerErrorException } from '@nestjs/common';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import Stripe from 'stripe';
 
 import { PrismaService } from 'apps/subscriptions/src/prisma/prisma.service';
-import { calculateSubscriptionEndDate } from '../utils/calculate-subscription-end-date';
-import { InjectStripeClient } from '@app/common/decorators/inject-stripe-client.decorator';
+
 import { SubscriptionsQueryRepository } from '../repositories/subscriptions.query-repository';
 import { SubscriptionsTransactionService } from '../services/subscriptions-transaction.service';
+import { determineSubscriptionEndDate } from '../utils/calculate-subscription-end-date';
 
 export class ProcessActiveSubscriptionPaymentCommand {
   public constructor(public readonly relatedSubscription: string) {}
@@ -63,10 +64,6 @@ export class ProcessActiveSubscriptionPaymentCommandHandler
           }),
         ]);
 
-      // const stripeSubscription = await this.stripe.subscriptions.retrieve(
-      //   relatedSubscription,
-      // );
-
       const { subscriptionPayment } =
         await this.subscriptionsTransactionService.createPayments(tx, {
           currency,
@@ -103,7 +100,7 @@ export class ProcessActiveSubscriptionPaymentCommandHandler
         )
       );
 
-      const newEndDate = calculateSubscriptionEndDate(
+      const newEndDate = determineSubscriptionEndDate(
         currentEndDate,
         period,
         periodType,

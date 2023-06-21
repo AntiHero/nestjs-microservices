@@ -1,27 +1,15 @@
-import { CommandBus } from '@nestjs/cqrs';
-import { Injectable } from '@nestjs/common';
-// import {
-//   Payment,
-//   PaymentProvider,
-//   PaymentStatus,
-//   SubscriptionPrice,
-//   SubscriptionStatus,
-// } from '.prisma/subscriptions';
-
 import {
   StripeEvent,
   StripeInvoiceObject,
 } from '@app/common/interfaces/events.interface';
-import { Handler } from '../abstract.handler';
+import { Injectable } from '@nestjs/common';
+import { CommandBus } from '@nestjs/cqrs';
+
 import { PrismaService } from 'apps/subscriptions/src/prisma/prisma.service';
-import { INVOICE_PAYMENT_SUCCEEDED } from '../../constants';
-// import { PaymentProviderService } from 'apps/subscriptions/src/services/payment-provider.service';
-// import { InjectStripeService } from 'apps/root/src/common/decorators/inject-stripe-service.decorator';
-// import { calculateSubscriptionEndDate } from 'apps/subscriptions/src/utils/calculate-subscription-end-date';
 import { SubscriptionsQueryRepository } from 'apps/subscriptions/src/repositories/subscriptions.query-repository';
-// import { SubscriptionsTransactionService } from 'apps/subscriptions/src/services/subscriptions-transaction.service';
-// import { ProcessPendingSubscriptionPaymentCommand } from 'apps/subscriptions/src/use-cases/process-pending-subscription-payment.use-case';
-// import { ProcessActiveSubscriptionPaymentCommand } from 'apps/subscriptions/src/use-cases/process-active-subscription-payment.use-case';
+
+import { INVOICE_PAYMENT_SUCCEEDED } from '../../constants';
+import { Handler } from '../abstract.handler';
 
 @Injectable()
 export class InvoicePaymentSucceededEventHandler extends Handler {

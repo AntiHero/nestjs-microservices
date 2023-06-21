@@ -1,8 +1,7 @@
 import { PeriodType, PrismaClient } from '.prisma/subscriptions';
+import { config } from 'dotenv';
 
-import dotenv from 'dotenv';
-
-dotenv.config();
+config();
 
 const prisma = new PrismaClient();
 

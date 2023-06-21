@@ -1,25 +1,7 @@
+import { AccountPlan }      from '@app/common/enums';
+import type { User }        from '@prisma/client';
+import { prop }             from '@typegoose/typegoose';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
-import { prop } from '@typegoose/typegoose';
-
-import { AccountPlan, OauthProvider } from '@app/common/enums';
-import type { User } from '@prisma/client';
-
-// export class EmailConfirmationModel extends TimeStamps {
-//   @prop()
-//   public confirmation: string;
-
-//   @prop({ type: () => Date })
-//   public expirationDate: Date;
-
-//   @prop()
-//   public confirmationCode: string;
-
-//   @prop()
-//   public isConfirmed: boolean;
-
-//   @prop({ unique: true })
-//   public userEmail: string;
-// }
 
 export class AvatarModel extends TimeStamps {
   @prop()
@@ -43,31 +25,6 @@ export class AvatarModel extends TimeStamps {
   @prop()
   public userId: string;
 }
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-// export interface OauthAccountModel extends Base {}
-// export class OauthAccountModel {
-//   @prop()
-//   public id: string;
-
-//   @prop()
-//   public clientId: string;
-
-//   @prop({ enum: OauthProvider, type: () => String })
-//   public type: OauthProvider;
-
-//   @prop()
-//   public linked: boolean;
-
-//   @prop({ type: () => String, default: null })
-//   public mergeCode: string | null;
-
-//   @prop({ type: () => Date, default: null })
-//   public mergeCodeExpDate: Date | null;
-
-//   @prop()
-//   public userId: string;
-// }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ProfileModel extends Base {}
@@ -94,22 +51,12 @@ export class ProfileModel extends TimeStamps {
   public userId: string;
 }
 
-// export class PasswordRecoveryModel {
-//   @prop({ type: () => String, default: null })
-//   public recoveryCode: string | null;
-
-//   @prop({ type: () => String, default: null })
-//   public expirationDate: string | null;
-
-//   @prop()
-//   public userId: string;
-// }
-
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface UserModel extends Base {}
 export class UserModel
   extends TimeStamps
-  implements Record<Exclude<keyof User, 'createdAt' | 'updatedAt'>, any>
+  implements
+    Record<Exclude<keyof User, 'createdAt' | 'updatedAt' | 'hash'>, any>
 {
   @prop({ unique: true })
   public id: string;
@@ -120,30 +67,21 @@ export class UserModel
   @prop({ unique: true })
   public email: string;
 
-  @prop({ type: String, default: null })
-  public hash: string | null;
-
   @prop({ enum: AccountPlan, type: () => String })
   public accountPlan: AccountPlan;
 
-  // @prop({ type: () => EmailConfirmationModel })
-  // public emailConfirmation: EmailConfirmationModel;
+  @prop({ type: () => AvatarModel, default: null })
+  public avatar: AvatarModel | null;
 
-  @prop({ type: () => AvatarModel })
-  public avatar: AvatarModel;
-
-  // @prop({ type: () => [OauthAccountModel] })
-  // public ouathAccount: OauthAccountModel[];
-
-  @prop({ type: () => ProfileModel })
-  public profile: ProfileModel;
-
-  // @prop({ type: () => PasswordRecoveryModel })
-  // public passwordRecovery: PasswordRecoveryModel;
+  @prop({ type: () => ProfileModel, defaultt: null })
+  public profile: ProfileModel | null;
 
   @prop()
   public isDeleted: boolean;
 
   @prop()
   public isBanned: boolean;
+
+  @prop()
+  public isEmailConfirmed: boolean;
 }

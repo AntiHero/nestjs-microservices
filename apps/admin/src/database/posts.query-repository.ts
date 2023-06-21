@@ -1,10 +1,10 @@
-import { ModelType } from '@typegoose/typegoose/lib/types';
 import { Injectable, Provider } from '@nestjs/common';
-
-import { Token } from '../@core/tokens';
+import { ModelType } from '@typegoose/typegoose/lib/types';
 import { InjectModel } from 'nestjs-typegoose';
+
+import { MongoQueryRepository } from './interfaces/mongo-repository.interface';
+import { Token } from '../@core/tokens';
 import { PostModel } from '../app/entity/post.model';
-import { MongoQueryRepository } from './abstracts/mongo.query-repository';
 
 @Injectable()
 export class PostsQueryRepository extends MongoQueryRepository<PostModel> {

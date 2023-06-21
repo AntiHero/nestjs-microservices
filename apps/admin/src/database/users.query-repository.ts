@@ -1,9 +1,9 @@
-import { ModelType } from '@typegoose/typegoose/lib/types';
 import { Injectable, Provider } from '@nestjs/common';
-
+import { ModelType } from '@typegoose/typegoose/lib/types';
 import { InjectModel } from 'nestjs-typegoose';
+
+import { AbstractUsersQueryRepository } from './interfaces/users-query-repository.interface';
 import { UserModel } from '../app/entity/user.model';
-import { AbstractUsersQueryRepository } from './abstracts/users.query-repository';
 
 @Injectable()
 export class UsersQueryRepository extends AbstractUsersQueryRepository {

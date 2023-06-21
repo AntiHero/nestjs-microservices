@@ -1,17 +1,17 @@
-import { AccountPlan } from '@prisma/client';
-import { Controller } from '@nestjs/common';
+import { GetUserInfoResult }   from '@app/common/interfaces/get-user-info-result.interface';
+import { AdminCommand }        from '@app/common/patterns';
+import { SubscriptionCommand } from '@app/common/patterns/subscriptions.pattern';
+import { RmqService }          from '@app/common/src';
+import { Controller }          from '@nestjs/common';
 import {
   Ctx,
   MessagePattern,
   Payload,
   RmqContext,
-} from '@nestjs/microservices';
+}                              from '@nestjs/microservices';
+import { AccountPlan }         from '@prisma/client';
 
-import { RmqService } from '@app/common/src';
-import { RootEvents, ROOT_PATTERNS } from '@app/common/patterns/root.patterns';
-import { UserRepository } from '../user/repositories/user.repository';
-import { GetUserInfoResult } from '@app/common/interfaces/get-user-info-result.interface';
-import { AdminPatterns } from '@app/common/patterns';
+import { UserRepository }      from '../user/repositories/user.repository';
 
 @Controller()
 export class TcpController {
@@ -20,7 +20,7 @@ export class TcpController {
     private readonly rmqService: RmqService,
   ) {}
 
-  @MessagePattern(ROOT_PATTERNS.GET_USER_INFO())
+  @MessagePattern(SubscriptionCommand.GetUserInfo)
   public async getUserInfo({
     userId,
   }: {
@@ -33,7 +33,7 @@ export class TcpController {
     return { username: user.username, email: user.email };
   }
 
-  @MessagePattern(RootEvents.UpdateUserAccountPlan)
+  @MessagePattern(SubscriptionCommand.UpdateUserAccountPlan)
   public async updateUserAccountPlan(
     @Payload() data: { userId: string; plan: AccountPlan },
     @Ctx() context: RmqContext,
@@ -45,7 +45,7 @@ export class TcpController {
     this.rmqService.ack(context);
   }
 
-  @MessagePattern(AdminPatterns.DeleteUser)
+  @MessagePattern(AdminCommand.DeleteUser)
   public async deleteUser(
     @Payload() userId: string,
     @Ctx() context: RmqContext,

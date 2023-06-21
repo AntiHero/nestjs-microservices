@@ -1,14 +1,14 @@
+import { createdUserMessageCreator }              from '@app/common/message-creators/created-user.message-creator';
+import { RootEvent }                              from '@app/common/patterns/root.pattern';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { EventEmitter2 as EventEmitter } from '@nestjs/event-emitter';
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { CommandHandler, ICommandHandler }        from '@nestjs/cqrs';
+import { EventEmitter2 as EventEmitter }          from '@nestjs/event-emitter';
 
-import { AuthDto } from '../dto/auth.dto';
-import { MailService } from '../../mail/mail.service';
-import { UserRepository } from '../../user/repositories/user.repository';
-import { BcryptAdaptor } from '../../adaptors/bcrypt/bcrypt.adaptor';
-import { createdUserMessageCreator } from '@app/common/message-creators/created-user.message-creator';
-import { RootEvents } from '@app/common/patterns/root.patterns';
-import { NOTIFY_ADMIN_EVENT } from '../../common/services/event-handler.service';
+import { BcryptAdaptor }                          from '../../adaptors/bcrypt/bcrypt.adaptor';
+import { NOTIFY_ADMIN_EVENT }                     from '../../common/event-router';
+import { MailService }                            from '../../mail/mail.service';
+import { UserRepository }                         from '../../user/repositories/user.repository';
+import { AuthDto }                                from '../dto/auth.dto';
 
 export class RegisterUserCommand {
   constructor(public authDto: AuthDto) {}
@@ -25,16 +25,18 @@ export class RegisterUserUseCase
   ) {}
   async execute(command: RegisterUserCommand) {
     const { email, password, username } = command.authDto;
-    // check that user with the given email or userName does not exist
     const checkUserEmail = await this.userRepository.findUserByEmail(email);
+
     if (checkUserEmail)
       throw new BadRequestException('This email already exists');
+
     const checkUserByUserName = await this.userRepository.findUserByUserName(
       username,
     );
+
     if (checkUserByUserName)
       throw new BadRequestException('This userName already exists');
-    // generate salt and hash
+
     const hash = await this.bcryptAdaptor.generateSaltAndHash(password);
 
     const newUser = await this.userRepository.createUser(command.authDto, hash);
@@ -53,11 +55,10 @@ export class RegisterUserUseCase
       });
 
       this.eventEmitter.emit(NOTIFY_ADMIN_EVENT, [
-        RootEvents.CreatedUser,
+        RootEvent.CreatedUser,
         message,
       ]);
 
-      // send email
       return this.mailService.sendUserConfirmation(
         newUser,
         newUser.emailConfirmation.confirmationCode,

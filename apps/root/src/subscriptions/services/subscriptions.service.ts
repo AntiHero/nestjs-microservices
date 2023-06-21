@@ -1,16 +1,16 @@
-import { SUBSCRIPTIONS_PATTERNS } from '@app/common/patterns/subscriptions.patterns';
+import { PaymentProvider } from '.prisma/subscriptions';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 
-import { PaymentProvider } from '.prisma/subscriptions';
+import { Result } from '@app/common/interfaces/result.interface';
+import { Payments } from '@app/common/interfaces/payments.interface';
+import { PaymentsQueryDto } from '@app/common/dtos/payments-query.dto';
 import { PriceList } from '@app/common/interfaces/price-list.interface';
 import { SubscriptionsServiceAdapter } from './subscriptions.service-adapter';
-import { GetCheckoutSessionUrlPayload } from '@app/common/interfaces/get-checkout-session-url-payload.interface';
-import { ErrorResult, Result } from '@app/common/interfaces/result.interface';
-import { Payments } from '@app/common/interfaces/payments.interface';
-import { PaymentsQueryDto } from '@app/common/dto/payments-query.dto';
+import { SubscriptionCommand } from '@app/common/patterns/subscriptions.pattern';
 import { CurrentSubscriptionDbType } from '@app/common/interfaces/subscriptions.interface';
+import { GetCheckoutSessionUrlPayload } from '@app/common/interfaces/get-checkout-session-url-payload.interface';
 
 @Injectable()
 export class SubscriptionsService extends SubscriptionsServiceAdapter {
@@ -22,7 +22,7 @@ export class SubscriptionsService extends SubscriptionsServiceAdapter {
 
   public getPriceList(): Observable<PriceList[]> {
     return this.subscriptionsClient.send<PriceList[]>(
-      SUBSCRIPTIONS_PATTERNS.GET_PRICES(),
+      SubscriptionCommand.GetPrices,
       {},
     );
   }
@@ -39,7 +39,7 @@ export class SubscriptionsService extends SubscriptionsServiceAdapter {
     return this.subscriptionsClient.send<
       Result<string>,
       GetCheckoutSessionUrlPayload
-    >(SUBSCRIPTIONS_PATTERNS.GET_CHECKOUT_SESSION_URL(), {
+    >(SubscriptionCommand.GetCheckoutSessionUrl, {
       userId,
       priceId,
       paymentSystem,
@@ -53,7 +53,7 @@ export class SubscriptionsService extends SubscriptionsServiceAdapter {
     return this.subscriptionsClient.send<
       Result<[number, Payments[]]>,
       { userId: string; query: PaymentsQueryDto }
-    >(SUBSCRIPTIONS_PATTERNS.GET_PAYMENTS(), {
+    >(SubscriptionCommand.GetUserPayments, {
       userId,
       query,
     });
@@ -61,7 +61,7 @@ export class SubscriptionsService extends SubscriptionsServiceAdapter {
 
   public cancelSubscription(userId: string): Observable<Result> {
     return this.subscriptionsClient.send<Result, { userId: string }>(
-      SUBSCRIPTIONS_PATTERNS.CANCEL_SUBSCRIPTION(),
+      SubscriptionCommand.CancelSubscription,
       {
         userId,
       },
@@ -74,7 +74,7 @@ export class SubscriptionsService extends SubscriptionsServiceAdapter {
     return this.subscriptionsClient.send<
       Result<CurrentSubscriptionDbType>,
       { userId: string }
-    >(SUBSCRIPTIONS_PATTERNS.GET_CURRENT_SUBSCRIPTION(), {
+    >(SubscriptionCommand.GetCurrentSubscription, {
       userId,
     });
   }

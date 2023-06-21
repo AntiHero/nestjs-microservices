@@ -1,16 +1,17 @@
 import { Column, Entity } from 'typeorm';
-import { BaseEntity } from './base';
+
+import { BaseEntity }     from './base';
 
 @Entity({
   name: 'admins',
 })
 export class AdminEntity extends BaseEntity {
   @Column()
-  username: string;
+  public username: string;
 
   @Column({ unique: true })
-  email: string;
+  public email: string;
 
   @Column()
-  password: string;
+  public password: string;
 }

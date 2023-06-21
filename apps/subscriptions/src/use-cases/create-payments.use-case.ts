@@ -1,16 +1,15 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { NotFoundException } from '@nestjs/common';
 import {
   PaymentProvider,
   PaymentStatus,
   SubscriptionPrice,
   SubscriptionType,
 } from '.prisma/subscriptions';
+import { NotFoundException } from '@nestjs/common';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-// import { PrismaTransactionType } from 'apps/root/src/common/types';
+import { PrismaTransactionType } from '../interfaces/prisma-transaction.interface';
 import { SubscriptionsQueryRepository } from '../repositories/subscriptions.query-repository';
 import { SubscriptionsTransactionService } from '../services/subscriptions-transaction.service';
-import { PrismaTransactionType } from '../interfaces/prisma-transaction.interface';
 
 export class CreatePaymentsCommand {
   public constructor(

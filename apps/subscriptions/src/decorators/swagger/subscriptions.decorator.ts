@@ -10,10 +10,9 @@ import {
   ApiOperation,
   ApiProperty,
 } from '@nestjs/swagger';
+import { CheckoutDto } from 'apps/root/src/subscriptions/dto/checkout.dto';
 
 import { Payment } from 'apps/subscriptions/src/interfaces';
-import { CheckoutDto } from 'apps/root/src/subscriptions/dto/checkout.dto';
-// import { CheckoutDto } from 'apps/root/src/subscriptions/dto/checkout.dto';
 
 export function PriceListApiDecorator() {
   return applyDecorators(

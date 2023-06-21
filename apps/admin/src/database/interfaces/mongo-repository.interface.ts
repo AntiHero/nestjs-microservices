@@ -1,7 +1,7 @@
-import { ModelType } from '@typegoose/typegoose/lib/types';
-
 import { SortDirection } from '@app/common/enums';
 import { DatabaseException } from '@app/common/exceptions/database.exception';
+import { ModelType } from '@typegoose/typegoose/lib/types';
+
 import { PaginationQuery } from '../../app/graphql/args/pagination-query.args';
 
 export abstract class MongoQueryRepository<M> {
@@ -9,7 +9,7 @@ export abstract class MongoQueryRepository<M> {
 
   public async findByQuery(
     filter: Partial<M>,
-    selection: any, //{ [key in keyof M]: M[key] },
+    selection: any,
     paginationQuery: PaginationQuery,
   ) {
     try {

@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 
 import { CheckoutDto } from '../dto/checkout.dto';
-import { PaymentsQueryDto } from '@app/common/dto/payments-query.dto';
+import { PaymentsQueryDto } from '@app/common/dtos/payments-query.dto';
 import { JwtAtGuard } from 'apps/root/src/common/guards/jwt-auth.guard';
 import { ActiveUser } from 'apps/root/src/common/decorators/active-user.decorator';
 import {

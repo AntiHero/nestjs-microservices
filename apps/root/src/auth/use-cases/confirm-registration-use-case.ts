@@ -1,8 +1,13 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { confirmedEmailMessageCreator }       from '@app/common/message-creators/confirmed-email.message-creator';
+import { RootEvent }                          from '@app/common/patterns';
 import { BadRequestException, GoneException } from '@nestjs/common';
-import { UserRepository } from '../../user/repositories/user.repository';
-import { ConfirmationCodeDto } from '../dto/confirmation-code.dto';
-import { UserWithEmailConfirmation } from '../../user/types';
+import { CommandHandler, ICommandHandler }    from '@nestjs/cqrs';
+import { EventEmitter2 as EventEmitter }      from '@nestjs/event-emitter';
+
+import { NOTIFY_ADMIN_EVENT }                 from '../../common/event-router';
+import { UserRepository }                     from '../../user/repositories/user.repository';
+import { UserWithEmailConfirmation }          from '../../user/types';
+import { ConfirmationCodeDto }                from '../dto/confirmation-code.dto';
 
 export class ConfirmRegistrationCommand {
   constructor(public codeDto: ConfirmationCodeDto) {}
@@ -11,10 +16,12 @@ export class ConfirmRegistrationCommand {
 export class ConfirmRegistrationUseCase
   implements ICommandHandler<ConfirmRegistrationCommand>
 {
-  constructor(private readonly userRepository: UserRepository) {}
+  public constructor(
+    private readonly userRepository: UserRepository,
+    public readonly eventEmitter: EventEmitter,
+  ) {}
 
-  async execute(command: ConfirmRegistrationCommand) {
-    // check user
+  public async execute(command: ConfirmRegistrationCommand) {
     const user = await this.userRepository.findUserByEmailConfirmationCode(
       command.codeDto.code,
     );
@@ -24,27 +31,40 @@ export class ConfirmRegistrationUseCase
         'No user exists with the given confirmation code',
       );
 
-    const checkCode = this.checkUserConfirmationCode(
-      user,
-      command.codeDto.code,
-    );
+    this.checkUserConfirmationCode(user, command.codeDto.code);
 
-    await this.userRepository.updateEmailConfirmationCode(user.email);
+    await this.userRepository.confirmRegistration(user.email);
+
+    this.eventEmitter.emit(NOTIFY_ADMIN_EVENT, {
+      event: RootEvent.ConfirmedEmail,
+      message: confirmedEmailMessageCreator({
+        emailConfirmed: true,
+        userId: user.id,
+      }),
+    });
   }
-  checkUserConfirmationCode(user: UserWithEmailConfirmation, code: string) {
+
+  public checkUserConfirmationCode(
+    user: UserWithEmailConfirmation,
+    code: string,
+  ) {
     if (!user.emailConfirmation)
       throw new BadRequestException(
         'No email confirmation exists for the current user',
       );
+
     if (user.emailConfirmation.isConfirmed) {
       throw new BadRequestException('User email already confirmed');
     }
+
     if (user.emailConfirmation.confirmationCode !== code) {
       throw new BadRequestException('User code does not match');
     }
+
     if (user.emailConfirmation.expirationDate < new Date().toISOString()) {
       throw new GoneException('User code has expired');
     }
+
     return true;
   }
 }

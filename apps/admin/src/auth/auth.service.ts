@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { AdminEntity } from '../app/entity/admin.entity';
-import { SqlRepository } from '../database/abstracts/sql.repository';
+import { SqlRepository } from '../database/interfaces/sql-repository.interface';
 
 @Injectable()
 export class AuthService {

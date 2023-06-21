@@ -34,18 +34,24 @@ type PaymentOutput {
   provider: PaymentProvider!
 }
 
-"""ONETIME,RECCURING"""
+"""
+ONETIME,RECCURING
+"""
 enum SubscriptionType {
   ONETIME
   RECCURING
 }
 
-"""USD"""
+"""
+USD
+"""
 enum Currency {
   USD
 }
 
-"""STRIPE,PAYPAL"""
+"""
+STRIPE,PAYPAL
+"""
 enum PaymentProvider {
   STRIPE
   PAYPAL
@@ -61,19 +67,39 @@ type UserInfoOutput {
 
 type Query {
   healthCheck: String!
-  userList(page: Int! = 1, pageSize: Int! = 9, sortDirection: SortDirectionType! = Desc, searchUsernameTerm: String! = "", sortField: UserSortFields! = DateAdded): [UserOutput!]!
+  userList(
+    page: Int! = 1
+    pageSize: Int! = 9
+    sortDirection: SortDirectionType! = Desc
+    searchUsernameTerm: String! = ""
+    sortField: UserSortFields! = DateAdded
+  ): [UserOutput!]!
   userInfo(id: ID!): UserInfoOutput!
-  userPhotos(userId: ID!, page: Int! = 1, pageSize: Int! = 9, sortDirection: SortDirectionType! = Desc): [ImageOutput!]
-  payments(userId: ID!, page: Int! = 1, pageSize: Int! = 9, sortDirection: SortDirectionType! = Desc): [PaymentOutput!]
+  userPhotos(
+    userId: ID!
+    page: Int! = 1
+    pageSize: Int! = 9
+    sortDirection: SortDirectionType! = Desc
+  ): [ImageOutput!]
+  payments(
+    userId: ID!
+    page: Int! = 1
+    pageSize: Int! = 9
+    sortDirection: SortDirectionType! = Desc
+  ): [PaymentOutput!]
 }
 
-"""Asc,Desc"""
+"""
+Asc,Desc
+"""
 enum SortDirectionType {
   Asc
   Desc
 }
 
-"""Username,DateAdded"""
+"""
+Username,DateAdded
+"""
 enum UserSortFields {
   Username
   DateAdded

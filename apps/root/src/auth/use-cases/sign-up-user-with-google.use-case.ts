@@ -1,21 +1,25 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { DeviceSessionsRepository } from '../../deviceSessions/repositories/device-sessions.repository';
-import { UserRepository } from '../../user/repositories/user.repository';
-import { JwtAdaptor } from '../../adaptors/jwt/jwt.adaptor';
-import { CreateUserWithOauthAccountData } from '../../user/types';
-import { GoogleAuthAdaptor } from '../../adaptors/google/google-auth.adaptor';
-import { randomUUID } from 'crypto';
-import { OauthCommandData } from '../types';
-import Joi from 'joi';
-import { BadRequestException, UnauthorizedException } from '@nestjs/common';
-import { add } from 'date-fns';
-import { OauthProvider } from '../../common/constants';
-import { MailService } from '../../mail/mail.service';
-import { User } from '@prisma/client';
-import { DevicesSessionsService } from '../services/devices.service';
-import { PrismaService } from '../../prisma/prisma.service';
+import { randomUUID }                                 from 'crypto';
 
-export class SignInWithGoogleCommand {
+import { createdUserMessageCreator }                  from '@app/common/message-creators/created-user.message-creator';
+import { RootEvent }                                  from '@app/common/patterns';
+import { BadRequestException, UnauthorizedException } from '@nestjs/common';
+import { CommandHandler, ICommandHandler }            from '@nestjs/cqrs';
+import { EventEmitter2 as EventEmitter }              from '@nestjs/event-emitter';
+import { User }                                       from '@prisma/client';
+import { add }                                        from 'date-fns';
+import Joi                                            from 'joi';
+
+import { GoogleAuthAdaptor }                          from '../../adaptors/google/google-auth.adaptor';
+import { JwtAdaptor }                                 from '../../adaptors/jwt/jwt.adaptor';
+import { OauthProvider }                              from '../../common/constants';
+import { NOTIFY_ADMIN_EVENT }                         from '../../common/event-router';
+import { MailService }                                from '../../mail/mail.service';
+import { UserRepository }                             from '../../user/repositories/user.repository';
+import { CreateUserWithOauthAccountData }             from '../../user/types';
+import { DevicesSessionsService }                     from '../services/devices.service';
+import { OauthCommandData }                           from '../types';
+
+export class SignUpUserWithGoogleCommand {
   public constructor(public readonly data: OauthCommandData) {
     const schema = Joi.object({
       code: Joi.string().required(),
@@ -28,30 +32,28 @@ export class SignInWithGoogleCommand {
     }
   }
 }
-@CommandHandler(SignInWithGoogleCommand)
-export class SignInUserWithGoogleUseCase
-  implements ICommandHandler<SignInWithGoogleCommand>
+@CommandHandler(SignUpUserWithGoogleCommand)
+export class SignUpUserWithGoogleUseCase
+  implements ICommandHandler<SignUpUserWithGoogleCommand>
 {
   constructor(
-    private readonly deviceSessionsRepository: DeviceSessionsRepository,
     private readonly userRepository: UserRepository,
-
     private readonly jwtAdaptor: JwtAdaptor,
     private readonly googleAuthAdaptor: GoogleAuthAdaptor,
     private readonly emailService: MailService,
     private readonly devicesSessionsService: DevicesSessionsService,
-    private prisma: PrismaService,
+    private readonly eventEmitter: EventEmitter,
   ) {}
 
   private readonly type = OauthProvider.GOOGLE;
-  async execute(command: SignInWithGoogleCommand) {
+  async execute(command: SignUpUserWithGoogleCommand) {
     try {
       const { code, ip, userAgent } = command.data;
 
       const { name, given_name, family_name, email, id } =
         await this.googleAuthAdaptor.validateUser(code);
 
-      let user: Pick<User, 'username' | 'id' | 'email'> | null =
+      let user: Pick<User, 'username' | 'id' | 'email' | 'createdAt'> | null =
         await this.userRepository.findUserByEmail(email);
 
       if (!user) {
@@ -77,9 +79,23 @@ export class SignInUserWithGoogleUseCase
         user = await this.userRepository.createUserWithOauthAccount(
           createUserData,
         );
+
+        const { id: userId, createdAt } = user;
+
+        const message = createdUserMessageCreator({
+          id: userId,
+          username: uniqueUsername,
+          email,
+          createdAt,
+        });
+
+        this.eventEmitter.emit(NOTIFY_ADMIN_EVENT, [
+          RootEvent.CreatedUser,
+          message,
+        ]);
+
         await this.emailService.sendOauthAccountCreationConfirmation(user);
       } else {
-        // if user exists already
         const existingOauthAccount =
           await this.userRepository.findOauthAccountByQuery({
             clientId: id,
@@ -101,7 +117,6 @@ export class SignInUserWithGoogleUseCase
           return user.email;
         }
       }
-      // create tokens and session
       const deviceId = command.data.deviceId || randomUUID();
 
       const { id: userId, username } = user;
@@ -126,6 +141,7 @@ export class SignInUserWithGoogleUseCase
       return tokens;
     } catch (error) {
       console.log(error);
+
       throw new UnauthorizedException();
     }
   }

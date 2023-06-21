@@ -1,3 +1,4 @@
+import { DatabaseException } from '@app/common/exceptions/database.exception';
 import { Inject } from '@nestjs/common';
 import {
   DataSource,
@@ -8,7 +9,6 @@ import {
 } from 'typeorm';
 
 import { BaseEntity } from '../../app/entity/base';
-import { DatabaseException } from '@app/common/exceptions/database.exception';
 
 export abstract class SqlRepository<K extends BaseEntity, T = new () => any> {
   @Inject(DataSource)

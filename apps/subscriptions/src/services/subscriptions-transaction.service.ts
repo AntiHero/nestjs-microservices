@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common';
 import {
   Payment,
   PaymentReference,
@@ -7,9 +6,9 @@ import {
   SubscriptionPayment,
   SubscriptionStatus,
 } from '.prisma/subscriptions';
-import { PrismaTransactionType } from 'apps/subscriptions/src/interfaces/prisma-transaction.interface';
+import { Injectable } from '@nestjs/common';
 
-// import { PrismaTransactionType } from 'apps/root/src/common/types';
+import { PrismaTransactionType } from 'apps/subscriptions/src/interfaces/prisma-transaction.interface';
 
 @Injectable()
 export class SubscriptionsTransactionService {

@@ -1,11 +1,11 @@
+import { deletedPostMessageCreator } from '@app/common/message-creators/deleted-post.message-creator';
+import { RootEvent } from '@app/common/patterns/root.pattern';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { EventEmitter2 as EventEmitter } from '@nestjs/event-emitter';
 import { Post } from '@prisma/client';
 
+import { NOTIFY_ADMIN_EVENT } from 'apps/root/src/common/event-router';
 import { PostsRepositoryAdapter } from 'apps/root/src/user/repositories/adapters/post/posts.adapter';
-import { EventEmitter2 as EventEmitter } from '@nestjs/event-emitter';
-import { NOTIFY_ADMIN_EVENT } from 'apps/root/src/common/services/event-handler.service';
-import { RootEvents } from '@app/common/patterns/root.patterns';
-import { deletedPostMessageCreator } from '@app/common/message-creators/deleted-post.message-creator';
 
 export class DeletePostCommand {
   public constructor(
@@ -29,7 +29,7 @@ export class DeletePostUseCase implements ICommandHandler<DeletePostCommand> {
     const message = deletedPostMessageCreator(postId);
 
     this.eventEmitter.emit(NOTIFY_ADMIN_EVENT, [
-      RootEvents.DeletedPost,
+      RootEvent.DeletedPost,
       message,
     ]);
   }

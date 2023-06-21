@@ -1,8 +1,9 @@
-import { UserModel } from '../../app/entity/user.model';
-import { MongoQueryRepository } from './mongo.query-repository';
 import { SortDirection, UserSortFields } from '@app/common/enums';
-import { UserPaginationQuery } from '../../app/graphql/args/pagination-query';
 import { DatabaseException } from '@app/common/exceptions/database.exception';
+
+import { MongoQueryRepository } from './mongo-repository.interface';
+import { UserModel } from '../../app/entity/user.model';
+import { UserPaginationQuery } from '../../app/graphql/args/pagination-query';
 
 export abstract class AbstractUsersQueryRepository extends MongoQueryRepository<UserModel> {
   public async getByQuery(paginationQuery: UserPaginationQuery) {

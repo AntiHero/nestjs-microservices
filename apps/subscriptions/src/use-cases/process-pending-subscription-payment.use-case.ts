@@ -1,15 +1,16 @@
-import { CommandBus, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import {
   PaymentStatus,
   SubscriptionPrice,
   SubscriptionStatus,
 } from '.prisma/subscriptions';
+import { CommandBus, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 import { PrismaService } from 'apps/subscriptions/src/prisma/prisma.service';
+
 import { CancelSubscriptionCommand } from './cancel-subscription.use-case';
-import { calculateSubscriptionEndDate } from '../utils/calculate-subscription-end-date';
 import { SubscriptionsQueryRepository } from '../repositories/subscriptions.query-repository';
 import { SubscriptionsTransactionService } from '../services/subscriptions-transaction.service';
+import { determineSubscriptionEndDate } from '../utils/calculate-subscription-end-date';
 
 export class ProcessPendingSubscriptionPaymentCommand {
   public constructor(
@@ -82,7 +83,7 @@ export class ProcessPendingSubscriptionPaymentCommandHandler
         )
       );
 
-      const newEndDate = calculateSubscriptionEndDate(
+      const newEndDate = determineSubscriptionEndDate(
         currentEndDate,
         period,
         periodType,

@@ -1,7 +1,7 @@
 import { globalConfig } from '@app/common/config/global.config';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import { ConfigType } from '@nestjs/config';
 import { Module } from '@nestjs/common';
+import { ConfigType } from '@nestjs/config';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 import { SubscriptionsController } from './api/subscriptions.controller';
 import { SubscriptionsService } from './services/subscriptions.service';

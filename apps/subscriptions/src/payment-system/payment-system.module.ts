@@ -1,13 +1,13 @@
 import { DynamicModule, Module } from '@nestjs/common';
 
 import type {
-  PaypalOptions,
-  StripeOptions,
   PaypalAsyncOptions,
+  PaypalOptions,
   StripeAsyncOptions,
+  StripeOptions,
 } from './interfaces';
-import { StripeCoreModule } from './stripe.core.module';
 import { PaypalCoreModule } from './paypal.core.module';
+import { StripeCoreModule } from './stripe.core.module';
 
 @Module({})
 export class PaymentSystemModule {

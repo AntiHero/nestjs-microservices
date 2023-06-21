@@ -1,7 +1,10 @@
-import { AccountPlan, EmailConfirmation, OauthAccount } from '@prisma/client';
-import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
+
+import { Injectable } from '@nestjs/common';
+import { AccountPlan, EmailConfirmation, OauthAccount } from '@prisma/client';
 import { add } from 'date-fns';
+
+import { UpdateOrCreateOauthAccountPaylod } from 'apps/root/src/auth/types';
 
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateUserDto } from '../dto/create.user.dto';
@@ -9,7 +12,6 @@ import {
   CreateUserWithOauthAccountData,
   UserWithEmailConfirmation,
 } from '../types';
-import { UpdateOrCreateOauthAccountPaylod } from 'apps/root/src/auth/types';
 
 @Injectable()
 export class UserRepository {
@@ -87,6 +89,7 @@ export class UserRepository {
         id: true,
         email: true,
         username: true,
+        createdAt: true,
         oauthAccount: {
           select: {
             mergeCode: true,
@@ -173,7 +176,7 @@ export class UserRepository {
     });
   }
 
-  public async updateEmailConfirmationCode(
+  public async confirmRegistration(
     userEmail: string,
   ): Promise<EmailConfirmation> {
     return this.prisma.emailConfirmation.update({
@@ -313,12 +316,11 @@ export class UserRepository {
 
   public async delete(id: string) {
     try {
-      const result = { id: 0 };
-      // const result = await this.prisma.user.delete({
-      //   where: {
-      //     id,
-      //   },
-      // });
+      const result = await this.prisma.user.delete({
+        where: {
+          id,
+        },
+      });
 
       return result.id ? true : false;
     } catch (error) {

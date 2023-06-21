@@ -1,15 +1,16 @@
-import { Transport } from '@nestjs/microservices';
+import { Queue } from '@app/common/queues';
+import { RmqService } from '@app/common/src';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
-import cookieParser from 'cookie-parser';
+import { Transport } from '@nestjs/microservices';
 import compression from 'compression';
+import cookieParser from 'cookie-parser';
 
 import { AppModule } from './app.module';
+import { useGlobalFilters } from './common/filters/global.filter';
+import { useGlobalPipes } from './common/pipes/global.pipe';
 import { setupSwagger } from './config/swagger.config';
 import { PrismaService } from './prisma/prisma.service';
-import { useGlobalPipes } from './common/pipes/global.pipe';
-import { useGlobalFilters } from './common/filters/global.filter';
-import { RmqService } from '@app/common/src';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -47,9 +48,8 @@ async function bootstrap() {
   });
 
   const rmqService = app.get<RmqService>(RmqService);
-  console.log(rmqService, 'service');
   // find connection options by queue name
-  app.connectMicroservice(rmqService.getOptions('main'));
+  app.connectMicroservice(rmqService.getOptions(Queue.Root));
 
   await Promise.all([
     app.startAllMicroservices(),

@@ -1,11 +1,12 @@
+import { DatabaseException } from '@app/common/exceptions/database.exception';
 import { Injectable } from '@nestjs/common';
 import { ModelType } from '@typegoose/typegoose/lib/types';
 
-import { Repository } from './repository';
+import { Repository } from './interfaces/repository.interface';
 
 @Injectable()
 export class MongoRepository<M> extends Repository<M> {
-  public constructor(private readonly repository: ModelType<M>) {
+  public constructor(protected readonly repository: ModelType<M>) {
     super();
   }
 
@@ -25,6 +26,20 @@ export class MongoRepository<M> extends Repository<M> {
       console.log(error);
 
       return false;
+    }
+  }
+
+  public async create(data: Partial<M>) {
+    try {
+      const result = await this.repository.create(data);
+
+      console.log(result);
+
+      return result;
+    } catch (error) {
+      console.log(error);
+
+      throw new DatabaseException();
     }
   }
 }

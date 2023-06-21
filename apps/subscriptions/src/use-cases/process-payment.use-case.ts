@@ -1,5 +1,5 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject } from '@nestjs/common';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 import { WEBHOOK_EVENT_HANDLERS } from '../constants';
 import { Handler } from '../webhook-event-handlers/abstract.handler';

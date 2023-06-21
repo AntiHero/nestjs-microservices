@@ -1,8 +1,7 @@
-import { BanSearchStatus, SortDirection } from '@app/common/enums';
-import { ArgsType, Int, registerEnumType } from '@nestjs/graphql';
-import { IsEnum, IsNumber, IsString } from 'class-validator';
-import { Transform } from 'class-transformer';
-import { Field } from '@nestjs/graphql';
+import { BanSearchStatus, SortDirection }         from '@app/common/enums';
+import { ArgsType, Field, Int, registerEnumType } from '@nestjs/graphql';
+import { Transform }                              from 'class-transformer';
+import { IsEnum, IsNumber, IsString }             from 'class-validator';
 
 registerEnumType(SortDirection, {
   name: 'SortDirectionType',

@@ -1,11 +1,11 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { PaymentProvider } from '.prisma/subscriptions';
 import { Inject } from '@nestjs/common';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { firstValueFrom } from 'rxjs';
 
 import { PAYMENT_SERVICES } from '../constants';
-import { RootServiceAdapter } from '../services/root.service-adapter';
 import { PaymentProviderService } from '../services/payment-provider.service';
+import { RootServiceAdapter } from '../services/root.service-adapter';
 
 export class CreateCustomerIfNotExistsCommand {
   public constructor(

@@ -1,24 +1,31 @@
-import { Inject, Injectable } from '@nestjs/common';
 import {
-  SubscriptionType,
-  SubscriptionStatus,
   PaymentStatus,
   SubscriptionPrice,
+  SubscriptionStatus,
+  SubscriptionType,
 } from '.prisma/subscriptions';
-
-import { Handler } from '../abstract.handler';
 import {
   StripeCheckoutSessionObject,
   StripeEvent,
 } from '@app/common/interfaces/events.interface';
-import { CHECKOUT_SESSION_COMPLETED } from '../../constants';
-import { PrismaService } from 'apps/subscriptions/src/prisma/prisma.service';
-import { calculateSubscriptionEndDate } from '../../utils/calculate-subscription-end-date';
-import { SubscriptionsTransactionService } from 'apps/subscriptions/src/services/subscriptions-transaction.service';
-import { SubscriptionsQueryRepository } from 'apps/subscriptions/src/repositories/subscriptions.query-repository';
-import { ClientProxy } from '@nestjs/microservices';
-import { RootEvents } from '@app/common/patterns/root.patterns';
+import { createdSubscriptionMessageCreator } from '@app/common/message-creators/created-subscription.message-creator';
+import { updateUserAccountPlanMessageCreator } from '@app/common/message-creators/update-user-account-plan.message-creator';
+import {
+  SubscriptionCommand,
+  SubscriptionEvent,
+} from '@app/common/patterns/subscriptions.pattern';
+import { Injectable } from '@nestjs/common';
+import { EventEmitter2 as EventEmitter } from '@nestjs/event-emitter';
 import { AccountPlan } from '@prisma/client';
+import { PaymentException } from 'apps/root/src/common/exceptions/subscriptions.exception';
+
+import { PrismaService } from 'apps/subscriptions/src/prisma/prisma.service';
+import { SubscriptionsQueryRepository } from 'apps/subscriptions/src/repositories/subscriptions.query-repository';
+import { SubscriptionsTransactionService } from 'apps/subscriptions/src/services/subscriptions-transaction.service';
+
+import { CHECKOUT_SESSION_COMPLETED } from '../../constants';
+import { determineSubscriptionEndDate } from '../../utils/calculate-subscription-end-date';
+import { Handler } from '../abstract.handler';
 
 @Injectable()
 export class CheckoutSessinCompletedEventHandler extends Handler {
@@ -26,7 +33,7 @@ export class CheckoutSessinCompletedEventHandler extends Handler {
     private readonly prismaService: PrismaService,
     private readonly subscriptionsTransactionService: SubscriptionsTransactionService,
     private readonly subscriptionsQueryRepository: SubscriptionsQueryRepository,
-    @Inject('ROOT_RMQ') private readonly rootRmqClient: ClientProxy,
+    private readonly eventEmitter: EventEmitter,
   ) {
     super();
   }
@@ -94,7 +101,7 @@ export class CheckoutSessinCompletedEventHandler extends Handler {
                 )
               );
 
-              const newEndDate = calculateSubscriptionEndDate(
+              const newEndDate = determineSubscriptionEndDate(
                 currentEndDate,
                 period,
                 periodType,
@@ -110,22 +117,64 @@ export class CheckoutSessinCompletedEventHandler extends Handler {
                     endDate: newEndDate,
                   },
                 ),
-                // move to rabbitmq
-                // this.userRepository.updateAccountPlan(
-                //   tx,
-                //   userId,
-                //   AccountPlan.BUSINESS,
-                // ),
               ]);
 
-              this.rootRmqClient.emit(RootEvents.updateUserAccountPlan, {
-                userId,
-                plan: AccountPlan.BUSINESS,
+              const paymentOverallInformation =
+                await this.subscriptionsQueryRepository.getOverallPaymentInformation(
+                  paymentId,
+                );
+
+              if (
+                !paymentOverallInformation ||
+                !paymentOverallInformation.subscriptionPayment ||
+                !paymentOverallInformation.subscriptionPayment.subscription
+              ) {
+                throw new PaymentException();
+              }
+
+              const {
+                id,
+                currency,
+                price,
+                provider,
+                status,
+                subscriptionPayment: {
+                  subscription: { endDate, startDate, type },
+                },
+              } = paymentOverallInformation;
+
+              const subscriptionCreatedEvent =
+                SubscriptionEvent.SubscriptionCreated;
+
+              this.eventEmitter.emit(subscriptionCreatedEvent, {
+                event: subscriptionCreatedEvent,
+                message: createdSubscriptionMessageCreator({
+                  id,
+                  currency,
+                  price,
+                  endDate,
+                  startDate,
+                  provider,
+                  status,
+                  type,
+                  userId,
+                }),
               });
-              // this.rootRmqClient.
+
+              const updateUserAccountPlanCommand =
+                SubscriptionCommand.UpdateUserAccountPlan;
+
+              this.eventEmitter.emit(updateUserAccountPlanCommand, {
+                event: updateUserAccountPlanCommand,
+                message: updateUserAccountPlanMessageCreator({
+                  userId,
+                  plan: AccountPlan.BUSINESS,
+                }),
+              });
             }
           },
           {
+            // TODO: I want to get rid of this
             timeout: 10_000,
           },
         );

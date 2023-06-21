@@ -1,6 +1,6 @@
 import paypal from '@paypal/checkout-server-sdk';
-import { PaypalEnvironment } from '../constants';
 
+import { PaypalEnvironment } from '../constants';
 import type { PaypalOptions } from '../interfaces';
 
 export const createPaypalClient = (options: PaypalOptions) => {

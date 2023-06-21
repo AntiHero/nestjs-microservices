@@ -2,12 +2,11 @@ import {
   BanSearchStatus,
   SortDirection,
   UserSortFields,
-} from '@app/common/enums';
-import { ArgsType, registerEnumType } from '@nestjs/graphql';
-import { Transform } from 'class-transformer';
-import { Field } from '@nestjs/graphql';
+}                                            from '@app/common/enums';
+import { ArgsType, Field, registerEnumType } from '@nestjs/graphql';
+import { Transform }                         from 'class-transformer';
 
-import { PaginationQuery } from './pagination-query.args';
+import { PaginationQuery }                   from './pagination-query.args';
 
 registerEnumType(SortDirection, {
   name: 'SortDirectionType',

@@ -1,14 +1,14 @@
-import { CommandBus, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { PaymentProvider } from '.prisma/subscriptions';
+import { Result } from '@app/common/interfaces/result.interface';
 import { Inject } from '@nestjs/common';
+import { CommandBus, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
+import { ValidatePaymentInputCommand } from './validate-payment-input.use-case';
+import { PAYMENT_STRATEGIES } from '../constants';
 import {
   PaymentCommand,
   PaymentStrategy,
 } from '../payment-strategies/abstract.strategy';
-import { PAYMENT_STRATEGIES } from '../constants';
-import { Result } from '@app/common/interfaces/result.interface';
-import { ValidatePaymentInputCommand } from './validate-payment-input.use-case';
 
 export class StartPaymentCommand {
   public constructor(

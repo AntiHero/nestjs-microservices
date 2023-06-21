@@ -1,7 +1,7 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsEmail } from 'class-validator';
+import { IsEmail }          from 'class-validator';
 
-import { AdminEntity } from '../../entity/admin.entity';
+import { AdminEntity }      from '../../entity/admin.entity';
 
 @InputType()
 export class CreateAdminInput

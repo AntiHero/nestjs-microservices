@@ -1,25 +1,25 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { ConfigType } from '@nestjs/config';
-import { CommandBus } from '@nestjs/cqrs';
 import {
   PaymentProvider,
   // PaymentStatus,
   SubscriptionStatus,
   SubscriptionType,
 } from '.prisma/subscriptions';
+import { InjectStripeClient } from '@app/common/decorators/inject-stripe-client.decorator';
+import { Inject, Injectable } from '@nestjs/common';
+import { ConfigType } from '@nestjs/config';
+import { CommandBus } from '@nestjs/cqrs';
+import { PaymentException } from 'apps/root/src/common/exceptions/subscriptions.exception';
 import Stripe from 'stripe';
 
-import { PrismaService } from 'apps/subscriptions/src/prisma/prisma.service';
-import { PaymentCommand, PaymentStrategy } from './abstract.strategy';
 import { subscriptionsConfig } from 'apps/subscriptions/src/config/subscriptions.config';
-import { PaymentException } from 'apps/root/src/common/exceptions/subscriptions.exception';
-import { InjectStripeClient } from '@app/common/decorators/inject-stripe-client.decorator';
+import { PrismaService } from 'apps/subscriptions/src/prisma/prisma.service';
+
+import { PaymentCommand, PaymentStrategy } from './abstract.strategy';
 import { SubscriptionsTransactionService } from '../services/subscriptions-transaction.service';
-// import { InjectStripeService } from 'apps/root/src/common/decorators/inject-stripe-service.decorator';
 import { CreateCustomerIfNotExistsCommand } from '../use-cases/create-customer-if-not-exists.use-case';
 import {
-  PaymentData,
   CreatePaymentsCommand,
+  PaymentData,
 } from '../use-cases/create-payments.use-case';
 
 export interface CheckoutMetadata extends Stripe.MetadataParam {

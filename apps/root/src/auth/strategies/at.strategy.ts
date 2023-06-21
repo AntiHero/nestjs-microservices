@@ -1,14 +1,15 @@
-import { PassportStrategy } from '@nestjs/passport';
-import { ExtractJwt, Strategy } from 'passport-jwt';
-import { ConfigService } from '@nestjs/config';
 import {
   BadRequestException,
   ForbiddenException,
   Injectable,
-} from '@nestjs/common';
-import { ActiveUserData } from '../../user/types';
-import { JwtAdaptor } from '../../adaptors/jwt/jwt.adaptor';
+}                                 from '@nestjs/common';
+import { ConfigService }          from '@nestjs/config';
+import { PassportStrategy }       from '@nestjs/passport';
 import { Request as RequestType } from 'express';
+import { ExtractJwt, Strategy }   from 'passport-jwt';
+
+import { JwtAdaptor }             from '../../adaptors/jwt/jwt.adaptor';
+import { ActiveUserData }         from '../../user/types';
 
 @Injectable()
 export class AtStrategy extends PassportStrategy(Strategy, 'jwt') {

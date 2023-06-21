@@ -1,5 +1,5 @@
+import { Injectable }                                     from '@nestjs/common';
 import { DefaultNamingStrategy, NamingStrategyInterface } from 'typeorm';
-import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class PluralNamingStrategy

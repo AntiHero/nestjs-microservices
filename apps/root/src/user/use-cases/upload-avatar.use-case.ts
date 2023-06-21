@@ -1,20 +1,22 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Avatar } from '@prisma/client';
 import { randomUUID } from 'crypto';
 
-import { PREVIEW_HEIGHT, PREVIEW_WIDTH } from 'apps/root/src/common/constants';
-import { ImageService } from 'apps/root/src/common/services/image.service';
-import { CloudStrategy } from 'apps/root/src/common/strategies/cloud.strategy';
+import { updatedAvatarMessageCreator } from '@app/common/message-creators/updated-avatar.message-creator';
+import { RootEvent } from '@app/common/patterns/root.pattern';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { EventEmitter2 as EventEmitter } from '@nestjs/event-emitter';
+import { Avatar } from '@prisma/client';
+
+import { PREVIEW_HEIGHT, PREVIEW_WIDTH } from 'apps/root/src/common/constants';
 import {
   AvatarCreationError,
   FILE_UPLOAD_ERROR,
 } from 'apps/root/src/common/errors';
+import { ImageService } from 'apps/root/src/common/services/image.service';
+import { CloudStrategy } from 'apps/root/src/common/strategies/cloud.strategy';
+
+import { NOTIFY_ADMIN_EVENT } from '../../common/event-router';
 import { ImagesQueryRepositoryAdapter } from '../repositories/adapters/images-query-repository.adapter';
 import { ImagesRepositoryAdapter } from '../repositories/adapters/images-repository.adapter';
-import { NOTIFY_ADMIN_EVENT } from '../../common/services/event-handler.service';
-import { RootEvents } from '@app/common/patterns/root.patterns';
-import { updatedAvatarMessageCreator } from '@app/common/message-creators/updated-avatar.message-creator';
 
 export class UploadAvatarCommand {
   public constructor(public userId: string, public file: Express.Multer.File) {}
@@ -83,7 +85,7 @@ export class UploadAvatarUseCase implements ICommandHandler {
       });
 
       this.eventEmitter.emit(NOTIFY_ADMIN_EVENT, [
-        RootEvents.UpdatedAvatar,
+        RootEvent.UpdatedAvatar,
         message,
       ]);
 

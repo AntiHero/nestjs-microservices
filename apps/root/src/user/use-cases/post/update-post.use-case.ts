@@ -1,12 +1,12 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Post } from '@prisma/client';
-import { UpdatePostDto } from 'apps/root/src/user/dto/update-post.dto';
-
-import { EventEmitter2 as EventEmitter } from '@nestjs/event-emitter';
-import { PostsRepositoryAdapter } from 'apps/root/src/user/repositories/adapters/post/posts.adapter';
 import { updatedPostMessageCreator } from '@app/common/message-creators/updated-post.message-creator';
-import { NOTIFY_ADMIN_EVENT } from 'apps/root/src/common/services/event-handler.service';
-import { RootEvents } from '@app/common/patterns/root.patterns';
+import { RootEvent } from '@app/common/patterns/root.pattern';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { EventEmitter2 as EventEmitter } from '@nestjs/event-emitter';
+import { Post } from '@prisma/client';
+
+import { NOTIFY_ADMIN_EVENT } from 'apps/root/src/common/event-router';
+import { UpdatePostDto } from 'apps/root/src/user/dto/update-post.dto';
+import { PostsRepositoryAdapter } from 'apps/root/src/user/repositories/adapters/post/posts.adapter';
 
 export class UpdatePostCommand {
   public constructor(
@@ -31,7 +31,7 @@ export class UpdatePostUseCase implements ICommandHandler<UpdatePostCommand> {
     const message = updatedPostMessageCreator(postId, payload.description);
 
     this.eventEmitter.emit(NOTIFY_ADMIN_EVENT, [
-      RootEvents.UpdatedPost,
+      RootEvent.UpdatedPost,
       message,
     ]);
   }

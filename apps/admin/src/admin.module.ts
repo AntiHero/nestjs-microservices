@@ -1,31 +1,31 @@
-import { join }                             from 'path';
+import { join } from 'path';
 
-import { globalConfig }                     from '@app/common/config/global.config';
-import { Queue }                            from '@app/common/queues';
-import { RmqService }                       from '@app/common/src';
-import { RmqModule }                        from '@app/common/src/rmq/rmq.module';
+import { globalConfig } from '@app/common/config/global.config';
+import { Queue } from '@app/common/queues';
+import { RmqService } from '@app/common/src';
+import { RmqModule } from '@app/common/src/rmq/rmq.module';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { Module }                           from '@nestjs/common';
-import { ConfigModule, ConfigService }      from '@nestjs/config';
-import { GraphQLModule }                    from '@nestjs/graphql';
-import { TypeOrmModule }                    from '@nestjs/typeorm';
-import { TypegooseModule }                  from 'nestjs-typegoose';
+import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { GraphQLModule } from '@nestjs/graphql';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypegooseModule } from 'nestjs-typegoose';
 
-import { AdminController }                  from './admin.controller';
-import { AdminResolver }                    from './admin.resolver';
-import { AdminService }                     from './admin.service';
-import { PostModel }                        from './app/entity/post.model';
-import { PaymentModel }                     from './app/entity/subscriptions.model';
-import { UserModel }                        from './app/entity/user.model';
-import { AuthModule }                       from './auth/auth.module';
-import { localConfig }                      from './config/global.config';
-import { mongooseConfigFactory }            from './config/mongoose.config';
-import { postgresConfigFactory }            from './config/typeorm.config';
-import { AdminMessageConroller }            from './controllers/message.controller';
-import { PaymentsQueryRepositoryProvider }  from './database/payments.query-repository';
-import { PostsQueryRepositoryProvider }     from './database/posts.query-repository';
-import { UsersQueryRepositoryProvider }     from './database/users.query-repository';
-import { UsersRepositoryProvider }          from './database/users.repository';
+import { AdminController } from './admin.controller';
+import { AdminResolver } from './admin.resolver';
+import { AdminService } from './admin.service';
+import { PostModel } from './app/entity/post.model';
+import { PaymentModel } from './app/entity/subscriptions.model';
+import { UserModel } from './app/entity/user.model';
+import { AuthModule } from './auth/auth.module';
+import { localConfig } from './config/global.config';
+import { mongooseConfigFactory } from './config/mongoose.config';
+import { postgresConfigFactory } from './config/typeorm.config';
+import { AdminMessageConroller } from './controllers/message.controller';
+import { PaymentsQueryRepositoryProvider } from './db/payments.query-repository';
+import { PostsQueryRepositoryProvider } from './db/posts.query-repository';
+import { UsersQueryRepositoryProvider } from './db/users.query-repository';
+import { UsersRepositoryProvider } from './db/users.repository';
 
 @Module({
   imports: [

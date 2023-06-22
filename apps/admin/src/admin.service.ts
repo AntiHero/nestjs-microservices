@@ -4,8 +4,8 @@ import { ClientProxy } from '@nestjs/microservices';
 import { DeepPartial } from 'typeorm';
 
 import { AdminEntity } from './app/entity/admin.entity';
-import { SqlRepository } from './database/interfaces/sql-repository.interface';
-import { UsersRepositoryInterface } from './database/interfaces/users-repository.interface';
+import { SqlRepository } from './db/interfaces/sql-repository.interface';
+import { UsersRepositoryInterface } from './db/interfaces/users-repository.interface';
 
 @Injectable()
 export class AdminService {

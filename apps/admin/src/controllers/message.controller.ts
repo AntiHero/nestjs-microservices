@@ -12,7 +12,7 @@ import {
   RmqContext,
 } from '@nestjs/microservices';
 
-import { UsersRepositoryInterface } from '../database/interfaces/users-repository.interface';
+import { UsersRepositoryInterface } from '../db/interfaces/users-repository.interface';
 
 @Controller()
 export class AdminMessageConroller {

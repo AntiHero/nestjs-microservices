@@ -17,8 +17,8 @@ import { ImageOutput } from './app/graphql/output/avatar.output';
 import { PaymentOutput } from './app/graphql/output/payments.output';
 import { UserInfoOutput } from './app/graphql/output/user-info.outpul';
 import { UserOutput } from './app/graphql/output/user.output';
-import { MongoQueryRepository } from './database/interfaces/mongo-repository.interface';
-import { AbstractUsersQueryRepository } from './database/interfaces/users-query-repository.interface';
+import { MongoQueryRepository } from './db/interfaces/mongo-repository.interface';
+import { AbstractUsersQueryRepository } from './db/interfaces/users-query-repository.interface';
 import { toPaymentsViewModel } from './utils/payments-view.mapper';
 import {
   PostImagesInput,

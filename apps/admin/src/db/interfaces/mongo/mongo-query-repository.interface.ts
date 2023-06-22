@@ -1,8 +1,8 @@
-import { SortDirection } from '@app/common/enums';
+import { SortDirection }     from '@app/common/enums';
 import { DatabaseException } from '@app/common/exceptions/database.exception';
-import { ModelType } from '@typegoose/typegoose/lib/types';
+import { ModelType }         from '@typegoose/typegoose/lib/types';
 
-import { PaginationQuery } from 'apps/admin/src/app/graphql/args/pagination-query.args';
+import { PaginationQuery }   from 'apps/admin/src/app/graphql/args/pagination-query.args';
 
 export abstract class MongoQueryRepository<M> {
   public constructor(protected readonly repository: ModelType<M>) {}

@@ -1,6 +1,7 @@
 import { ConfirmedEmailtype }       from '@app/common/message-creators/confirmed-email.message-creator';
 import { CreatedPostType }          from '@app/common/message-creators/created-post.message-creator';
 import { CreatedUserType }          from '@app/common/message-creators/created-user.message-creator';
+import { DeletedPostType }          from '@app/common/message-creators/deleted-post.message-creator';
 import { UpdatedAvatarType }        from '@app/common/message-creators/updated-avatar.message-creator';
 import { UpdatedProfileType }       from '@app/common/message-creators/updated-profile.message-creator';
 import { RootEvent }                from '@app/common/patterns/root.pattern';
@@ -80,6 +81,16 @@ export class AdminMessageConroller {
     @Ctx() context: RmqContext,
   ) {
     await this.postsRepository.update(userId, updates);
+
+    this.rmqService.ack(context);
+  }
+
+  @MessagePattern(RootEvent.DeletedPost)
+  public async deletePost(
+    @Payload() { id }: DeletedPostType,
+    @Ctx() context: RmqContext,
+  ) {
+    await this.postsRepository.delete(id);
 
     this.rmqService.ack(context);
   }

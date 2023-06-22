@@ -1,10 +1,6 @@
 import assert from 'assert';
 
-type DeepPartial<T> = T extends Record<string, infer R>
-  ? Partial<{
-      [key in keyof T]: DeepPartial<R>;
-    }>
-  : T;
+import { DeepPartial } from '../types/deep-partial.type';
 
 export function applyUpdates<T extends Record<string, any>>(
   t: T,

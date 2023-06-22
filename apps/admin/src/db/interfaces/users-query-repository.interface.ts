@@ -1,11 +1,17 @@
 import { SortDirection, UserSortFields } from '@app/common/enums';
 import { DatabaseException } from '@app/common/exceptions/database.exception';
+import { ModelType } from '@typegoose/typegoose/lib/types';
+import { InjectModel } from 'nestjs-typegoose';
 
 import { MongoQueryRepository } from './mongo/mongo-query-repository.interface';
 import { UserModel } from '../../app/entity/user.model';
 import { UserPaginationQuery } from '../../app/graphql/args/pagination-query';
 
-export abstract class AbstractUsersQueryRepository extends MongoQueryRepository<UserModel> {
+export abstract class UsersQueryRepositoryInterface extends MongoQueryRepository<UserModel> {
+  public constructor(@InjectModel(UserModel) repository: ModelType<UserModel>) {
+    super(repository);
+  }
+
   public async getByQuery(paginationQuery: UserPaginationQuery) {
     try {
       const { page, pageSize, searchUsernameTerm, sortField } = paginationQuery;

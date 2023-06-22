@@ -16,7 +16,7 @@ import { UserInfoOutput } from './app/graphql/output/user-info.outpul';
 import { UserOutput } from './app/graphql/output/user.output';
 import { PaymentsQueryRepositoryInterface } from './db/interfaces/payments/payments-query-repository.interface';
 import { PostsQueryRepositoryInterface } from './db/interfaces/post/posts-query-repository.interface';
-import { AbstractUsersQueryRepository } from './db/interfaces/users-query-repository.interface';
+import { UsersQueryRepositoryInterface } from './db/interfaces/users-query-repository.interface';
 import { toPaymentsViewModel } from './utils/payments-view.mapper';
 import {
   PostImagesInput,
@@ -30,7 +30,7 @@ import { toUserViewModel } from './utils/user-list-view.mapper';
 export class AdminResolver {
   public constructor(
     private readonly adminService: AdminService,
-    private readonly usersQueryRepository: AbstractUsersQueryRepository,
+    private readonly usersQueryRepository: UsersQueryRepositoryInterface,
     private readonly postsQueryRepository: PostsQueryRepositoryInterface,
     private readonly paymentQueryRepository: PaymentsQueryRepositoryInterface,
   ) {}

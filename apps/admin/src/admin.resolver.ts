@@ -1,13 +1,10 @@
 import { Public } from '@app/common/decorators/public.decorator';
 import { PaymentStatus } from '@app/common/enums';
-import { Inject, UseGuards } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { BasicAuthGuard } from './@core/guards/basic.guard';
-import { Token } from './@core/tokens';
 import { AdminService } from './admin.service';
-import { PostModel } from './app/entity/post.model';
-import { PaymentModel } from './app/entity/subscriptions.model';
 import { UserPaginationQuery } from './app/graphql/args/pagination-query';
 import { PaginationQuery } from './app/graphql/args/pagination-query.args';
 import { CreateAdminInput } from './app/graphql/input/create-admin.input';
@@ -17,7 +14,8 @@ import { ImageOutput } from './app/graphql/output/avatar.output';
 import { PaymentOutput } from './app/graphql/output/payments.output';
 import { UserInfoOutput } from './app/graphql/output/user-info.outpul';
 import { UserOutput } from './app/graphql/output/user.output';
-import { MongoQueryRepository } from './db/interfaces/mongo-repository.interface';
+import { PaymentsQueryRepositoryInterface } from './db/interfaces/payments/payments-query-repository.interface';
+import { PostsQueryRepositoryInterface } from './db/interfaces/post/posts-query-repository.interface';
 import { AbstractUsersQueryRepository } from './db/interfaces/users-query-repository.interface';
 import { toPaymentsViewModel } from './utils/payments-view.mapper';
 import {
@@ -33,10 +31,8 @@ export class AdminResolver {
   public constructor(
     private readonly adminService: AdminService,
     private readonly usersQueryRepository: AbstractUsersQueryRepository,
-    @Inject(Token.PostsQueryRepository)
-    private readonly postsQueryRepository: MongoQueryRepository<PostModel>,
-    @Inject(Token.PaymentsQueryRepository)
-    private readonly paymentQueryRepository: MongoQueryRepository<PaymentModel>,
+    private readonly postsQueryRepository: PostsQueryRepositoryInterface,
+    private readonly paymentQueryRepository: PaymentsQueryRepositoryInterface,
   ) {}
 
   @Public()

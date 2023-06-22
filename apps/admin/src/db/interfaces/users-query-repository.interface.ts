@@ -1,7 +1,7 @@
 import { SortDirection, UserSortFields } from '@app/common/enums';
 import { DatabaseException } from '@app/common/exceptions/database.exception';
 
-import { MongoQueryRepository } from './mongo-repository.interface';
+import { MongoQueryRepository } from './mongo/mongo-query-repository.interface';
 import { UserModel } from '../../app/entity/user.model';
 import { UserPaginationQuery } from '../../app/graphql/args/pagination-query';
 

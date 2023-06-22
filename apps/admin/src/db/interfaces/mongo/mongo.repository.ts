@@ -1,11 +1,9 @@
 import { DatabaseException } from '@app/common/exceptions/database.exception';
-import { Injectable } from '@nestjs/common';
 import { ModelType } from '@typegoose/typegoose/lib/types';
 
-import { Repository } from './interfaces/repository.interface';
+import { Repository } from '../repository.interface';
 
-@Injectable()
-export class MongoRepository<M> extends Repository<M> {
+export abstract class MongoRepository<M> extends Repository<M> {
   public constructor(protected readonly repository: ModelType<M>) {
     super();
   }

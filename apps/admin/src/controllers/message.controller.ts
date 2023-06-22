@@ -1,4 +1,5 @@
 import { ConfirmedEmailtype } from '@app/common/message-creators/confirmed-email.message-creator';
+import { CreatedPostType } from '@app/common/message-creators/created-post.message-creator';
 import { CreatedUserType } from '@app/common/message-creators/created-user.message-creator';
 import { UpdatedAvatarType } from '@app/common/message-creators/updated-avatar.message-creator';
 import { UpdatedProfileType } from '@app/common/message-creators/updated-profile.message-creator';
@@ -12,13 +13,15 @@ import {
   RmqContext,
 } from '@nestjs/microservices';
 
+import { PostsRepositoryInterface } from '../db/interfaces/post/posts-repository.interface';
 import { UsersRepositoryInterface } from '../db/interfaces/users-repository.interface';
 
 @Controller()
 export class AdminMessageConroller {
   public constructor(
     private readonly rmqService: RmqService,
-    private readonly userRepository: UsersRepositoryInterface,
+    private readonly usersRepository: UsersRepositoryInterface,
+    private readonly postsRepository: PostsRepositoryInterface,
   ) {}
 
   @MessagePattern(RootEvent.CreatedUser)
@@ -26,7 +29,7 @@ export class AdminMessageConroller {
     @Payload() data: CreatedUserType,
     @Ctx() context: RmqContext,
   ) {
-    await this.userRepository.create(data);
+    await this.usersRepository.create(data);
 
     this.rmqService.ack(context);
   }
@@ -36,7 +39,7 @@ export class AdminMessageConroller {
     @Payload() { userId, ...updates }: ConfirmedEmailtype,
     @Ctx() context: RmqContext,
   ) {
-    await this.userRepository.update(userId, updates);
+    await this.usersRepository.update(userId, updates);
 
     this.rmqService.ack(context);
   }
@@ -46,7 +49,7 @@ export class AdminMessageConroller {
     @Payload() { userId, ...updates }: UpdatedProfileType,
     @Ctx() context: RmqContext,
   ) {
-    await this.userRepository.update(userId, { profile: { ...updates } });
+    await this.usersRepository.update(userId, { profile: { ...updates } });
 
     this.rmqService.ack(context);
   }
@@ -56,7 +59,18 @@ export class AdminMessageConroller {
     @Payload() { userId, ...updates }: UpdatedAvatarType,
     @Ctx() context: RmqContext,
   ) {
-    await this.userRepository.update(userId, { avatar: { ...updates } });
+    await this.usersRepository.update(userId, { avatar: { ...updates } });
+
+    this.rmqService.ack(context);
+  }
+
+  @MessagePattern(RootEvent.CreatedPost)
+  public async createPost(
+    @Payload() { userId, ...updates }: CreatedPostType,
+    @Ctx() context: RmqContext,
+  ) {
+    // await this.usersRepository.update(userId, { avatar: { ...updates } });
+    await this.postsRepository;
 
     this.rmqService.ack(context);
   }

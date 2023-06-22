@@ -1,6 +1,6 @@
 import { Image, Post } from '@prisma/client';
 
-type PostCreatedPayload = Pick<
+export type CreatedPostType = Pick<
   Post,
   'userId' | 'description' | 'createdAt' | 'id'
 > & {
@@ -8,5 +8,5 @@ type PostCreatedPayload = Pick<
 };
 
 export const createdPostMessageCreator = (
-  data: PostCreatedPayload,
-): PostCreatedPayload => data;
+  data: CreatedPostType,
+): CreatedPostType => data;

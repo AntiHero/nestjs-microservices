@@ -1,5 +1,5 @@
 import { DatabaseException } from '@app/common/exceptions/database.exception';
-import { Inject } from '@nestjs/common';
+import { Inject }            from '@nestjs/common';
 import {
   DataSource,
   DeepPartial,
@@ -8,7 +8,7 @@ import {
   Repository,
 } from 'typeorm';
 
-import { BaseEntity } from '../../app/entity/base';
+import { BaseEntity }        from '../../app/entity/base';
 
 export abstract class SqlRepository<K extends BaseEntity, T = new () => any> {
   @Inject(DataSource)

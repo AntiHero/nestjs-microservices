@@ -1,15 +1,13 @@
-import { type Payment }     from '.prisma/subscriptions';
+import { type Payment } from '.prisma/subscriptions';
 import {
   Currency,
   PaymentProvider,
   PaymentStatus,
   SubscriptionType,
-}                           from '@app/common/enums';
-import { prop }             from '@typegoose/typegoose';
-import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
+} from '@app/common/enums';
+import { prop }         from '@typegoose/typegoose';
+import { TimeStamps }   from '@typegoose/typegoose/lib/defaultClasses';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface SubscriptionModel extends Base {}
 export class PaymentModel
   extends TimeStamps
   implements

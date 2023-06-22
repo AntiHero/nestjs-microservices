@@ -4,7 +4,7 @@ export type CreatedPostType = Pick<
   Post,
   'userId' | 'description' | 'createdAt' | 'id'
 > & {
-  images: Pick<Image, 'url' | 'previewUrl'>[];
+  images: Pick<Image, 'url' | 'previewUrl' | 'id'>[];
 };
 
 export const createdPostMessageCreator = (

@@ -1,11 +1,11 @@
-import { ConfirmedEmailtype } from '@app/common/message-creators/confirmed-email.message-creator';
-import { CreatedPostType } from '@app/common/message-creators/created-post.message-creator';
-import { CreatedUserType } from '@app/common/message-creators/created-user.message-creator';
-import { UpdatedAvatarType } from '@app/common/message-creators/updated-avatar.message-creator';
-import { UpdatedProfileType } from '@app/common/message-creators/updated-profile.message-creator';
-import { RootEvent } from '@app/common/patterns/root.pattern';
-import { RmqService } from '@app/common/src';
-import { Controller } from '@nestjs/common';
+import { ConfirmedEmailtype }       from '@app/common/message-creators/confirmed-email.message-creator';
+import { CreatedPostType }          from '@app/common/message-creators/created-post.message-creator';
+import { CreatedUserType }          from '@app/common/message-creators/created-user.message-creator';
+import { UpdatedAvatarType }        from '@app/common/message-creators/updated-avatar.message-creator';
+import { UpdatedProfileType }       from '@app/common/message-creators/updated-profile.message-creator';
+import { RootEvent }                from '@app/common/patterns/root.pattern';
+import { RmqService }               from '@app/common/src';
+import { Controller }               from '@nestjs/common';
 import {
   Ctx,
   MessagePattern,
@@ -66,11 +66,20 @@ export class AdminMessageConroller {
 
   @MessagePattern(RootEvent.CreatedPost)
   public async createPost(
+    @Payload() data: CreatedPostType,
+    @Ctx() context: RmqContext,
+  ) {
+    await this.postsRepository.create(data);
+
+    this.rmqService.ack(context);
+  }
+
+  @MessagePattern(RootEvent.UpdatedPost)
+  public async updatePost(
     @Payload() { userId, ...updates }: CreatedPostType,
     @Ctx() context: RmqContext,
   ) {
-    // await this.usersRepository.update(userId, { avatar: { ...updates } });
-    await this.postsRepository;
+    await this.postsRepository.update(userId, updates);
 
     this.rmqService.ack(context);
   }

@@ -1,10 +1,10 @@
-import { AccountPlan }      from '@app/common/enums';
-import type { User }        from '@prisma/client';
-import { prop }             from '@typegoose/typegoose';
-import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
+import { AccountPlan } from '@app/common/enums';
+import type { User }   from '@prisma/client';
+import { prop }        from '@typegoose/typegoose';
+import { TimeStamps }  from '@typegoose/typegoose/lib/defaultClasses';
 
 export class AvatarModel extends TimeStamps {
-  @prop()
+  @prop({ unique: true })
   public id: string;
 
   @prop({ type: () => String, default: null })
@@ -26,10 +26,8 @@ export class AvatarModel extends TimeStamps {
   public userId: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ProfileModel extends Base {}
 export class ProfileModel extends TimeStamps {
-  @prop()
+  @prop({ unique: true })
   public id: string;
 
   @prop({ type: () => String, default: null })
@@ -51,8 +49,6 @@ export class ProfileModel extends TimeStamps {
   public userId: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface UserModel extends Base {}
 export class UserModel
   extends TimeStamps
   implements

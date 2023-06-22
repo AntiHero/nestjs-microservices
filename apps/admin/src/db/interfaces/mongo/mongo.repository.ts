@@ -1,7 +1,9 @@
 import { DatabaseException } from '@app/common/exceptions/database.exception';
-import { ModelType } from '@typegoose/typegoose/lib/types';
+import { DeepPartial }       from '@app/common/types/deep-partial.type';
+import { applyUpdates }      from '@app/common/utils/apply-updates.util';
+import { ModelType }         from '@typegoose/typegoose/lib/types';
 
-import { Repository } from '../repository.interface';
+import { Repository }        from '../repository.interface';
 
 export abstract class MongoRepository<M> extends Repository<M> {
   public constructor(protected readonly repository: ModelType<M>) {
@@ -34,6 +36,24 @@ export abstract class MongoRepository<M> extends Repository<M> {
       console.log(result);
 
       return result;
+    } catch (error) {
+      console.log(error);
+
+      throw new DatabaseException();
+    }
+  }
+
+  public async update(id: string, updates: DeepPartial<M>): Promise<boolean> {
+    try {
+      const result = await this.repository.findOne({
+        id,
+      });
+
+      if (!result) return false;
+
+      await applyUpdates(result, <any>updates).save();
+
+      return true;
     } catch (error) {
       console.log(error);
 

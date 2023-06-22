@@ -1,8 +1,9 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+
 import { JwtAdaptor } from '../../adaptors/jwt/jwt.adaptor';
+import { ActiveUserData } from '../../user/types';
 import { DeviceSessionsRepository } from '../repositories/device-sessions.repository';
 import { DeviceViewModel } from '../types';
-import { ActiveUserData } from '../../user/types';
 
 export class AllUserDevicesWithActiveSessionsCommand {
   constructor(public user: ActiveUserData) {}

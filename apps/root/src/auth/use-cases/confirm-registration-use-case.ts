@@ -1,13 +1,13 @@
-import { confirmedEmailMessageCreator }       from '@app/common/message-creators/confirmed-email.message-creator';
-import { RootEvent }                          from '@app/common/patterns';
+import { confirmedEmailMessageCreator } from '@app/common/message-creators/confirmed-email.message-creator';
+import { RootEvent } from '@app/common/patterns';
 import { BadRequestException, GoneException } from '@nestjs/common';
-import { CommandHandler, ICommandHandler }    from '@nestjs/cqrs';
-import { EventEmitter2 as EventEmitter }      from '@nestjs/event-emitter';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { EventEmitter2 as EventEmitter } from '@nestjs/event-emitter';
 
-import { NOTIFY_ADMIN_EVENT }                 from '../../common/event-router';
-import { UserRepository }                     from '../../user/repositories/user.repository';
-import { UserWithEmailConfirmation }          from '../../user/types';
-import { ConfirmationCodeDto }                from '../dto/confirmation-code.dto';
+import { NOTIFY_ADMIN_EVENT } from '../../common/event-router';
+import { UserRepository } from '../../user/repositories/user.repository';
+import { UserWithEmailConfirmation } from '../../user/types';
+import { ConfirmationCodeDto } from '../dto/confirmation-code.dto';
 
 export class ConfirmRegistrationCommand {
   constructor(public codeDto: ConfirmationCodeDto) {}
@@ -38,7 +38,7 @@ export class ConfirmRegistrationUseCase
     this.eventEmitter.emit(NOTIFY_ADMIN_EVENT, {
       event: RootEvent.ConfirmedEmail,
       message: confirmedEmailMessageCreator({
-        emailConfirmed: true,
+        isEmailConfirmed: true,
         userId: user.id,
       }),
     });

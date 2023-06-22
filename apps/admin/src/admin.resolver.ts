@@ -108,5 +108,111 @@ export class AdminResolver {
     );
 
     return result.map(toPaymentsViewModel);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@UseGuards(BasicAuthGuard)
+@Resolver()
+export class AdminResolver {
+  public constructor(
+    private readonly adminService: AdminService,
+    private readonly usersQueryRepository: UsersQueryRepositoryInterface,
+    private readonly postsQueryRepository: PostsQueryRepositoryInterface,
+    private readonly paymentQueryRepository: PaymentsQueryRepositoryInterface,
+  ) {}
+
+  @Public()
+  @Query(() => String)
+  public async healthCheck() {
+    return 'ok';
+  }
+
+  @Query(() => [UserOutput], { name: 'userList' })
+  public async getUserList(@Args() paginationQuery: UserPaginationQuery) {
+    const result =
+      (await this.usersQueryRepository.getByQuery(paginationQuery))?.map(
+        toUserViewModel,
+      ) || [];
+
+    return result;
+  }
+
+  @Mutation(() => Boolean)
+  public async deleteUser(@Args('input') input: DeleteUserInput) {
+    return this.adminService.deleteUser(input.id);
+  }
+
+  @Mutation(() => Admin)
+  async createAdmin(@Args('input') createAdminInput: CreateAdminInput) {
+    const result = await this.adminService.createAdmin(createAdminInput);
+
+    return result;
+  }
+
+  @Query(() => UserInfoOutput, { name: 'userInfo' })
+  public async getUserInfo(@Args('id', { type: () => ID }) id: string) {
+    const result = await this.usersQueryRepository.getInfoById(id);
+
+    return result && toUserInfoViewModel(result);
+  }
+
+  @Query(() => [ImageOutput], { nullable: true, name: 'userPhotos' })
+  public async getPostImages(
+    @Args('userId', { type: () => ID }) userId: string,
+    @Args() paginationQuery: PaginationQuery,
+  ) {
+    const result = await this.postsQueryRepository.findByQuery(
+      {
+        userId,
+      },
+      {
+        images: {
+          url: 1,
+          previewUrl: 1,
+        },
+      },
+      paginationQuery,
+    );
+
+    return (result as unknown as PostImagesInput[])
+      .map(toPostImagesViewModel)
+      .flat();
+  }
+
+  @Query(() => [PaymentOutput], { name: 'payments', nullable: true })
+  public async getPayments(
+    @Args('userId', { type: () => ID }) userId: string,
+    @Args() paginationQuery: PaginationQuery,
+  ) {
+    const result = await this.paymentQueryRepository.findByQuery(
+      {
+        userId,
+        status: PaymentStatus.CONFIRMED,
+      },
+      {},
+      paginationQuery,
+    );
+
+    return result.map(toPaymentsViewModel);
   }
 }

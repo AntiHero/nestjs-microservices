@@ -1,17 +1,17 @@
-import { SubscriptionStatus } from '.prisma/subscriptions';
-import { InjectStripeService } from '@app/common/decorators/inject-stripe-service.decorator';
+import { SubscriptionStatus }              from '.prisma/subscriptions';
+import { InjectStripeService }             from '@app/common/decorators/inject-stripe-service.decorator';
 import {
   StripeEvent,
   StripeSubscriptionObject,
 } from '@app/common/interfaces/events.interface';
-import { Injectable } from '@nestjs/common';
+import { Injectable }                      from '@nestjs/common';
 
-import { PrismaService } from 'apps/subscriptions/src/prisma/prisma.service';
-import { SubscriptionsQueryRepository } from 'apps/subscriptions/src/repositories/subscriptions.query-repository';
+import { PrismaService }                   from 'apps/subscriptions/src/prisma/prisma.service';
+import { SubscriptionsQueryRepository }    from 'apps/subscriptions/src/repositories/subscriptions.query-repository';
 import { SubscriptionsTransactionService } from 'apps/subscriptions/src/services/subscriptions-transaction.service';
 
-import { CUSTOMER_SUBSCRIPTION_DELETED } from '../../constants';
-import { Handler } from '../abstract.handler';
+import { CUSTOMER_SUBSCRIPTION_DELETED }   from '../../constants';
+import { Handler }                         from '../abstract.handler';
 
 @Injectable()
 export class CustomerSubscriptionDeletedEventHandler extends Handler {

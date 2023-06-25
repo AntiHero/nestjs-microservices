@@ -7,6 +7,8 @@ class AdminCommand {
   public static GetUserList = AdminCommand.createPattern('get_user_list');
 
   public static DeleteUser = AdminCommand.createPattern('delete_user');
+
+  public static BanUser = AdminCommand.createPattern('ban_user');
 }
 
 export { AdminCommand };

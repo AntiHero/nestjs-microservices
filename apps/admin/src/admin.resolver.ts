@@ -7,6 +7,7 @@ import { BasicAuthGuard }                      from './@core/guards/basic.guard'
 import { AdminService }                        from './admin.service';
 import { UserPaginationQuery }                 from './app/graphql/args/pagination-query';
 import { PaginationQuery }                     from './app/graphql/args/pagination-query.args';
+import { BanUserInput }                        from './app/graphql/input/ban-user-input';
 import { CreateAdminInput }                    from './app/graphql/input/create-admin.input';
 import { DeleteUserInput }                     from './app/graphql/input/delete-user.input';
 import { Admin }                               from './app/graphql/model/admin.model';
@@ -54,6 +55,11 @@ export class AdminResolver {
   @Mutation(() => Boolean)
   public async deleteUser(@Args('input') input: DeleteUserInput) {
     return this.adminService.deleteUser(input.id);
+  }
+
+  @Mutation(() => Boolean)
+  public async banUser(@Args('input') input: BanUserInput) {
+    return this.adminService.banUser(input.id);
   }
 
   @Mutation(() => Admin)

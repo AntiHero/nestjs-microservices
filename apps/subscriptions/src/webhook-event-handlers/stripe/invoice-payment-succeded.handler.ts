@@ -2,14 +2,14 @@ import {
   StripeEvent,
   StripeInvoiceObject,
 } from '@app/common/interfaces/events.interface';
-import { Injectable } from '@nestjs/common';
-import { CommandBus } from '@nestjs/cqrs';
+import { Injectable }                   from '@nestjs/common';
+import { CommandBus }                   from '@nestjs/cqrs';
 
-import { PrismaService } from 'apps/subscriptions/src/prisma/prisma.service';
+import { PrismaService }                from 'apps/subscriptions/src/prisma/prisma.service';
 import { SubscriptionsQueryRepository } from 'apps/subscriptions/src/repositories/subscriptions.query-repository';
 
-import { INVOICE_PAYMENT_SUCCEEDED } from '../../constants';
-import { Handler } from '../abstract.handler';
+import { INVOICE_PAYMENT_SUCCEEDED }    from '../../constants';
+import { Handler }                      from '../abstract.handler';
 
 @Injectable()
 export class InvoicePaymentSucceededEventHandler extends Handler {

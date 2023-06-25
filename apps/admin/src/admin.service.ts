@@ -29,4 +29,16 @@ export class AdminService {
 
     return result;
   }
+
+  public async banUser(id: string) {
+    const result = await this.usersRepository.update(id, {
+      isBanned: true,
+    });
+
+    if (result) {
+      this.rootClient.emit(AdminCommand.BanUser, id);
+    }
+
+    return result;
+  }
 }

@@ -8,24 +8,24 @@ import {
   StripeCheckoutSessionObject,
   StripeEvent,
 } from '@app/common/interfaces/events.interface';
-import { createdSubscriptionMessageCreator } from '@app/common/message-creators/created-subscription.message-creator';
+import { createdSubscriptionMessageCreator }   from '@app/common/message-creators/created-subscription.message-creator';
 import { updateUserAccountPlanMessageCreator } from '@app/common/message-creators/update-user-account-plan.message-creator';
 import {
   SubscriptionCommand,
   SubscriptionEvent,
 } from '@app/common/patterns/subscriptions.pattern';
-import { Injectable } from '@nestjs/common';
-import { EventEmitter2 as EventEmitter } from '@nestjs/event-emitter';
-import { AccountPlan } from '@prisma/client';
-import { PaymentException } from 'apps/root/src/common/exceptions/subscriptions.exception';
+import { Injectable }                          from '@nestjs/common';
+import { EventEmitter2 as EventEmitter }       from '@nestjs/event-emitter';
+import { AccountPlan }                         from '@prisma/client';
+import { PaymentException }                    from 'apps/root/src/common/exceptions/subscriptions.exception';
 
-import { PrismaService } from 'apps/subscriptions/src/prisma/prisma.service';
-import { SubscriptionsQueryRepository } from 'apps/subscriptions/src/repositories/subscriptions.query-repository';
-import { SubscriptionsTransactionService } from 'apps/subscriptions/src/services/subscriptions-transaction.service';
+import { PrismaService }                       from 'apps/subscriptions/src/prisma/prisma.service';
+import { SubscriptionsQueryRepository }        from 'apps/subscriptions/src/repositories/subscriptions.query-repository';
+import { SubscriptionsTransactionService }     from 'apps/subscriptions/src/services/subscriptions-transaction.service';
 
-import { CHECKOUT_SESSION_COMPLETED } from '../../constants';
-import { determineSubscriptionEndDate } from '../../utils/calculate-subscription-end-date';
-import { Handler } from '../abstract.handler';
+import { CHECKOUT_SESSION_COMPLETED }          from '../../constants';
+import { determineSubscriptionEndDate }        from '../../utils/calculate-subscription-end-date';
+import { Handler }                             from '../abstract.handler';
 
 @Injectable()
 export class CheckoutSessinCompletedEventHandler extends Handler {
@@ -158,6 +158,8 @@ export class CheckoutSessinCompletedEventHandler extends Handler {
                   status,
                   type,
                   userId,
+                  period,
+                  periodType,
                 }),
               });
 

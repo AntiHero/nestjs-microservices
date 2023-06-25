@@ -1,15 +1,15 @@
-import { updatedProfileMessageCreator } from '@app/common/message-creators/updated-profile.message-creator';
-import { RootEvent } from '@app/common/patterns/root.pattern';
+import { updatedProfileMessageCreator }           from '@app/common/message-creators/updated-profile.message-creator';
+import { RootEvent }                              from '@app/common/patterns/root.pattern';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { EventEmitter2 as EventEmitter } from '@nestjs/event-emitter';
-import { Profile } from '@prisma/client';
+import { CommandHandler, ICommandHandler }        from '@nestjs/cqrs';
+import { EventEmitter2 as EventEmitter }          from '@nestjs/event-emitter';
+import { Profile }                                from '@prisma/client';
 
-import { NOTIFY_ADMIN_EVENT } from '../../common/event-router';
-import { UpdateUserProfileDto } from '../dto/update-user-profile.dto';
-import { ProfileQueryRepositoryAdapter } from '../repositories/adapters/profile-query-repository.adapter';
-import { ProfileRepositoryAdapter } from '../repositories/adapters/profile-repository.adapter';
-import { UserRepository } from '../repositories/user.repository';
+import { NOTIFY_ADMIN_EVENT }                     from '../../common/event-router';
+import { UpdateUserProfileDto }                   from '../dto/update-user-profile.dto';
+import { ProfileQueryRepositoryAdapter }          from '../repositories/adapters/profile-query-repository.adapter';
+import { ProfileRepositoryAdapter }               from '../repositories/adapters/profile-repository.adapter';
+import { UserRepository }                         from '../repositories/user.repository';
 
 export class UpdateProfileCommand {
   constructor(
@@ -17,6 +17,7 @@ export class UpdateProfileCommand {
     public updateUserProfileDto: UpdateUserProfileDto,
   ) {}
 }
+
 @CommandHandler(UpdateProfileCommand)
 export class UpdateProfileUseCase
   implements ICommandHandler<UpdateProfileCommand>
@@ -27,6 +28,7 @@ export class UpdateProfileUseCase
     private readonly profileQueryRepository: ProfileQueryRepositoryAdapter,
     private readonly eventEmitter: EventEmitter,
   ) {}
+
   public async execute(command: UpdateProfileCommand) {
     const { userId } = command;
 

@@ -1,19 +1,21 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { User } from '@prisma/client';
-import { randomUUID } from 'crypto';
+import { randomUUID }                      from 'crypto';
+
 import {
   BadRequestException,
   ForbiddenException,
   UnauthorizedException,
 } from '@nestjs/common';
-import Joi from 'joi';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { User }                            from '@prisma/client';
+import Joi                                 from 'joi';
 
-import { OauthCommandData } from '../types';
-import { OauthProvider } from 'apps/root/src/common/constants';
-import { JwtAdaptor } from '../../adaptors/jwt/jwt.adaptor';
-import { DevicesSessionsService } from '../services/devices.service';
-import { GithubUsersService } from '../services/github-users.service';
-import { UserRepository } from '../../user/repositories/user.repository';
+import { OauthProvider }                   from 'apps/root/src/common/constants';
+
+import { JwtAdapter }                      from '../../adapters/jwt/jwt.adapter';
+import { UserRepository }                  from '../../user/repositories/user.repository';
+import { DevicesSessionsService }          from '../services/devices.service';
+import { GithubUsersService }              from '../services/github-users.service';
+import { OauthCommandData }                from '../types';
 
 export class SignInWithGithubCommand {
   public constructor(public readonly data: OauthCommandData) {
@@ -37,7 +39,7 @@ export class SignInUserWithGithubUseCase
     private readonly devicesSessionsService: DevicesSessionsService,
     private readonly githubUserService: GithubUsersService,
     private readonly userRepository: UserRepository,
-    private readonly jwtAdaptor: JwtAdaptor,
+    private readonly jwtAdaptor: JwtAdapter,
   ) {}
 
   private readonly type = OauthProvider.GITHUB;

@@ -1,5 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { JwtService }                                from '@nestjs/jwt';
 
 @Injectable()
 export class CookieAuthGuard implements CanActivate {
@@ -15,6 +15,7 @@ export class CookieAuthGuard implements CanActivate {
     const payload: any = this.jwtService.decode(refreshToken);
 
     request.user = payload;
+
     return true;
   }
 }

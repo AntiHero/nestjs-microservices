@@ -11,7 +11,6 @@ export class EventRouter {
 
   @OnEvent(NOTIFY_ADMIN_EVENT)
   public rootEvent<T>([event, payload]: [string, T]) {
-    console.log(event, payload);
     this.adminRmqClient.emitMessage(event, payload);
   }
 }

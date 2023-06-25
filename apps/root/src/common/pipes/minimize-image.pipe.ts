@@ -1,11 +1,13 @@
-import { Injectable, PipeTransform } from '@nestjs/common';
-import sharp from 'sharp';
+import { Injectable, PipeTransform }           from '@nestjs/common';
+import sharp                                   from 'sharp';
 
 import { MAX_AVATAR_HEIGHT, MAX_AVATAR_WIDTH } from '../constants';
 
 @Injectable()
 export class MinimizeImagePipe implements PipeTransform {
-  async transform(file: Express.Multer.File): Promise<Express.Multer.File> {
+  public async transform(
+    file: Express.Multer.File,
+  ): Promise<Express.Multer.File> {
     const { height = 0, width = 0 } = await sharp(file.buffer).metadata();
 
     if (height > MAX_AVATAR_HEIGHT || width > MAX_AVATAR_WIDTH) {

@@ -1,11 +1,12 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { DATABASE_ERROR } from 'apps/root/src/common/errors';
+import { Prisma }                                   from '@prisma/client';
 
-import { PrismaService } from 'apps/root/src/prisma/prisma.service';
-import { PostsQueryDto } from 'apps/root/src/user/dto/posts-query.dto';
-import { UserPost, UserPosts } from 'apps/root/src/user/types';
-import { PostsQueryRepositoryAdatapter } from '../adapters/post/posts.query-adapter';
-import { Prisma, PrismaClient } from '@prisma/client';
+import { DATABASE_ERROR }                           from 'apps/root/src/common/errors';
+import { PrismaService }                            from 'apps/root/src/prisma/prisma.service';
+import { PostsQueryDto }                            from 'apps/root/src/user/dto/posts-query.dto';
+import { UserPost, UserPosts }                      from 'apps/root/src/user/types';
+
+import { PostsQueryRepositoryAdatapter }            from '../adapters/post/posts.query-adapter';
 
 @Injectable()
 export class PostsQueryRepository extends PostsQueryRepositoryAdatapter {

@@ -1,20 +1,20 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
-import * as argon from 'argon2';
-import { UserRepository } from '../../user/repositories/user.repository';
-import { DeviceSessionsRepository } from '../../deviceSessions/repositories/device-sessions.repository';
-import { ActiveUserData } from '../../user/types';
+import { ConfigService }                     from '@nestjs/config';
+import { JwtService }                        from '@nestjs/jwt';
+import * as argon                            from 'argon2';
+
+import { DeviceSessionsRepository }          from '../../deviceSessions/repositories/device-sessions.repository';
+import { ActiveUserData }                    from '../../user/types';
+
 @Injectable()
-export class JwtAdaptor {
-  constructor(
+export class JwtAdapter {
+  public constructor(
     private jwtService: JwtService,
     private config: ConfigService,
-    private userRepository: UserRepository,
     private deviceSessionsRepository: DeviceSessionsRepository,
   ) {}
 
-  async getTokens(userId: string, userName: string, deviceId: string) {
+  public async getTokens(userId: string, userName: string, deviceId: string) {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         { userId, deviceId },
@@ -38,7 +38,7 @@ export class JwtAdaptor {
     };
   }
 
-  async updateTokensHash(tokens: {
+  public async updateTokensHash(tokens: {
     accessToken: string;
     refreshToken: string;
   }) {
@@ -49,7 +49,8 @@ export class JwtAdaptor {
       refreshTokenHash,
     };
   }
-  async refreshToken(user: ActiveUserData) {
+
+  public async refreshToken(user: ActiveUserData) {
     //  create new pair of tokens
     const tokens = await this.getTokens(
       user.userId,
@@ -61,9 +62,11 @@ export class JwtAdaptor {
       user.deviceId,
       hashedTokens,
     );
+
     return tokens;
   }
-  async validateRtToken(refreshToken: string, deviceId: string) {
+
+  public async validateRtToken(refreshToken: string, deviceId: string) {
     const isJwt =
       await this.deviceSessionsRepository.findTokensByDeviceSessionId(deviceId);
 
@@ -76,7 +79,8 @@ export class JwtAdaptor {
     if (!rtMatches) throw new UnauthorizedException('Access denied');
     return true;
   }
-  async validateAtToken(accessToken: string, deviceId: string) {
+
+  public async validateAtToken(accessToken: string, deviceId: string) {
     const isJwt =
       await this.deviceSessionsRepository.findTokensByDeviceSessionId(deviceId);
 
@@ -86,7 +90,9 @@ export class JwtAdaptor {
       );
 
     const rtMatches = await argon.verify(isJwt.accessTokenHash, accessToken);
+
     if (!rtMatches) throw new UnauthorizedException('Access denied');
+
     return true;
   }
 }

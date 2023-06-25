@@ -1,17 +1,16 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import { UserRepository } from '../../user/repositories/user.repository';
-import { google, Auth } from 'googleapis';
-import { googleOauthConfig } from '../../config/google-oauth.config';
-import { ConfigType } from '@nestjs/config';
+import { ConfigType }                                from '@nestjs/config';
+import { Auth, google }                              from 'googleapis';
+
+import { googleOauthConfig }                         from '../../config/google-oauth.config';
 
 @Injectable()
-export class GoogleAuthAdaptor {
+export class GoogleAuthAdapter {
   oauthClient: Auth.OAuth2Client;
 
-  constructor(
+  public constructor(
     @Inject(googleOauthConfig.KEY)
     private readonly oauthConfig: ConfigType<typeof googleOauthConfig>,
-    private userRepository: UserRepository,
   ) {
     this.oauthClient = new google.auth.OAuth2(
       this.oauthConfig.clientId,
@@ -20,7 +19,7 @@ export class GoogleAuthAdaptor {
     );
   }
 
-  async validateUser(code: string) {
+  public async validateUser(code: string) {
     const { tokens } = await this.oauthClient.getToken(code);
 
     if (!tokens || !tokens.access_token)

@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable }                   from '@nestjs/common';
 import { Avatar, Prisma, PrismaClient } from '@prisma/client';
 
-import { AvatarPayload } from '../types';
-import { ImagesRepositoryAdapter } from './adapters/images-repository.adapter';
+import { ImagesRepositoryAdapter }      from './adapters/images-repository.adapter';
+import { AvatarPayload }                from '../types';
 
 @Injectable()
 export class AvatarsRepository extends ImagesRepositoryAdapter<Avatar> {

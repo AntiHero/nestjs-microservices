@@ -1,23 +1,23 @@
-import { randomUUID }                                 from 'crypto';
+import { randomUUID } from 'crypto';
 
-import { createdUserMessageCreator }                  from '@app/common/message-creators/created-user.message-creator';
-import { RootEvent }                                  from '@app/common/patterns';
+import { createdUserMessageCreator } from '@app/common/message-creators/created-user.message-creator';
+import { RootEvent } from '@app/common/patterns';
 import { BadRequestException, UnauthorizedException } from '@nestjs/common';
-import { CommandHandler, ICommandHandler }            from '@nestjs/cqrs';
-import { EventEmitter2 as EventEmitter }              from '@nestjs/event-emitter';
-import { User }                                       from '@prisma/client';
-import { add }                                        from 'date-fns';
-import Joi                                            from 'joi';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { EventEmitter2 as EventEmitter } from '@nestjs/event-emitter';
+import { User } from '@prisma/client';
+import { add } from 'date-fns';
+import Joi from 'joi';
 
-import { GoogleAuthAdaptor }                          from '../../adaptors/google/google-auth.adaptor';
-import { JwtAdaptor }                                 from '../../adaptors/jwt/jwt.adaptor';
-import { OauthProvider }                              from '../../common/constants';
-import { NOTIFY_ADMIN_EVENT }                         from '../../common/event-router';
-import { MailService }                                from '../../mail/mail.service';
-import { UserRepository }                             from '../../user/repositories/user.repository';
-import { CreateUserWithOauthAccountData }             from '../../user/types';
-import { DevicesSessionsService }                     from '../services/devices.service';
-import { OauthCommandData }                           from '../types';
+import { GoogleAuthAdapter } from '../../adapters/google/google-auth.adapter';
+import { JwtAdapter } from '../../adapters/jwt/jwt.adapter';
+import { OauthProvider } from '../../common/constants';
+import { NOTIFY_ADMIN_EVENT } from '../../common/event-router';
+import { MailService } from '../../mail/mail.service';
+import { UserRepository } from '../../user/repositories/user.repository';
+import { CreateUserWithOauthAccountData } from '../../user/types';
+import { DevicesSessionsService } from '../services/devices.service';
+import { OauthCommandData } from '../types';
 
 export class SignUpUserWithGoogleCommand {
   public constructor(public readonly data: OauthCommandData) {
@@ -38,8 +38,8 @@ export class SignUpUserWithGoogleUseCase
 {
   constructor(
     private readonly userRepository: UserRepository,
-    private readonly jwtAdaptor: JwtAdaptor,
-    private readonly googleAuthAdaptor: GoogleAuthAdaptor,
+    private readonly jwtAdaptor: JwtAdapter,
+    private readonly googleAuthAdaptor: GoogleAuthAdapter,
     private readonly emailService: MailService,
     private readonly devicesSessionsService: DevicesSessionsService,
     private readonly eventEmitter: EventEmitter,
@@ -94,7 +94,7 @@ export class SignUpUserWithGoogleUseCase
           message,
         ]);
 
-        await this.emailService.sendOauthAccountCreationConfirmation(user);
+        await this.emailService.sendOauthAccountCreationEmail(user);
       } else {
         const existingOauthAccount =
           await this.userRepository.findOauthAccountByQuery({
@@ -113,7 +113,7 @@ export class SignUpUserWithGoogleUseCase
             mergeCodeExpDate: add(new Date(), { minutes: 10 }),
           });
 
-          await this.emailService.sendAccountsMerge(user, mergeCode);
+          await this.emailService.sendMergeAccountEmail(user, mergeCode);
           return user.email;
         }
       }

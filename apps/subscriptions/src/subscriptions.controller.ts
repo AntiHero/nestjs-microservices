@@ -1,7 +1,7 @@
-import { PaymentsQueryDto } from '@app/common/dtos/payments-query.dto';
+import { PaymentsQueryDto }             from '@app/common/dtos/payments-query.dto';
 import { GetCheckoutSessionUrlPayload } from '@app/common/interfaces/get-checkout-session-url-payload.interface';
-import { Result } from '@app/common/interfaces/result.interface';
-import { SubscriptionCommand } from '@app/common/patterns/subscriptions.pattern';
+import { Result }                       from '@app/common/interfaces/result.interface';
+import { SubscriptionCommand }          from '@app/common/patterns/subscriptions.pattern';
 import {
   Body,
   Controller,
@@ -12,16 +12,16 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { CommandBus } from '@nestjs/cqrs';
-import { ClientProxy, MessagePattern } from '@nestjs/microservices';
-import { ApiExcludeEndpoint } from '@nestjs/swagger';
+import { CommandBus }                   from '@nestjs/cqrs';
+import { ClientProxy, MessagePattern }  from '@nestjs/microservices';
+import { ApiExcludeEndpoint }           from '@nestjs/swagger';
 
-import { StripeWebhookGuard } from './guards/stripe-webhook.guard';
-import { StripeEvent } from './interfaces';
+import { StripeWebhookGuard }           from './guards/stripe-webhook.guard';
+import { StripeEvent }                  from './interfaces';
 import { SubscriptionsQueryRepository } from './repositories/subscriptions.query-repository';
-import { CancelSubscriptionCommand } from './use-cases/cancel-subscription.use-case';
-import { ProcessPaymentCommand } from './use-cases/process-payment.use-case';
-import { StartPaymentCommand } from './use-cases/start-payment.use-case';
+import { CancelSubscriptionCommand }    from './use-cases/cancel-subscription.use-case';
+import { ProcessPaymentCommand }        from './use-cases/process-payment.use-case';
+import { StartPaymentCommand }          from './use-cases/start-payment.use-case';
 
 @Controller()
 export class SubscriptionsController {

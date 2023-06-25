@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaClient, User } from '@prisma/client';
-import { ProfileDbModel } from '../types';
+import { Injectable }                    from '@nestjs/common';
+import { PrismaClient, User }            from '@prisma/client';
+
 import { ProfileQueryRepositoryAdapter } from './adapters/profile-query-repository.adapter';
+import { ProfileDbModel }                from '../types';
 
 @Injectable()
 export class ProfileQueryRepository extends ProfileQueryRepositoryAdapter {

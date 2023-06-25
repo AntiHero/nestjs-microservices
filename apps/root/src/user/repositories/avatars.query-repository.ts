@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { Avatar } from '@prisma/client';
+import { Injectable }                   from '@nestjs/common';
+import { Avatar }                       from '@prisma/client';
 
-import { PrismaService } from 'apps/root/src/prisma/prisma.service';
+import { PrismaService }                from 'apps/root/src/prisma/prisma.service';
+
 import { ImagesQueryRepositoryAdapter } from './adapters/images-query-repository.adapter';
 
 @Injectable()

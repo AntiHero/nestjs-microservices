@@ -1,5 +1,4 @@
-import { ApiProperty, PickType } from '@nestjs/swagger';
-import { number } from 'joi';
+import { ApiProperty, PickType }           from '@nestjs/swagger';
 
 import type { CreatePostResult, UserPost } from '.';
 

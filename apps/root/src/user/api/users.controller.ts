@@ -39,7 +39,7 @@ import {
   UpdateProfileApiDecorator,
   UploadUserAvatarApiDecorator,
 } from 'apps/root/src/common/decorators/swagger/users.decorator';
-import { JwtAtGuard } from '../../common/guards/jwt-auth.guard';
+import { JwtGuard } from '../../common/guards/jwt-auth.guard';
 import { ProfileMapper } from '../utils/profile-mapper';
 
 import { UpdateProfileCommand } from '../use-cases/update-profile.use-case';
@@ -65,7 +65,7 @@ import { PostsMapper } from '../utils/posts.mapper';
 import { UserRepository } from '../repositories/user.repository';
 
 @ApiTags('Users')
-@UseGuards(JwtAtGuard, UserEmailConfirmationGuard)
+@UseGuards(JwtGuard, UserEmailConfirmationGuard)
 @Controller('/api/users')
 export class UsersController {
   public constructor(

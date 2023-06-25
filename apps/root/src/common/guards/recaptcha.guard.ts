@@ -5,8 +5,9 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { RECAPTCHA_TOKEN } from '../constants';
+import { ConfigService }            from '@nestjs/config';
+
+import { RECAPTCHA_TOKEN }          from '../constants';
 import { NO_RECAPTCHA_TOKEN_ERROR } from '../errors';
 
 @Injectable()

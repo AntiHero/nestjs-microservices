@@ -2,18 +2,21 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
-}                                 from '@nestjs/common';
+} from '@nestjs/common';
 import { ConfigService }          from '@nestjs/config';
 import { PassportStrategy }       from '@nestjs/passport';
 import { Request as RequestType } from 'express';
 import { ExtractJwt, Strategy }   from 'passport-jwt';
 
-import { JwtAdaptor }             from '../../adaptors/jwt/jwt.adaptor';
+import { JwtAdapter }             from '../../adapters/jwt/jwt.adapter';
 import { ActiveUserData }         from '../../user/types';
 
 @Injectable()
 export class AtStrategy extends PassportStrategy(Strategy, 'jwt') {
-  constructor(config: ConfigService, private readonly jwtAdaptor: JwtAdaptor) {
+  public constructor(
+    config: ConfigService,
+    private readonly jwtAdaptor: JwtAdapter,
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
@@ -21,17 +24,21 @@ export class AtStrategy extends PassportStrategy(Strategy, 'jwt') {
       passReqToCallback: true,
     });
   }
-  async validate(request: RequestType, payload: ActiveUserData) {
+
+  public async validate(request: RequestType, payload: ActiveUserData) {
     const accessToken = request
       ?.get('authorization')
       ?.replace('Bearer', '')
       .trim();
 
     if (!accessToken) throw new ForbiddenException('Access token malformed');
+
     if (!payload) {
       throw new BadRequestException('invalid jwt token');
     }
+
     await this.jwtAdaptor.validateAtToken(accessToken, payload.deviceId);
+
     return payload;
   }
 }

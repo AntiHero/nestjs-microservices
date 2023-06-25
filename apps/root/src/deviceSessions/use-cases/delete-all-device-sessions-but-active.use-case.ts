@@ -1,7 +1,8 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { JwtAdaptor } from '../../adaptors/jwt/jwt.adaptor';
-import { DeviceSessionsRepository } from '../repositories/device-sessions.repository';
-import { ActiveUserData } from '../../user/types';
+
+import { JwtAdapter }                      from '../../adapters/jwt/jwt.adapter';
+import { ActiveUserData }                  from '../../user/types';
+import { DeviceSessionsRepository }        from '../repositories/device-sessions.repository';
 
 export class DeleteAllDeviceSessionsButActiveCommand {
   constructor(public user: ActiveUserData) {}
@@ -11,7 +12,7 @@ export class DeleteAllDeviceSessionsButActiveUseCase
   implements ICommandHandler<DeleteAllDeviceSessionsButActiveCommand>
 {
   constructor(
-    private readonly jwtAdaptor: JwtAdaptor,
+    private readonly jwtAdaptor: JwtAdapter,
     private readonly deviceSessionsRepository: DeviceSessionsRepository,
   ) {}
   async execute(command: DeleteAllDeviceSessionsButActiveCommand) {

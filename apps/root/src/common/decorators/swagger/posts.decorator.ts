@@ -11,6 +11,7 @@ import {
   ApiOperation,
   ApiProperty,
 } from '@nestjs/swagger';
+
 import {
   CreatePostResponse,
   GetUserPostResponse,
@@ -98,7 +99,11 @@ export function GetPostsApiDecorator(type?: 'self') {
       type: PostsResponse,
       isArray: true,
     }),
-    !type ? ApiNotFoundResponse({ description: 'User not found' }) : () => {},
+    !type
+      ? ApiNotFoundResponse({ description: 'User not found' })
+      : () => {
+          null;
+        },
     ApiInternalServerErrorResponse({
       description: 'An error occurs when attempting to get posts from database',
     }),

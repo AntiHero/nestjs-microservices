@@ -1,5 +1,5 @@
-import { DeviceSession, Token } from '@prisma/client';
-import { Injectable } from '@nestjs/common';
+import { Injectable }               from '@nestjs/common';
+import { DeviceSession, Token }     from '@prisma/client';
 
 import { DeviceSessionsRepository } from 'apps/root/src/deviceSessions/repositories/device-sessions.repository';
 

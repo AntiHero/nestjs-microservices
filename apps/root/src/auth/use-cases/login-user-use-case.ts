@@ -1,11 +1,13 @@
+import { randomUUID }                      from 'crypto';
+
+import { UnauthorizedException }           from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { JwtAdaptor } from '../../adaptors/jwt/jwt.adaptor';
-import { UserRepository } from '../../user/repositories/user.repository';
-import { LoginDto } from '../dto/login.dto';
-import { UnauthorizedException } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
-import { randomUUID } from 'crypto';
-import { DeviceSessionsRepository } from '../../deviceSessions/repositories/device-sessions.repository';
+import * as bcrypt                         from 'bcrypt';
+
+import { JwtAdapter }                      from '../../adapters/jwt/jwt.adapter';
+import { DeviceSessionsRepository }        from '../../deviceSessions/repositories/device-sessions.repository';
+import { UserRepository }                  from '../../user/repositories/user.repository';
+import { LoginDto }                        from '../dto/login.dto';
 
 export class LoginUserCommand {
   constructor(
@@ -17,13 +19,13 @@ export class LoginUserCommand {
 }
 @CommandHandler(LoginUserCommand)
 export class LoginUserUseCase implements ICommandHandler<LoginUserCommand> {
-  constructor(
+  public constructor(
     private readonly deviceSessionsRepository: DeviceSessionsRepository,
     private readonly userRepository: UserRepository,
-
-    private readonly jwtAdaptor: JwtAdaptor,
+    private readonly jwtAdaptor: JwtAdapter,
   ) {}
-  async execute(command: LoginUserCommand) {
+
+  public async execute(command: LoginUserCommand) {
     // find user and check if its banned
     const user = await this.userRepository.findUserByEmail(
       command.loginDto.email,
@@ -61,24 +63,25 @@ export class LoginUserUseCase implements ICommandHandler<LoginUserCommand> {
         await this.deviceSessionsRepository.findSessionByDeviceId(
           command.deviceId,
         );
+
       if (isDeviceSession && isDeviceSession.userId === user.id) {
         await this.deviceSessionsRepository.updateTokensByDeviceSessionId(
           command.deviceId,
           hashedTokens,
         );
+
         return tokens;
       }
     }
 
     // create device session
-    const newDeviceSession =
-      await this.deviceSessionsRepository.createNewDeviceSession(
-        deviceId,
-        user.id,
-        command.ip,
-        command.userAgent,
-        hashedTokens,
-      );
+    await this.deviceSessionsRepository.createNewDeviceSession(
+      deviceId,
+      user.id,
+      command.ip,
+      command.userAgent,
+      hashedTokens,
+    );
 
     return tokens;
   }

@@ -4,6 +4,7 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
+
 import { UserRepository } from 'apps/root/src/user/repositories/user.repository';
 
 @Injectable()

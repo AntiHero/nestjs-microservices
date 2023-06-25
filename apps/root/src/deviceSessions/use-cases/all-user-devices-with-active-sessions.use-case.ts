@@ -1,9 +1,9 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { JwtAdaptor } from '../../adaptors/jwt/jwt.adaptor';
-import { ActiveUserData } from '../../user/types';
-import { DeviceSessionsRepository } from '../repositories/device-sessions.repository';
-import { DeviceViewModel } from '../types';
+import { JwtAdapter }                      from '../../adapters/jwt/jwt.adapter';
+import { ActiveUserData }                  from '../../user/types';
+import { DeviceSessionsRepository }        from '../repositories/device-sessions.repository';
+import { DeviceViewModel }                 from '../types';
 
 export class AllUserDevicesWithActiveSessionsCommand {
   constructor(public user: ActiveUserData) {}
@@ -14,7 +14,7 @@ export class AllUserDevicesWithActiveSessionsUseCase
   implements ICommandHandler<AllUserDevicesWithActiveSessionsCommand>
 {
   public constructor(
-    private readonly jwtAdaptor: JwtAdaptor,
+    private readonly jwtAdaptor: JwtAdapter,
     private readonly deviceSessionsRepository: DeviceSessionsRepository,
   ) {}
 

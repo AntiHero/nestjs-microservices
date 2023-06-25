@@ -1,5 +1,6 @@
 import { Currency, PaymentProvider, PeriodType } from '.prisma/subscriptions';
-import { applyDecorators } from '@nestjs/common';
+import { SubscriptionType }                      from '@app/common/enums';
+import { applyDecorators }                       from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -10,9 +11,9 @@ import {
   ApiOperation,
   ApiProperty,
 } from '@nestjs/swagger';
-import { CheckoutDto } from 'apps/root/src/subscriptions/dto/checkout.dto';
+import { Payment }                               from 'apps/subscriptions/src/interfaces';
 
-import { Payment } from 'apps/subscriptions/src/interfaces';
+import { CheckoutDto }                           from 'apps/root/src/subscriptions/dto/checkout.dto';
 
 export function PriceListApiDecorator() {
   return applyDecorators(
@@ -85,6 +86,44 @@ export function CancelSubscriptionApiDecorator() {
     }),
     ApiBearerAuth(),
   );
+}
+
+export function CurrentSubscriptionApiDecorator() {
+  return applyDecorators(
+    ApiOperation({
+      summary: 'Get current subscription',
+    }),
+    ApiOkResponse({
+      type: SubscriptionResponse,
+    }),
+    ApiBadRequestResponse({
+      description: 'Bad request to Stripe server',
+    }),
+    ApiInternalServerErrorResponse({
+      description: 'An error occurs when attempting to get data from database',
+    }),
+    ApiBearerAuth(),
+  );
+}
+
+class SubscriptionResponse {
+  @ApiProperty()
+  type: SubscriptionType;
+
+  @ApiProperty()
+  amount: number;
+
+  @ApiProperty()
+  startDate: Date;
+
+  @ApiProperty()
+  endDate: Date;
+
+  @ApiProperty()
+  period: number;
+
+  @ApiProperty()
+  periodType: number;
 }
 
 class SubscriptionsPaymentsResponse {

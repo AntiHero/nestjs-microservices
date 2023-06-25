@@ -234,7 +234,7 @@ export class UserRepository {
     id: string,
   ): Promise<UserWithEmailConfirmation | null> {
     try {
-      return this.prisma.user.findFirst({
+      const result = this.prisma.user.findUnique({
         where: {
           id,
         },
@@ -242,6 +242,8 @@ export class UserRepository {
           emailConfirmation: true,
         },
       });
+
+      return result;
     } catch (error) {
       console.log(error);
 

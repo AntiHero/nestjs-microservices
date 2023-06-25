@@ -1,10 +1,17 @@
-import { AccountPlan } from '@app/common/enums';
-import type { User }   from '@prisma/client';
-import { prop }        from '@typegoose/typegoose';
-import { TimeStamps }  from '@typegoose/typegoose/lib/defaultClasses';
+import { AccountPlan }                          from '@app/common/enums';
+import type { User }                            from '@prisma/client';
+import { getModelForClass, modelOptions, prop } from '@typegoose/typegoose';
+import { TimeStamps }                           from '@typegoose/typegoose/lib/defaultClasses';
 
-export class AvatarModel extends TimeStamps {
-  @prop({ unique: true })
+@modelOptions({
+  schemaOptions: {
+    // key that is used to distinguish docs
+    discriminatorKey: '',
+    _id: false,
+  },
+})
+export class AvatarClass extends TimeStamps {
+  @prop()
   public id: string;
 
   @prop({ type: () => String, default: null })
@@ -14,7 +21,13 @@ export class AvatarModel extends TimeStamps {
   public previewUrl: string | null;
 }
 
-export class ProfileModel extends TimeStamps {
+@modelOptions({
+  schemaOptions: {
+    discriminatorKey: '',
+    _id: false,
+  },
+})
+export class ProfileClass extends TimeStamps {
   @prop({ unique: true })
   public id: string;
 
@@ -37,7 +50,7 @@ export class ProfileModel extends TimeStamps {
   public userId: string;
 }
 
-export class UserModel
+export class UserClass
   extends TimeStamps
   implements
     Record<Exclude<keyof User, 'createdAt' | 'updatedAt' | 'hash'>, any>
@@ -54,11 +67,11 @@ export class UserModel
   @prop({ enum: AccountPlan, type: () => String })
   public accountPlan: AccountPlan;
 
-  @prop({ type: () => AvatarModel, default: null })
-  public avatar: AvatarModel | null;
+  @prop({ type: () => AvatarClass, default: null })
+  public avatar: AvatarClass | null;
 
-  @prop({ type: () => ProfileModel, defaultt: null })
-  public profile: ProfileModel | null;
+  @prop({ type: () => ProfileClass, default: null })
+  public profile: ProfileClass | null;
 
   @prop()
   public isDeleted: boolean;
@@ -69,3 +82,9 @@ export class UserModel
   @prop()
   public isEmailConfirmed: boolean;
 }
+
+export const UserModel = getModelForClass(UserClass, {
+  options: {
+    customName: 'users',
+  },
+});

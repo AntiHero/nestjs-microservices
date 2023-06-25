@@ -1,5 +1,5 @@
 import { PaymentViewModel }  from '../@core/interfaces';
-import { type PaymentClass } from '../app/entity/subscriptions.model';
+import { type PaymentClass } from '../app/entity/payments.model';
 
 export const toPaymentsViewModel = (input: PaymentClass): PaymentViewModel => ({
   currency: input.currency,

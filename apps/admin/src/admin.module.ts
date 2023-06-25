@@ -15,9 +15,9 @@ import { TypegooseModule }                  from 'nestjs-typegoose';
 import { AdminController }                  from './admin.controller';
 import { AdminResolver }                    from './admin.resolver';
 import { AdminService }                     from './admin.service';
-import { PostModel }                        from './app/entity/post.model';
-import { PaymentClass }                     from './app/entity/subscriptions.model';
-import { UserModel }                        from './app/entity/user.model';
+import { PaymentClass }                     from './app/entity/payments.model';
+import { PostClass }                        from './app/entity/post.model';
+import { UserClass }                        from './app/entity/user.model';
 import { AuthModule }                       from './auth/auth.module';
 import { localConfig }                      from './config/global.config';
 import { mongooseConfigFactory }            from './config/mongoose.config';
@@ -59,13 +59,13 @@ export class AdminModule {
       }),
       TypegooseModule.forFeature([
         {
-          typegooseClass: UserModel,
+          typegooseClass: UserClass,
           schemaOptions: {
             collection: 'users',
           },
         },
         {
-          typegooseClass: PostModel,
+          typegooseClass: PostClass,
           schemaOptions: {
             collection: 'posts',
           },

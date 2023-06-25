@@ -1,23 +1,23 @@
 import { confirmedEmailMessageCreator } from '@app/common/message-creators/confirmed-email.message-creator';
-import { createdUserMessageCreator }    from '@app/common/message-creators/created-user.message-creator';
-import { updatedAvatarMessageCreator }  from '@app/common/message-creators/updated-avatar.message-creator';
+import { createdUserMessageCreator } from '@app/common/message-creators/created-user.message-creator';
+import { updatedAvatarMessageCreator } from '@app/common/message-creators/updated-avatar.message-creator';
 import { updatedProfileMessageCreator } from '@app/common/message-creators/updated-profile.message-creator';
-import { RootEvent }                    from '@app/common/patterns';
-import { Queue }                        from '@app/common/queues';
-import { RmqService }                   from '@app/common/src';
-import { RmqModule }                    from '@app/common/src/rmq/rmq.module';
-import { RmqClientToken }               from '@app/common/tokens';
-import { INestApplication }             from '@nestjs/common';
-import { Test, TestingModule }          from '@nestjs/testing';
-import mongoose                         from 'mongoose';
+import { RootEvent } from '@app/common/patterns';
+import { Queue } from '@app/common/queues';
+import { RmqService } from '@app/common/src';
+import { RmqModule } from '@app/common/src/rmq/rmq.module';
+import { RmqClientToken } from '@app/common/tokens';
+import { INestApplication } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
+import mongoose from 'mongoose';
 
-import testUsers                        from './mock-data/users.json';
-import { AdminModule }                  from '../src/admin.module';
-import { PostModel }                    from '../src/app/entity/post.model';
-import { UserModel }                    from '../src/app/entity/user.model';
-import { AdminMessageConroller }        from '../src/controllers/message.controller';
-import { PostsRepositoryProvider }      from '../src/db/repositories/post/post-repository';
-import { UsersRepositoryProvider }      from '../src/db/repositories/user/users.repository';
+import testUsers from './mock-data/users.json';
+import { AdminModule } from '../src/admin.module';
+import { PostClass } from '../src/app/entity/post.model';
+import { UserClass } from '../src/app/entity/user.model';
+import { AdminMessageConroller } from '../src/controllers/message.controller';
+import { PostsRepositoryProvider } from '../src/db/repositories/post/post-repository';
+import { UsersRepositoryProvider } from '../src/db/repositories/user/users.repository';
 
 jest.mock('@app/common/src/rmq/rmq.service.ts', () => {
   const original = jest.requireActual('@app/common/src/rmq/rmq.service.ts');
@@ -32,8 +32,8 @@ jest.mock('@app/common/src/rmq/rmq.service.ts', () => {
 
 describe('AdminController (e2e)', () => {
   let app: INestApplication;
-  let userCollection: mongoose.Collection<UserModel>;
-  let postsCollection: mongoose.Collection<PostModel>;
+  let userCollection: mongoose.Collection<UserClass>;
+  let postsCollection: mongoose.Collection<PostClass>;
 
   beforeAll(async () => {
     const uri = <string>process.env.MONGODB_URI;

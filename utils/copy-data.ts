@@ -3,15 +3,32 @@ import { resolve }                                  from 'node:path';
 
 import { PrismaClient as PrismaSubscriptionClient } from '.prisma/subscriptions';
 import { PrismaClient }                             from '@prisma/client';
+import { config }                                   from 'dotenv';
 import mongoose                                     from 'mongoose';
 
+import { PaymentModel }                             from 'apps/admin/src/app/entity/payments.model';
 import { PostModel }                                from 'apps/admin/src/app/entity/post.model';
+import { UserModel }                                from 'apps/admin/src/app/entity/user.model';
+
+config({
+  path: 'apps/admin/.env',
+});
 
 const prisma = new PrismaClient();
 const prismaSubscription = new PrismaSubscriptionClient();
 
 async function connectToMongo(uri: string) {
-  await mongoose.connect(uri).then(() => console.log('mongo connected'));
+  await mongoose
+    .connect(uri)
+    .then(() => console.log('1. mongo connected.'))
+    .then(() =>
+      Promise.all([
+        mongoose.connection.collection('users').deleteMany({}),
+        mongoose.connection.collection('posts').deleteMany({}),
+        mongoose.connection.collection('paymenents').deleteMany({}),
+      ]),
+    )
+    .then(() => console.log('2. db has been cleared.'));
 }
 
 async function writeFile<T>(name: string, data: T[]) {
@@ -27,14 +44,6 @@ async function writeFile<T>(name: string, data: T[]) {
       },
     ),
   );
-}
-
-async function writeToMongo<T>(
-  name: string,
-  data: mongoose.mongo.OptionalId<T>[],
-) {
-  const collection = mongoose.connection.collection(name);
-  collection.insertMany(data);
 }
 
 async function getUserData(): Promise<any> {
@@ -55,7 +64,10 @@ async function getUserData(): Promise<any> {
       },
     });
 
-    await Promise.all([writeFile('users', result)]);
+    await Promise.all([
+      writeFile('users', result),
+      ...result.map((user) => UserModel.create(user)),
+    ]);
   } catch (error: any) {
     console.log(error);
 
@@ -84,7 +96,10 @@ async function getPostsData(): Promise<any> {
       },
     });
 
-    await Promise.all([writeFile('posts', result)]);
+    await Promise.all([
+      writeFile('posts', result),
+      ...result.map((post) => PostModel.create(post)),
+    ]);
   } catch (error: any) {
     console.log(error);
 
@@ -126,8 +141,10 @@ async function getSubscriptionsData() {
       },
     });
 
-    const subscriptions = result.map(({ subscriptionPayment, ...rest }) => {
-      const result = {
+    await mongoose.connection.collection('payments').deleteMany({});
+
+    const payments = result.map(({ subscriptionPayment, ...rest }) => {
+      const payment = {
         ...rest,
         endDate: subscriptionPayment?.subscription?.endDate,
         startDate: subscriptionPayment?.subscription?.startDate,
@@ -135,9 +152,11 @@ async function getSubscriptionsData() {
         period: subscriptionPayment?.pricingPlan?.price?.period,
         periodType: subscriptionPayment?.pricingPlan?.price?.periodType,
       };
+
+      return PaymentModel.create(payment);
     });
 
-    await Promise.all([writeFile('subscriptions', result)]);
+    await Promise.all([writeFile('subscriptions', result), ...payments]);
   } catch (error: any) {
     console.log(error);
 
@@ -145,13 +164,20 @@ async function getSubscriptionsData() {
   }
 }
 
-getUserData()
+const uri = <string>process.env.MONGODB_URI;
+
+connectToMongo(uri)
+  .then(getUserData)
   .then(getPostsData)
   .then(getSubscriptionsData)
   .catch(async (e) => {
     console.error(e);
   })
   .finally(async () => {
-    await Promise.all([prisma.$disconnect(), prismaSubscription.$disconnect()]);
-    console.log('completed');
+    await Promise.all([
+      prisma.$disconnect(),
+      prismaSubscription.$disconnect(),
+      mongoose.connection.close(),
+    ]);
+    console.log('3. completed.');
   });

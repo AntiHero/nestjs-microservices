@@ -4,11 +4,11 @@ import { ModelType } from '@typegoose/typegoose/lib/types';
 import { InjectModel } from 'nestjs-typegoose';
 
 import { MongoQueryRepository } from './mongo/mongo-query-repository.interface';
-import { UserModel } from '../../app/entity/user.model';
+import { UserClass } from '../../app/entity/user.model';
 import { UserPaginationQuery } from '../../app/graphql/args/pagination-query';
 
-export abstract class UsersQueryRepositoryInterface extends MongoQueryRepository<UserModel> {
-  public constructor(@InjectModel(UserModel) repository: ModelType<UserModel>) {
+export abstract class UsersQueryRepositoryInterface extends MongoQueryRepository<UserClass> {
+  public constructor(@InjectModel(UserClass) repository: ModelType<UserClass>) {
     super(repository);
   }
 

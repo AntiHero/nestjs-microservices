@@ -1,8 +1,13 @@
-/* eslint-disable @typescript-eslint/no-empty-interface */
-import type { Image, Post } from '@prisma/client';
-import { prop }             from '@typegoose/typegoose';
-import { TimeStamps }       from '@typegoose/typegoose/lib/defaultClasses';
+import type { Image, Post }                     from '@prisma/client';
+import { getModelForClass, modelOptions, prop } from '@typegoose/typegoose';
+import { TimeStamps }                           from '@typegoose/typegoose/lib/defaultClasses';
 
+@modelOptions({
+  schemaOptions: {
+    discriminatorKey: '',
+    _id: false,
+  },
+})
 export class ImageModel
   extends TimeStamps
   implements
@@ -18,7 +23,7 @@ export class ImageModel
   public previewUrl: string | null;
 }
 
-export class PostModel
+export class PostClass
   extends TimeStamps
   implements Record<Exclude<keyof Post, 'createdAt' | 'updatedAt'>, any>
 {
@@ -34,3 +39,9 @@ export class PostModel
   @prop({ type: () => [ImageModel], default: [] })
   public images: ImageModel[];
 }
+
+export const PostModel = getModelForClass(PostClass, {
+  options: {
+    customName: 'posts',
+  },
+});

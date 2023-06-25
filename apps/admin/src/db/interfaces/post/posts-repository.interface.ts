@@ -1,12 +1,12 @@
-import { ModelType }       from '@typegoose/typegoose/lib/types';
-import { InjectModel }     from 'nestjs-typegoose';
+import { ModelType } from '@typegoose/typegoose/lib/types';
+import { InjectModel } from 'nestjs-typegoose';
 
-import { PostModel }       from 'apps/admin/src/app/entity/post.model';
+import { PostClass } from 'apps/admin/src/app/entity/post.model';
 
 import { MongoRepository } from '../mongo/mongo.repository';
 
-export abstract class PostsRepositoryInterface extends MongoRepository<PostModel> {
-  public constructor(@InjectModel(PostModel) repository: ModelType<PostModel>) {
+export abstract class PostsRepositoryInterface extends MongoRepository<PostClass> {
+  public constructor(@InjectModel(PostClass) repository: ModelType<PostClass>) {
     super(repository);
   }
 }

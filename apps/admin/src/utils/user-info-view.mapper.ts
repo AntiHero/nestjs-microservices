@@ -1,5 +1,5 @@
 import { type AvatarViewModel } from './common.interfaces';
-import { UserModel }            from '../app/entity/user.model';
+import { UserClass } from '../app/entity/user.model';
 
 export interface UserInfoViewModel {
   id: string;
@@ -9,7 +9,7 @@ export interface UserInfoViewModel {
   avatar: AvatarViewModel;
 }
 
-export const toUserInfoViewModel = (input: UserModel): UserInfoViewModel => ({
+export const toUserInfoViewModel = (input: UserClass): UserInfoViewModel => ({
   id: input.id,
   username: input.username,
   profileLink: `${process.env.FRONTEND_DOMAIN}/users/${input.username}`,

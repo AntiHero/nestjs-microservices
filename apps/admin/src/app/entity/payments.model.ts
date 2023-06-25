@@ -48,4 +48,8 @@ export class PaymentClass
   public periodType: PeriodType;
 }
 
-export const PaymentModel = getModelForClass(PaymentClass);
+export const PaymentModel = getModelForClass(PaymentClass, {
+  options: {
+    customName: 'payments',
+  },
+});

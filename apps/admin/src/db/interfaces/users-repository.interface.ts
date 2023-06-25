@@ -1,4 +1,4 @@
 import { MongoRepository } from './mongo/mongo.repository';
-import { UserModel }       from '../../app/entity/user.model';
+import { UserClass } from '../../app/entity/user.model';
 
-export abstract class UsersRepositoryInterface extends MongoRepository<UserModel> {}
+export abstract class UsersRepositoryInterface extends MongoRepository<UserClass> {}

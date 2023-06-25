@@ -26,6 +26,7 @@
     "prepare": "husky install",
     "test:e2e:root": "yarn workspace root run test:e2e",
     "test:e2e:admin": "yarn workspace admin run test:e2e",
+    "seed:admin": "ts-node -r tsconfig-paths/register utils/copy-data.ts",
     "subscriptions:seed": "ts-node apps/subscriptions/src/seed/index.ts"
   },
   "dependencies": {

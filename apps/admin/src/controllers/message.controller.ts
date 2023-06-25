@@ -3,6 +3,7 @@ import { CreatedPostType }          from '@app/common/message-creators/created-p
 import { CreatedUserType }          from '@app/common/message-creators/created-user.message-creator';
 import { DeletedPostType }          from '@app/common/message-creators/deleted-post.message-creator';
 import { UpdatedAvatarType }        from '@app/common/message-creators/updated-avatar.message-creator';
+import { UpdatedPostType }          from '@app/common/message-creators/updated-post.message-creator';
 import { UpdatedProfileType }       from '@app/common/message-creators/updated-profile.message-creator';
 import { RootEvent }                from '@app/common/patterns/root.pattern';
 import { RmqService }               from '@app/common/src';
@@ -77,10 +78,10 @@ export class AdminMessageConroller {
 
   @MessagePattern(RootEvent.UpdatedPost)
   public async updatePost(
-    @Payload() { userId, ...updates }: CreatedPostType,
+    @Payload() { id, ...updates }: UpdatedPostType,
     @Ctx() context: RmqContext,
   ) {
-    await this.postsRepository.update(userId, updates);
+    await this.postsRepository.update(id, updates);
 
     this.rmqService.ack(context);
   }

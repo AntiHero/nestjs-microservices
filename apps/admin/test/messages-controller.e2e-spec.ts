@@ -1,23 +1,27 @@
 import { confirmedEmailMessageCreator } from '@app/common/message-creators/confirmed-email.message-creator';
-import { createdUserMessageCreator } from '@app/common/message-creators/created-user.message-creator';
-import { updatedAvatarMessageCreator } from '@app/common/message-creators/updated-avatar.message-creator';
+import { createdPostMessageCreator }    from '@app/common/message-creators/created-post.message-creator';
+import { createdUserMessageCreator }    from '@app/common/message-creators/created-user.message-creator';
+import { deletedPostMessageCreator }    from '@app/common/message-creators/deleted-post.message-creator';
+import { updatedAvatarMessageCreator }  from '@app/common/message-creators/updated-avatar.message-creator';
+import { updatedPostMessageCreator }    from '@app/common/message-creators/updated-post.message-creator';
 import { updatedProfileMessageCreator } from '@app/common/message-creators/updated-profile.message-creator';
-import { RootEvent } from '@app/common/patterns';
-import { Queue } from '@app/common/queues';
-import { RmqService } from '@app/common/src';
-import { RmqModule } from '@app/common/src/rmq/rmq.module';
-import { RmqClientToken } from '@app/common/tokens';
-import { INestApplication } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
-import mongoose from 'mongoose';
+import { RootEvent }                    from '@app/common/patterns';
+import { Queue }                        from '@app/common/queues';
+import { RmqService }                   from '@app/common/src';
+import { RmqModule }                    from '@app/common/src/rmq/rmq.module';
+import { RmqClientToken }               from '@app/common/tokens';
+import { INestApplication }             from '@nestjs/common';
+import { Test, TestingModule }          from '@nestjs/testing';
+import mongoose                         from 'mongoose';
 
-import testUsers from './mock-data/users.json';
-import { AdminModule } from '../src/admin.module';
-import { PostClass } from '../src/app/entity/post.model';
-import { UserClass } from '../src/app/entity/user.model';
-import { AdminMessageConroller } from '../src/controllers/message.controller';
-import { PostsRepositoryProvider } from '../src/db/repositories/post/post-repository';
-import { UsersRepositoryProvider } from '../src/db/repositories/user/users.repository';
+import testPosts                        from './mock-data/posts.json';
+import testUsers                        from './mock-data/users.json';
+import { AdminModule }                  from '../src/admin.module';
+import { PostClass, PostModel }         from '../src/app/entity/post.model';
+import { UserClass }                    from '../src/app/entity/user.model';
+import { AdminMessageConroller }        from '../src/controllers/message.controller';
+import { PostsRepositoryProvider }      from '../src/db/repositories/post/post-repository';
+import { UsersRepositoryProvider }      from '../src/db/repositories/user/users.repository';
 
 jest.mock('@app/common/src/rmq/rmq.service.ts', () => {
   const original = jest.requireActual('@app/common/src/rmq/rmq.service.ts');
@@ -44,7 +48,7 @@ describe('AdminController (e2e)', () => {
     );
   });
 
-  let client: any;
+  let client: Record<string, any>;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -73,6 +77,10 @@ describe('AdminController (e2e)', () => {
     beforeEach(async () => {
       const { createdAt, id, email, username } = testUsers[0];
 
+      userCollection = mongoose.connection.collection('users');
+
+      await userCollection.deleteMany({});
+
       await client.server.messageHandlers.get(RootEvent.CreatedUser)(
         createdUserMessageCreator({
           id,
@@ -81,10 +89,6 @@ describe('AdminController (e2e)', () => {
           createdAt: new Date(createdAt),
         }),
       );
-
-      userCollection = mongoose.connection.collection('users');
-
-      await userCollection.deleteMany({});
     });
 
     test('should create user', async () => {
@@ -190,7 +194,7 @@ describe('AdminController (e2e)', () => {
       });
     });
 
-    test.only('should update avatar', async () => {
+    test('should update avatar', async () => {
       const { id } = testUsers[0];
 
       const createdUser = await mongoose.connection
@@ -241,26 +245,107 @@ describe('AdminController (e2e)', () => {
     });
   });
 
-  describe('posts', async () => {
-    beforeAll(async () => {
-      const { createdAt, id, email, username } = testUsers[0];
+  describe.only('posts', () => {
+    beforeEach(async () => {
+      postsCollection = mongoose.connection.collection('posts');
 
-      userCollection = mongoose.connection.collection('users');
+      await postsCollection.deleteMany({});
 
-      await userCollection.deleteMany({});
+      const { id, userId, createdAt, description, images } = testPosts[0];
 
-      await client.server.messageHandlers.get(RootEvent.CreatedUser)(
-        createdUserMessageCreator({
+      await PostModel.create({
+        id,
+        userId,
+        createdAt,
+        description,
+        images,
+      });
+    });
+
+    test('should create post', async () => {
+      const { id, userId, createdAt, description, images } = testPosts[1];
+
+      await client.server.messageHandlers.get(RootEvent.CreatedPost)(
+        createdPostMessageCreator({
           id,
-          email,
-          username,
+          userId,
+          description,
+          images,
           createdAt: new Date(createdAt),
         }),
       );
+
+      const createdPost = await mongoose.connection
+        .collection('posts')
+        .findOne({
+          id,
+        });
+
+      expect(createdPost).toMatchObject({
+        id,
+        userId,
+        description,
+        createdAt: new Date(createdAt),
+        images: images.map(({ id, createdAt, url, previewUrl }) => ({
+          id,
+          url,
+          previewUrl,
+          createdAt: new Date(createdAt),
+        })),
+      });
     });
 
-    beforeEach(async () => {
-      postsCollection = mongoose.connection.collection('posts');
+    test('should update post', async () => {
+      const { id, description } = testPosts[0];
+
+      const existingPost = await mongoose.connection
+        .collection('posts')
+        .findOne({
+          id,
+        });
+
+      expect(existingPost?.description).toBe(description);
+
+      const newDescription = 'new description';
+
+      await client.server.messageHandlers.get(RootEvent.UpdatedPost)(
+        updatedPostMessageCreator({
+          id,
+          description: newDescription,
+        }),
+      );
+
+      const updatedPost = await mongoose.connection
+        .collection('posts')
+        .findOne({
+          id,
+        });
+
+      expect(updatedPost?.description).toBe(newDescription);
+    });
+
+    test('should delete post', async () => {
+      const { id } = testPosts[0];
+
+      const existingPost = await mongoose.connection
+        .collection('posts')
+        .findOne({
+          id,
+        });
+
+      expect(existingPost?.isDeleted).toBe(false);
+
+      await client.server.messageHandlers.get(RootEvent.DeletedPost)(
+        deletedPostMessageCreator(id),
+      );
+
+      const deletedPost = await mongoose.connection
+        .collection('posts')
+        .findOne({
+          id,
+        });
+
+      expect(deletedPost?.isDeleted).toBe(true);
     });
   });
 

@@ -73,13 +73,13 @@ export class UserClass
   @prop({ type: () => ProfileClass, default: null })
   public profile: ProfileClass | null;
 
-  @prop()
+  @prop({ default: false })
   public isDeleted: boolean;
 
-  @prop()
+  @prop({ default: false })
   public isBanned: boolean;
 
-  @prop()
+  @prop({ default: false })
   public isEmailConfirmed: boolean;
 }
 

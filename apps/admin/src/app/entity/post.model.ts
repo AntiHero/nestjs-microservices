@@ -38,6 +38,9 @@ export class PostClass
 
   @prop({ type: () => [ImageModel], default: [] })
   public images: ImageModel[];
+
+  @prop({ default: false })
+  public isDeleted: boolean;
 }
 
 export const PostModel = getModelForClass(PostClass, {

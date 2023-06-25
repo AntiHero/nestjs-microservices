@@ -2,7 +2,7 @@
 /dist
 /node_modules
 **/node_modules
-utils/*
+utils/*.json
 
 .yarn
 .env

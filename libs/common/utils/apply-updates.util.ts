@@ -1,4 +1,4 @@
-import assert from 'assert';
+import assert          from 'assert';
 
 import { DeepPartial } from '../types/deep-partial.type';
 
@@ -12,10 +12,11 @@ export function applyUpdates<T extends Record<string, any>>(
   if (!u) return t;
 
   const m = { ...t };
+  Object.setPrototypeOf(m, t);
 
   for (const k in u) {
     if (typeof u[k] === 'object' && u[k] !== null && !Array.isArray(u[k])) {
-      m[k] = applyUpdates(m[k], u[k]);
+      m[k] = applyUpdates(m[k] || ({} as any), u[k]);
     } else {
       m[k] = u[k]!;
     }

@@ -13,13 +13,6 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type UserOutput {
-  id: ID!
-  username: String!
-  profileLink: String!
-  dateAdded: String!
-}
-
 type ImageOutput {
   url: String
   previewUrl: String
@@ -34,24 +27,18 @@ type PaymentOutput {
   provider: PaymentProvider!
 }
 
-"""
-ONETIME,RECCURING
-"""
+"""ONETIME,RECCURING"""
 enum SubscriptionType {
   ONETIME
   RECCURING
 }
 
-"""
-USD
-"""
+"""USD"""
 enum Currency {
   USD
 }
 
-"""
-STRIPE,PAYPAL
-"""
+"""STRIPE,PAYPAL"""
 enum PaymentProvider {
   STRIPE
   PAYPAL
@@ -65,41 +52,28 @@ type UserInfoOutput {
   avatar: ImageOutput!
 }
 
-type Query {
-  healthCheck: String!
-  userList(
-    page: Int! = 1
-    pageSize: Int! = 9
-    sortDirection: SortDirectionType! = Desc
-    searchUsernameTerm: String! = ""
-    sortField: UserSortFields! = DateAdded
-  ): [UserOutput!]!
-  userInfo(id: ID!): UserInfoOutput!
-  userPhotos(
-    userId: ID!
-    page: Int! = 1
-    pageSize: Int! = 9
-    sortDirection: SortDirectionType! = Desc
-  ): [ImageOutput!]
-  payments(
-    userId: ID!
-    page: Int! = 1
-    pageSize: Int! = 9
-    sortDirection: SortDirectionType! = Desc
-  ): [PaymentOutput!]
+type UserOutput {
+  id: ID!
+  username: String!
+  profileLink: String!
+  dateAdded: String!
 }
 
-"""
-Asc,Desc
-"""
+type Query {
+  healthCheck: String!
+  userList(page: Int! = 1, pageSize: Int! = 9, sortDirection: SortDirectionType! = Desc, searchUsernameTerm: String! = "", sortField: UserSortFields! = DateAdded): [UserOutput!]!
+  userInfo(id: ID!): UserInfoOutput!
+  userPhotos(userId: ID!, page: Int! = 1, pageSize: Int! = 9, sortDirection: SortDirectionType! = Desc): [ImageOutput!]
+  payments(userId: ID!, page: Int! = 1, pageSize: Int! = 9, sortDirection: SortDirectionType! = Desc): [PaymentOutput!]
+}
+
+"""Asc,Desc"""
 enum SortDirectionType {
   Asc
   Desc
 }
 
-"""
-Username,DateAdded
-"""
+"""Username,DateAdded"""
 enum UserSortFields {
   Username
   DateAdded

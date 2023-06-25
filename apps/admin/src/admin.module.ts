@@ -4,6 +4,7 @@ import { globalConfig }                     from '@app/common/config/global.conf
 import { Queue }                            from '@app/common/queues';
 import { RmqService }                       from '@app/common/src';
 import { RmqModule }                        from '@app/common/src/rmq/rmq.module';
+import { RmqClientToken }                   from '@app/common/tokens';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module }                           from '@nestjs/common';
 import { ConfigModule, ConfigService }      from '@nestjs/config';
@@ -15,7 +16,7 @@ import { AdminController }                  from './admin.controller';
 import { AdminResolver }                    from './admin.resolver';
 import { AdminService }                     from './admin.service';
 import { PostModel }                        from './app/entity/post.model';
-import { PaymentModel }                     from './app/entity/subscriptions.model';
+import { PaymentClass }                     from './app/entity/subscriptions.model';
 import { UserModel }                        from './app/entity/user.model';
 import { AuthModule }                       from './auth/auth.module';
 import { localConfig }                      from './config/global.config';
@@ -30,52 +31,12 @@ import { UsersRepositoryProvider }          from './db/repositories/user/users.r
 
 @Module({
   imports: [
-    TypeOrmModule.forRootAsync({
-      useFactory: postgresConfigFactory,
-      inject: [ConfigService],
-    }),
-    TypegooseModule.forRootAsync({
-      useFactory: mongooseConfigFactory,
-      inject: [ConfigService],
-    }),
-    TypegooseModule.forFeature([
-      {
-        typegooseClass: UserModel,
-        schemaOptions: {
-          collection: 'users',
-        },
-      },
-      {
-        typegooseClass: PostModel,
-        schemaOptions: {
-          collection: 'posts',
-        },
-      },
-      {
-        typegooseClass: PaymentModel,
-        schemaOptions: {
-          collection: 'payments',
-        },
-      },
-    ]),
-    ConfigModule.forRoot({
-      isGlobal: true,
-      load: [localConfig, globalConfig],
-      envFilePath: [
-        `${process.cwd()}/apps/admin/.env`,
-        `${process.cwd()}/.env.global`,
-      ],
-    }),
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      autoSchemaFile: join(__dirname, 'schema/schema.gql'),
-      plugins: [],
-    }),
+    ...AdminModule.setupTypegoose(),
+    AdminModule.setupGraphql(),
+    AdminModule.setupRmqClient(),
+    AdminModule.setupTypeorm(),
+    AdminModule.setupConfig(),
     AuthModule,
-    RmqModule.register({
-      name: 'ROOT_RMQ',
-      queue: Queue.Root,
-    }),
   ],
   controllers: [AdminController, AdminMessageConroller],
   providers: [
@@ -89,4 +50,66 @@ import { UsersRepositoryProvider }          from './db/repositories/user/users.r
     RmqService,
   ],
 })
-export class AdminModule {}
+export class AdminModule {
+  public static setupTypegoose() {
+    return [
+      TypegooseModule.forRootAsync({
+        useFactory: mongooseConfigFactory,
+        inject: [ConfigService],
+      }),
+      TypegooseModule.forFeature([
+        {
+          typegooseClass: UserModel,
+          schemaOptions: {
+            collection: 'users',
+          },
+        },
+        {
+          typegooseClass: PostModel,
+          schemaOptions: {
+            collection: 'posts',
+          },
+        },
+        {
+          typegooseClass: PaymentClass,
+          schemaOptions: {
+            collection: 'payments',
+          },
+        },
+      ]),
+    ];
+  }
+
+  public static setupGraphql() {
+    return TypeOrmModule.forRootAsync({
+      useFactory: postgresConfigFactory,
+      inject: [ConfigService],
+    });
+  }
+
+  public static setupTypeorm() {
+    return GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: join(__dirname, 'schema/schema.gql'),
+      plugins: [],
+    });
+  }
+
+  public static setupRmqClient() {
+    return RmqModule.register({
+      name: RmqClientToken.ROOT_RMQ,
+      queue: Queue.Root,
+    });
+  }
+
+  public static setupConfig() {
+    return ConfigModule.forRoot({
+      isGlobal: true,
+      load: [localConfig, globalConfig],
+      envFilePath: [
+        `${process.cwd()}/apps/admin/.env`,
+        `${process.cwd()}/.env.global`,
+      ],
+    });
+  }
+}

@@ -7,16 +7,21 @@ export type UpdatedProfileType = Partial<
 
 export const updatedProfileMessageCreator = ({
   userId,
-  aboutMe = null,
-  birthday = null,
-  city = null,
-  name = null,
-  surname = null,
-}: UpdatedProfileType): UpdatedProfileType => ({
-  userId,
-  birthday,
   aboutMe,
+  birthday,
+  city,
   name,
   surname,
-  city,
-});
+}: UpdatedProfileType): UpdatedProfileType => {
+  const result: UpdatedProfileType = {
+    userId,
+  };
+
+  aboutMe !== undefined && (result.aboutMe = aboutMe);
+  birthday !== undefined && (result.birthday = birthday);
+  city !== undefined && (result.city = city);
+  name !== undefined && (result.name = name);
+  surname !== undefined && (result.surname = surname);
+
+  return result;
+};

@@ -12,18 +12,6 @@ export class AvatarModel extends TimeStamps {
 
   @prop({ type: () => String, default: null })
   public previewUrl: string | null;
-
-  @prop({ type: () => Number, default: null })
-  public size: number | null;
-
-  @prop({ type: () => Number, default: null })
-  public height: number | null;
-
-  @prop({ type: () => Number, default: null })
-  public width: number | null;
-
-  @prop()
-  public userId: string;
 }
 
 export class ProfileModel extends TimeStamps {

@@ -1,13 +1,13 @@
-import { ModelType } from '@typegoose/typegoose/lib/types';
-import { InjectModel } from 'nestjs-typegoose';
+import { ModelType }            from '@typegoose/typegoose/lib/types';
+import { InjectModel }          from 'nestjs-typegoose';
 
-import { PaymentModel } from 'apps/admin/src/app/entity/subscriptions.model';
+import { PaymentClass }         from 'apps/admin/src/app/entity/subscriptions.model';
 
 import { MongoQueryRepository } from '../mongo/mongo-query-repository.interface';
 
-export abstract class PaymentsQueryRepositoryInterface extends MongoQueryRepository<PaymentModel> {
+export abstract class PaymentsQueryRepositoryInterface extends MongoQueryRepository<PaymentClass> {
   public constructor(
-    @InjectModel(PaymentModel) repository: ModelType<PaymentModel>,
+    @InjectModel(PaymentClass) repository: ModelType<PaymentClass>,
   ) {
     super(repository);
   }

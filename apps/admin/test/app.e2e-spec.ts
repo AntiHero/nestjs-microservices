@@ -1,52 +1,10 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { CanActivate, INestApplication } from '@nestjs/common';
-import request from 'supertest';
-import { AdminModule } from './../src/admin.module';
-import mongoose from 'mongoose';
+import { Test, TestingModule }           from '@nestjs/testing';
+import mongoose                          from 'mongoose';
+import request                           from 'supertest';
 
-const testUsers = [
-  {
-    id: '76075d78-763a-43bf-a56b-488ce44541a1',
-    username: 'alice_test',
-    email: 'alice@gmail.com',
-    createdAt: '2023-05-27T15:43:33.931Z',
-    accountPlan: 'PERSONAL',
-    isBanned: false,
-    avatar: {
-      url: 'https://avatars.githubusercontent.com/u/109024996?v=4',
-      previewUrl: 'https://avatars.githubusercontent.com/u/109024996?v=4',
-    },
-    profile: {
-      name: 'alice',
-      surname: null,
-      birthday: null,
-      city: null,
-      aboutMe: null,
-    },
-    isDeleted: false,
-  },
-  {
-    id: '279bf07e-b0c5-456b-b1d5-69a01e62fa54',
-    username: 'bob_test',
-    email: 'bob@gmail.com',
-    createdAt: '2023-05-30T14:38:00.266Z',
-    accountPlan: 'PERSONAL',
-    isBanned: false,
-    avatar: {
-      url: 'https://inctagram.storage.yandexcloud.net/content/users/279bf07e-b0c5-456b-b1d5-69a01e62fa54/avatar/15d8227d-a175-465a-9477-f43a08cbbfeb.jpg',
-      previewUrl:
-        'https://inctagram.storage.yandexcloud.net/content/users/279bf07e-b0c5-456b-b1d5-69a01e62fa54/avatar/.preivew.9ba8c974-8544-4479-864a-f1e2d4617c5c.jpg',
-    },
-    profile: {
-      name: 'bob',
-      surname: null,
-      birthday: null,
-      city: null,
-      aboutMe: null,
-    },
-    isDeleted: false,
-  },
-];
+import { AdminModule }                   from './../src/admin.module';
+import testUsers                         from './mock-data/users.json';
 
 jest.mock('apps/admin/src/@core/guards/basic.guard.ts', () => {
   class MockedGuard implements CanActivate {

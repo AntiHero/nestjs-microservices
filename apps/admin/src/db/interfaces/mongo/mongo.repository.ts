@@ -33,8 +33,6 @@ export abstract class MongoRepository<M> extends Repository<M> {
     try {
       const result = await this.repository.create(data);
 
-      console.log(result);
-
       return result;
     } catch (error) {
       console.log(error);

@@ -1,14 +1,15 @@
-import { type Payment } from '.prisma/subscriptions';
+import { type Payment }           from '.prisma/subscriptions';
 import {
   Currency,
   PaymentProvider,
   PaymentStatus,
   SubscriptionType,
 } from '@app/common/enums';
-import { prop }         from '@typegoose/typegoose';
-import { TimeStamps }   from '@typegoose/typegoose/lib/defaultClasses';
+import { PeriodType }             from '@app/common/enums/period-type.enum';
+import { getModelForClass, prop } from '@typegoose/typegoose';
+import { TimeStamps }             from '@typegoose/typegoose/lib/defaultClasses';
 
-export class PaymentModel
+export class PaymentClass
   extends TimeStamps
   implements
     Record<keyof Omit<Payment, 'createdAt' | 'updatedAt' | 'reference'>, any>
@@ -39,4 +40,12 @@ export class PaymentModel
 
   @prop({ type: () => String, enum: SubscriptionType })
   public type: SubscriptionType;
+
+  @prop()
+  public period: number;
+
+  @prop({ type: () => String, enum: PeriodType })
+  public periodType: PeriodType;
 }
+
+export const PaymentModel = getModelForClass(PaymentClass);

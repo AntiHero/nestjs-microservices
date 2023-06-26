@@ -194,7 +194,7 @@ describe('AdminController (e2e)', () => {
       });
     });
 
-    describe.only('users mutations', () => {
+    describe('users mutations', () => {
       test('should ban user', async () => {
         const userInfo = `
         query {
@@ -226,6 +226,25 @@ describe('AdminController (e2e)', () => {
           .expect(200)
           .then((response) => {
             expect(response.body.data.banUser).toBe(true);
+          });
+
+        const userList = `
+        query {
+          userList(sortField: DateAdded, sortDirection: Asc, banFilter: Banned) {
+            id
+          }
+        }
+      `;
+
+        await request(app.getHttpServer())
+          .post('/graphql')
+          .send({ query: userList })
+          .expect(200)
+          .then((response) => {
+            expect(response.body.data.userList.length).toBe(1);
+            expect(response.body.data.userList[0]).toMatchObject({
+              id: testUser1.id,
+            });
           });
       });
     });

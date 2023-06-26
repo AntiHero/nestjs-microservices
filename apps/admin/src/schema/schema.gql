@@ -64,7 +64,7 @@ type UserOutput {
 
 type Query {
   healthCheck: String!
-  userList(page: Int! = 1, pageSize: Int! = 9, sortDirection: SortDirectionType! = Desc, searchUsernameTerm: String! = "", sortField: UserSortFields! = DateAdded): [UserOutput!]!
+  userList(page: Int! = 1, pageSize: Int! = 9, sortDirection: SortDirectionType! = Desc, searchUsernameTerm: String! = "", sortField: UserSortFields! = DateAdded, banFilter: BanFilterType!): [UserOutput!]!
   userInfo(id: ID!): UserInfoOutput!
   userPhotos(userId: ID!, page: Int! = 1, pageSize: Int! = 9, sortDirection: SortDirectionType! = Desc): [ImageOutput!]
   payments(userId: ID!, page: Int! = 1, pageSize: Int! = 9, sortDirection: SortDirectionType! = Desc): [PaymentOutput!]
@@ -80,6 +80,13 @@ enum SortDirectionType {
 enum UserSortFields {
   Username
   DateAdded
+}
+
+"""Banned,Active,All"""
+enum BanFilterType {
+  Banned
+  Active
+  All
 }
 
 type Mutation {

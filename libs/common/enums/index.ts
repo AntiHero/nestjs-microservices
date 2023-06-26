@@ -1,4 +1,4 @@
-export * from './ban-search-status.enum';
+export * from './ban-filter.enum';
 export * from './subscription-type.enum';
 export * from './user-sort-fields.enum';
 export * from './sort-direction.enum';

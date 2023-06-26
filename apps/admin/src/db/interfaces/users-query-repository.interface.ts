@@ -1,11 +1,11 @@
-import { SortDirection, UserSortFields } from '@app/common/enums';
-import { DatabaseException }             from '@app/common/exceptions/database.exception';
-import { ModelType }                     from '@typegoose/typegoose/lib/types';
-import { InjectModel }                   from 'nestjs-typegoose';
+import { BanFilter, SortDirection, UserSortFields } from '@app/common/enums';
+import { DatabaseException }                        from '@app/common/exceptions/database.exception';
+import { ModelType }                                from '@typegoose/typegoose/lib/types';
+import { InjectModel }                              from 'nestjs-typegoose';
 
-import { MongoQueryRepository }          from './mongo/mongo-query-repository.interface';
-import { UserClass }                     from '../../app/entity/user.model';
-import { UserPaginationQuery }           from '../../app/graphql/args/user-pagination-query';
+import { MongoQueryRepository }                     from './mongo/mongo-query-repository.interface';
+import { UserClass }                                from '../../app/entity/user.model';
+import { UserPaginationQuery }                      from '../../app/graphql/args/user-pagination-query';
 
 export abstract class UsersQueryRepositoryInterface extends MongoQueryRepository<UserClass> {
   public constructor(@InjectModel(UserClass) repository: ModelType<UserClass>) {
@@ -14,7 +14,8 @@ export abstract class UsersQueryRepositoryInterface extends MongoQueryRepository
 
   public async getList(paginationQuery: UserPaginationQuery) {
     try {
-      const { page, pageSize, searchUsernameTerm, sortField } = paginationQuery;
+      const { page, pageSize, searchUsernameTerm, sortField, banFilter } =
+        paginationQuery;
 
       const sortDirection =
         paginationQuery.sortDirection === SortDirection.Asc ? 1 : -1;
@@ -22,6 +23,15 @@ export abstract class UsersQueryRepositoryInterface extends MongoQueryRepository
       const result = await this.repository
         .find({
           username: { $regex: searchUsernameTerm },
+          ...(banFilter === BanFilter.Active
+            ? {
+                isBanned: false,
+              }
+            : banFilter === BanFilter.Banned
+            ? {
+                isBanned: true,
+              }
+            : {}),
         })
         .skip(pageSize * (page - 1))
         .limit(pageSize)

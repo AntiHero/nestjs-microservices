@@ -1,6 +1,3 @@
-// eslint-disable-next-line import/order
-import { setLogLevel }         from '@typegoose/typegoose';
-setLogLevel('DEBUG');
 import { HttpExceptionFilter } from '@app/common/filters/http-exception.filter';
 import { Queue }               from '@app/common/queues';
 import { RmqService }          from '@app/common/src';

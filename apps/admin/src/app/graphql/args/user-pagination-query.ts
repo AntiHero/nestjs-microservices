@@ -1,21 +1,17 @@
-import {
-  BanSearchStatus,
-  SortDirection,
-  UserSortFields,
-} from '@app/common/enums';
-import { ArgsType, Field, registerEnumType } from '@nestjs/graphql';
-import { Transform }                         from 'class-transformer';
+import { BanFilter, SortDirection, UserSortFields } from '@app/common/enums';
+import { ArgsType, Field, registerEnumType }        from '@nestjs/graphql';
+import { Transform }                                from 'class-transformer';
 
-import { PaginationQuery }                   from './pagination-query.args';
+import { PaginationQuery }                          from './pagination-query.args';
 
 registerEnumType(SortDirection, {
   name: 'SortDirectionType',
   description: `${Object.keys(SortDirection)}`,
 });
 
-registerEnumType(BanSearchStatus, {
-  name: 'BanSearchStatusType',
-  description: `${Object.keys(BanSearchStatus)}`,
+registerEnumType(BanFilter, {
+  name: 'BanFilterType',
+  description: `${Object.keys(BanFilter)}`,
 });
 
 registerEnumType(UserSortFields, {
@@ -33,4 +29,7 @@ export class UserPaginationQuery extends PaginationQuery {
 
   @Field(() => UserSortFields)
   sortField = 'createdAt';
+
+  @Field(() => BanFilter)
+  banFilter: boolean | null = null;
 }

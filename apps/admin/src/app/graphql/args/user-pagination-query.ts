@@ -2,7 +2,7 @@ import {
   BanSearchStatus,
   SortDirection,
   UserSortFields,
-}                                            from '@app/common/enums';
+} from '@app/common/enums';
 import { ArgsType, Field, registerEnumType } from '@nestjs/graphql';
 import { Transform }                         from 'class-transformer';
 

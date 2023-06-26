@@ -53,14 +53,23 @@ async function getUserData(): Promise<any> {
       include: {
         avatar: {
           select: {
-            id: true,
             url: true,
             previewUrl: true,
             createdAt: true,
             updatedAt: true,
           },
         },
-        profile: true,
+        profile: {
+          select: {
+            name: true,
+            surname: true,
+            birthday: true,
+            city: true,
+            aboutMe: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
       },
     });
 

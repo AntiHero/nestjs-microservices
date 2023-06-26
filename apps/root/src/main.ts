@@ -9,6 +9,7 @@ import cookieParser           from 'cookie-parser';
 
 import { AppModule }          from './app.module';
 import { useGlobalFilters }   from './common/filters/global.filter';
+import { Logger }             from './common/interfaces/logger.interface';
 import { useGlobalPipes }     from './common/pipes/global.pipe';
 import { setupSwaggerModule } from './config/swagger.config';
 import { PrismaService }      from './prisma/prisma.service';
@@ -18,6 +19,7 @@ async function bootstrap() {
 
   configureCors(app);
   useMiddlewares(app);
+  useLogger(app);
   setupSwagger(app);
   setupGlobalPipesAndFilters(app);
 
@@ -30,7 +32,13 @@ async function bootstrap() {
 }
 
 async function createApp(): Promise<INestApplication> {
-  return await NestFactory.create(AppModule);
+  return await NestFactory.create(AppModule, {
+    bufferLogs: true,
+  });
+}
+
+function useLogger(app: INestApplication) {
+  app.useLogger(app.get(Logger));
 }
 
 function configureCors(app: INestApplication): void {

@@ -18,7 +18,7 @@ import testPosts                        from './mock-data/posts.json';
 import testUsers                        from './mock-data/users.json';
 import { AdminModule }                  from '../src/admin.module';
 import { PostClass, PostModel }         from '../src/app/entity/post.model';
-import { UserClass }                    from '../src/app/entity/user.model';
+import { UserClass, UserModel }         from '../src/app/entity/user.model';
 import { AdminMessageConroller }        from '../src/controllers/message.controller';
 import { PostsRepositoryProvider }      from '../src/db/repositories/post/post-repository';
 import { UsersRepositoryProvider }      from '../src/db/repositories/user/users.repository';
@@ -81,6 +81,17 @@ describe('AdminController (e2e)', () => {
 
       await userCollection.deleteMany({});
 
+      await UserModel.create({
+        id,
+        email,
+        username,
+        createdAt: new Date(createdAt),
+      });
+    });
+
+    test('should create user', async () => {
+      const { createdAt, id, email, username } = testUsers[1];
+
       await client.server.messageHandlers.get(RootEvent.CreatedUser)(
         createdUserMessageCreator({
           id,
@@ -89,10 +100,6 @@ describe('AdminController (e2e)', () => {
           createdAt: new Date(createdAt),
         }),
       );
-    });
-
-    test('should create user', async () => {
-      const { createdAt, id, email, username } = testUsers[0];
 
       const createdUser = await mongoose.connection
         .collection('users')
@@ -165,12 +172,10 @@ describe('AdminController (e2e)', () => {
         id,
       });
 
-      expect(updatedUser).toMatchObject({
-        profile: {
-          aboutMe: 'RPD rookie',
-          city: 'Raccoon',
-          surname: 'Kennedy',
-        },
+      expect(updatedUser?.profile).toMatchObject({
+        aboutMe: 'RPD rookie',
+        city: 'Raccoon',
+        surname: 'Kennedy',
       });
 
       await client.server.messageHandlers.get(RootEvent.UpdatedProfile)(
@@ -184,13 +189,11 @@ describe('AdminController (e2e)', () => {
         id,
       });
 
-      expect(updatedUser).toMatchObject({
-        profile: {
-          aboutMe: 'RPD rookie',
-          city: 'Raccoon',
-          surname: 'Kennedy',
-          name: 'Leon',
-        },
+      expect(updatedUser?.profile).toMatchObject({
+        aboutMe: 'RPD rookie',
+        city: 'Raccoon',
+        surname: 'Kennedy',
+        name: 'Leon',
       });
     });
 
@@ -245,7 +248,7 @@ describe('AdminController (e2e)', () => {
     });
   });
 
-  describe.only('posts', () => {
+  describe('posts', () => {
     beforeEach(async () => {
       postsCollection = mongoose.connection.collection('posts');
 

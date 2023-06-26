@@ -1,3 +1,6 @@
+// eslint-disable-next-line import/order
+import { setLogLevel }         from '@typegoose/typegoose';
+setLogLevel('DEBUG');
 import { HttpExceptionFilter } from '@app/common/filters/http-exception.filter';
 import { Queue }               from '@app/common/queues';
 import { RmqService }          from '@app/common/src';
@@ -23,9 +26,10 @@ async function bootstrap() {
   // find connection options by queue name
   app.connectMicroservice(rmqService.getOptions(Queue.Admin));
 
-  await Promise.all([
-    app.startAllMicroservices(),
-    app.listen(configService.get<string>('global.port') || 7000),
-  ]).then(() => 'Admin microserivces is running...');
+  const port = configService.get<string>('global.port') || 7000;
+
+  await Promise.all([app.startAllMicroservices(), app.listen(port)]).then(() =>
+    console.log('Admin microserivces is running at port %s...', port),
+  );
 }
 bootstrap();

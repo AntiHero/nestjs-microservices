@@ -4,7 +4,7 @@ import { TimeStamps }                           from '@typegoose/typegoose/lib/d
 
 @modelOptions({
   schemaOptions: {
-    discriminatorKey: '',
+    discriminatorKey: 'id',
     _id: false,
   },
 })

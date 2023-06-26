@@ -1,19 +1,9 @@
-import { AccountPlan }                          from '@app/common/enums';
-import type { User }                            from '@prisma/client';
-import { getModelForClass, modelOptions, prop } from '@typegoose/typegoose';
-import { TimeStamps }                           from '@typegoose/typegoose/lib/defaultClasses';
+import { AccountPlan }            from '@app/common/enums';
+import type { User }              from '@prisma/client';
+import { getModelForClass, prop } from '@typegoose/typegoose';
+import { TimeStamps }             from '@typegoose/typegoose/lib/defaultClasses';
 
-@modelOptions({
-  schemaOptions: {
-    // key that is used to distinguish docs
-    discriminatorKey: '',
-    _id: false,
-  },
-})
 export class AvatarClass extends TimeStamps {
-  @prop()
-  public id: string;
-
   @prop({ type: () => String, default: null })
   public url: string | null;
 
@@ -21,16 +11,7 @@ export class AvatarClass extends TimeStamps {
   public previewUrl: string | null;
 }
 
-@modelOptions({
-  schemaOptions: {
-    discriminatorKey: '',
-    _id: false,
-  },
-})
 export class ProfileClass extends TimeStamps {
-  @prop({ unique: true })
-  public id: string;
-
   @prop({ type: () => String, default: null })
   public name: string | null;
 
@@ -45,9 +26,6 @@ export class ProfileClass extends TimeStamps {
 
   @prop({ type: () => String, default: null })
   public aboutMe: string | null;
-
-  @prop()
-  public userId: string;
 }
 
 export class UserClass

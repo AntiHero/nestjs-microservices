@@ -1,8 +1,8 @@
-import { Injectable, Provider } from '@nestjs/common';
-import { ModelType } from '@typegoose/typegoose/lib/types';
-import { InjectModel } from 'nestjs-typegoose';
+import { Injectable, Provider }     from '@nestjs/common';
+import { ModelType }                from '@typegoose/typegoose/lib/types';
+import { InjectModel }              from 'nestjs-typegoose';
 
-import { UserClass } from 'apps/admin/src/app/entity/user.model';
+import { UserClass }                from 'apps/admin/src/app/entity/user.model';
 
 import { UsersRepositoryInterface } from '../../interfaces/users-repository.interface';
 

@@ -81,10 +81,15 @@ enum UserSortFields {
 
 type Mutation {
   deleteUser(input: DeleteUserInput!): Boolean!
+  banUser(input: BanUserInput!): Boolean!
   createAdmin(input: CreateAdminInput!): Admin!
 }
 
 input DeleteUserInput {
+  id: String!
+}
+
+input BanUserInput {
   id: String!
 }
 

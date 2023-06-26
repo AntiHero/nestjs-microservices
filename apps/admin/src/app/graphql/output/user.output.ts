@@ -1,6 +1,6 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
-import { UserViewModel } from 'apps/admin/src/utils/user-list-view.mapper';
+import { UserViewModel }         from 'apps/admin/src/utils/user-list-view.mapper';
 
 @ObjectType()
 export class UserOutput implements UserViewModel {

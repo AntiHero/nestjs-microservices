@@ -5,8 +5,8 @@ import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { BasicAuthGuard }                      from './@core/guards/basic.guard';
 import { AdminService }                        from './admin.service';
-import { UserPaginationQuery }                 from './app/graphql/args/pagination-query';
 import { PaginationQuery }                     from './app/graphql/args/pagination-query.args';
+import { UserPaginationQuery }                 from './app/graphql/args/user-pagination-query';
 import { BanUserInput }                        from './app/graphql/input/ban-user-input';
 import { CreateAdminInput }                    from './app/graphql/input/create-admin.input';
 import { DeleteUserInput }                     from './app/graphql/input/delete-user.input';
@@ -45,7 +45,7 @@ export class AdminResolver {
   @Query(() => [UserOutput], { name: 'userList' })
   public async getUserList(@Args() paginationQuery: UserPaginationQuery) {
     const result =
-      (await this.usersQueryRepository.getByQuery(paginationQuery))?.map(
+      (await this.usersQueryRepository.getList(paginationQuery))?.map(
         toUserViewModel,
       ) || [];
 

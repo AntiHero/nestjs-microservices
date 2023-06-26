@@ -10,5 +10,5 @@ export interface PaymentViewModel {
   endDate: Date;
   currency: Currency;
   price: number;
-  provider: PaymentProvider;
+  paymentType: PaymentProvider;
 }

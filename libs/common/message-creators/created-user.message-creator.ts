@@ -1,13 +1,7 @@
-import { type User }   from '@prisma/client';
-import {
-  IsDate,
-  IsEmail,
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-} from 'class-validator';
+import { type User }                             from '@prisma/client';
+import { IsDate, IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
-import { AccountPlan } from '../enums';
+import { AccountPlan }                           from '../enums';
 
 export interface CreatedUserType
   extends Pick<User, 'email' | 'username' | 'id' | 'createdAt'> {

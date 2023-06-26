@@ -165,7 +165,7 @@ async function getSubscriptionsData() {
       return PaymentModel.create(payment);
     });
 
-    await Promise.all([writeFile('subscriptions', result), ...payments]);
+    await Promise.all([writeFile('payments', result), ...payments]);
   } catch (error: any) {
     console.log(error);
 

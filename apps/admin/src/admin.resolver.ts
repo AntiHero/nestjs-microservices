@@ -6,25 +6,27 @@ import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { BasicAuthGuard }                      from './@core/guards/basic.guard';
 import { AdminService }                        from './admin.service';
 import { PaginationQuery }                     from './app/graphql/args/pagination-query.args';
+import { PaymentsPaginationQuery }             from './app/graphql/args/payments-pagination-query.args';
 import { UserPaginationQuery }                 from './app/graphql/args/user-pagination-query';
 import { BanUserInput }                        from './app/graphql/input/ban-user-input';
 import { CreateAdminInput }                    from './app/graphql/input/create-admin.input';
 import { DeleteUserInput }                     from './app/graphql/input/delete-user.input';
 import { Admin }                               from './app/graphql/model/admin.model';
 import { ImageOutput }                         from './app/graphql/output/avatar.output';
+import { PaymentOutput }                       from './app/graphql/output/payment.output';
 import { UserInfoOutput }                      from './app/graphql/output/user-info.outpul';
 import { UserPaymentsOutput }                  from './app/graphql/output/user-payments.output';
 import { UserOutput }                          from './app/graphql/output/user.output';
 import { PaymentsQueryRepositoryInterface }    from './db/interfaces/payments/payments-query-repository.interface';
 import { PostsQueryRepositoryInterface }       from './db/interfaces/post/posts-query-repository.interface';
 import { UsersQueryRepositoryInterface }       from './db/interfaces/users-query-repository.interface';
-import { toUserPaymentsViewModel }             from './utils/payments-view.mapper';
 import {
   PostImagesInput,
   toPostImagesViewModel,
 } from './utils/post-images-view.mapper';
 import { toUserInfoViewModel }                 from './utils/user-info-view.mapper';
 import { toUserViewModel }                     from './utils/user-list-view.mapper';
+import { toUserPaymentsViewModel }             from './utils/user-payments-view.mapper';
 
 @UseGuards(BasicAuthGuard)
 @Resolver()
@@ -99,7 +101,7 @@ export class AdminResolver {
       .flat();
   }
 
-  @Query(() => [UserPaymentsOutput], { name: 'payments', nullable: true })
+  @Query(() => [UserPaymentsOutput], { name: 'userPayments', nullable: true })
   public async getPayments(
     @Args('userId', { type: () => ID }) userId: string,
     @Args() paginationQuery: PaginationQuery,
@@ -119,5 +121,17 @@ export class AdminResolver {
   @Mutation(() => Boolean)
   public async unBanUser(@Args('input') input: BanUserInput) {
     return this.adminService.unBanUser(input.id);
+  }
+
+  @Query(() => [PaymentOutput], { name: 'allUsersPayments' })
+  public async getAllUsersPayments(
+    @Args() paymentsPaginationQuery: PaymentsPaginationQuery,
+  ) {
+    const result =
+      await this.paymentQueryRepository.getPaymentsInfoWithUserDetails(
+        paymentsPaginationQuery,
+      );
+
+    return [];
   }
 }

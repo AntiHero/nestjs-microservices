@@ -116,7 +116,6 @@ describe('AdminController (e2e)', () => {
         avatar: null,
         profile: null,
         isBanned: false,
-        isDeleted: false,
         isEmailConfirmed: false,
       });
     });
@@ -336,7 +335,7 @@ describe('AdminController (e2e)', () => {
           id,
         });
 
-      expect(existingPost?.isDeleted).toBe(false);
+      expect(existingPost).not.toBe(null);
 
       await client.server.messageHandlers.get(RootEvent.DeletedPost)(
         deletedPostMessageCreator(id),
@@ -348,7 +347,7 @@ describe('AdminController (e2e)', () => {
           id,
         });
 
-      expect(deletedPost?.isDeleted).toBe(true);
+      expect(deletedPost).toBe(null);
     });
   });
 

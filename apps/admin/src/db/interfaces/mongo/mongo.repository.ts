@@ -12,16 +12,11 @@ export abstract class MongoRepository<M> extends Repository<M> {
 
   public async delete(id: string) {
     try {
-      const result = await this.repository.updateOne(
-        {
-          id,
-        },
-        {
-          isDeleted: true,
-        },
-      );
+      const result = await this.repository.deleteOne({
+        id,
+      });
 
-      return result.modifiedCount ? true : false;
+      return result.deletedCount ? true : false;
     } catch (error) {
       console.log(error);
 

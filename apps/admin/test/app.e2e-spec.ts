@@ -1,3 +1,4 @@
+import { RmqClientToken }                from '@app/common/tokens';
 import { CanActivate, INestApplication } from '@nestjs/common';
 import { Test, TestingModule }           from '@nestjs/testing';
 import mongoose                          from 'mongoose';
@@ -36,13 +37,20 @@ describe('AdminController (e2e)', () => {
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AdminModule],
-    }).compile();
+    })
+      .overrideProvider(RmqClientToken.ROOT_RMQ)
+      .useValue({
+        emit() {
+          null;
+        },
+      })
+      .compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
   });
 
-  describe('users query', () => {
+  describe('users', () => {
     const testUser1 = {
       id: testUsers[0].id,
       username: testUsers[0].username,
@@ -57,10 +65,11 @@ describe('AdminController (e2e)', () => {
       dateAdded: testUsers[1].createdAt,
     };
 
-    test('should return user list', async () => {
-      expect.assertions(2);
+    describe('users queries', () => {
+      test('should return user list', async () => {
+        expect.assertions(2);
 
-      const query = `
+        const query = `
       query {
         userList {
           id
@@ -71,23 +80,23 @@ describe('AdminController (e2e)', () => {
       }
     `;
 
-      await request(app.getHttpServer())
-        .post('/graphql')
-        .send({ query })
-        .expect(200)
-        .then((response) => {
-          expect(response.body.data.userList.length).toBe(2);
-          expect(response.body.data.userList).toStrictEqual([
-            testUser2,
-            testUser1,
-          ]);
-        });
-    });
+        await request(app.getHttpServer())
+          .post('/graphql')
+          .send({ query })
+          .expect(200)
+          .then((response) => {
+            expect(response.body.data.userList.length).toBe(2);
+            expect(response.body.data.userList).toStrictEqual([
+              testUser2,
+              testUser1,
+            ]);
+          });
+      });
 
-    test('should sort users by username, desc by default', async () => {
-      expect.assertions(4);
+      test('should sort users by username, desc by default', async () => {
+        expect.assertions(4);
 
-      const query = `
+        const query = `
         query {
           userList(sortField: Username) {
             id
@@ -98,19 +107,19 @@ describe('AdminController (e2e)', () => {
         }
       `;
 
-      await request(app.getHttpServer())
-        .post('/graphql')
-        .send({ query })
-        .expect(200)
-        .then((response) => {
-          expect(response.body.data.userList.length).toBe(2);
-          expect(response.body.data.userList).toStrictEqual([
-            testUser2,
-            testUser1,
-          ]);
-        });
+        await request(app.getHttpServer())
+          .post('/graphql')
+          .send({ query })
+          .expect(200)
+          .then((response) => {
+            expect(response.body.data.userList.length).toBe(2);
+            expect(response.body.data.userList).toStrictEqual([
+              testUser2,
+              testUser1,
+            ]);
+          });
 
-      const queryWithSortingAsc = `
+        const queryWithSortingAsc = `
         query {
           userList(sortField: Username, sortDirection: Asc) {
             id
@@ -121,23 +130,23 @@ describe('AdminController (e2e)', () => {
         }
       `;
 
-      await request(app.getHttpServer())
-        .post('/graphql')
-        .send({ query: queryWithSortingAsc })
-        .expect(200)
-        .then((response) => {
-          expect(response.body.data.userList.length).toBe(2);
-          expect(response.body.data.userList).toStrictEqual([
-            testUser1,
-            testUser2,
-          ]);
-        });
-    });
+        await request(app.getHttpServer())
+          .post('/graphql')
+          .send({ query: queryWithSortingAsc })
+          .expect(200)
+          .then((response) => {
+            expect(response.body.data.userList.length).toBe(2);
+            expect(response.body.data.userList).toStrictEqual([
+              testUser1,
+              testUser2,
+            ]);
+          });
+      });
 
-    test('should sort users by createdAt date', async () => {
-      expect.assertions(4);
+      test('should sort users by createdAt date', async () => {
+        expect.assertions(4);
 
-      const query = `
+        const query = `
         query {
           userList(sortField: DateAdded) {
             id
@@ -148,19 +157,19 @@ describe('AdminController (e2e)', () => {
         }
       `;
 
-      await request(app.getHttpServer())
-        .post('/graphql')
-        .send({ query })
-        .expect(200)
-        .then((response) => {
-          expect(response.body.data.userList.length).toBe(2);
-          expect(response.body.data.userList).toStrictEqual([
-            testUser2,
-            testUser1,
-          ]);
-        });
+        await request(app.getHttpServer())
+          .post('/graphql')
+          .send({ query })
+          .expect(200)
+          .then((response) => {
+            expect(response.body.data.userList.length).toBe(2);
+            expect(response.body.data.userList).toStrictEqual([
+              testUser2,
+              testUser1,
+            ]);
+          });
 
-      const queryWithSortingAsc = `
+        const queryWithSortingAsc = `
         query {
           userList(sortField: DateAdded, sortDirection: Asc) {
             id
@@ -171,17 +180,54 @@ describe('AdminController (e2e)', () => {
         }
       `;
 
-      await request(app.getHttpServer())
-        .post('/graphql')
-        .send({ query: queryWithSortingAsc })
-        .expect(200)
-        .then((response) => {
-          expect(response.body.data.userList.length).toBe(2);
-          expect(response.body.data.userList).toStrictEqual([
-            testUser1,
-            testUser2,
-          ]);
-        });
+        await request(app.getHttpServer())
+          .post('/graphql')
+          .send({ query: queryWithSortingAsc })
+          .expect(200)
+          .then((response) => {
+            expect(response.body.data.userList.length).toBe(2);
+            expect(response.body.data.userList).toStrictEqual([
+              testUser1,
+              testUser2,
+            ]);
+          });
+      });
+    });
+
+    describe.only('users mutations', () => {
+      test('should ban user', async () => {
+        const userInfo = `
+        query {
+          userInfo(id: "${testUser1.id}") {
+            isBanned
+            banReason
+          }
+        }
+      `;
+
+        await request(app.getHttpServer())
+          .post('/graphql')
+          .send({ query: userInfo })
+          .expect(200)
+          .then((response) => {
+            expect(response.body.data.userInfo.isBanned).toBe(false);
+            expect(response.body.data.userInfo.banReason).toBe('');
+          });
+
+        const banUser = `
+          mutation {
+            banUser(input: { id: "${testUser1.id}", banReason: "Another reason" }) 
+          }
+      `;
+
+        await request(app.getHttpServer())
+          .post('/graphql')
+          .send({ query: banUser })
+          .expect(200)
+          .then((response) => {
+            expect(response.body.data.banUser).toBe(true);
+          });
+      });
     });
   });
 

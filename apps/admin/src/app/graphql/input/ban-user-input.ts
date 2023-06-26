@@ -1,6 +1,9 @@
-import { InputType }       from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
 
-import { DeleteUserInput } from './delete-user.input';
+import { DeleteUserInput }  from './delete-user.input';
 
 @InputType()
-export class BanUserInput extends DeleteUserInput {}
+export class BanUserInput extends DeleteUserInput {
+  @Field()
+  public banReason: string;
+}

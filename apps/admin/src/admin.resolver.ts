@@ -59,7 +59,7 @@ export class AdminResolver {
 
   @Mutation(() => Boolean)
   public async banUser(@Args('input') input: BanUserInput) {
-    return this.adminService.banUser(input.id);
+    return this.adminService.banUser(input.id, input.banReason);
   }
 
   @Mutation(() => Admin)
@@ -114,5 +114,10 @@ export class AdminResolver {
     );
 
     return result.map(toPaymentsViewModel);
+  }
+
+  @Mutation(() => Boolean)
+  public async unBanUser(@Args('input') input: BanUserInput) {
+    return this.adminService.unBanUser(input.id);
   }
 }

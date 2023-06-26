@@ -1,5 +1,5 @@
 import { type AvatarViewModel } from './common.interfaces';
-import { UserClass } from '../app/entity/user.model';
+import { UserClass }            from '../app/entity/user.model';
 
 export interface UserInfoViewModel {
   id: string;
@@ -7,6 +7,8 @@ export interface UserInfoViewModel {
   profileLink: string;
   dateAdded: string;
   avatar: AvatarViewModel;
+  isBanned: boolean;
+  banReason: string;
 }
 
 export const toUserInfoViewModel = (input: UserClass): UserInfoViewModel => ({
@@ -18,4 +20,6 @@ export const toUserInfoViewModel = (input: UserClass): UserInfoViewModel => ({
     url: input.avatar?.url || null,
     previewUrl: input.avatar?.previewUrl || null,
   },
+  isBanned: input.isBanned || false,
+  banReason: input.banReason || '',
 });

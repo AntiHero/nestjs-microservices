@@ -22,7 +22,6 @@ export abstract class UsersQueryRepositoryInterface extends MongoQueryRepository
       const result = await this.repository
         .find({
           username: { $regex: searchUsernameTerm },
-          isDeleted: false,
         })
         .skip(pageSize * (page - 1))
         .limit(pageSize)
@@ -42,6 +41,7 @@ export abstract class UsersQueryRepositoryInterface extends MongoQueryRepository
   }
 
   public async getInfoById(id: string) {
+    console.log(id, 'id');
     try {
       // const result = await this.repository.aggregate([
       //   {
@@ -83,7 +83,6 @@ export abstract class UsersQueryRepositoryInterface extends MongoQueryRepository
         .findOne(
           {
             id,
-            isDeleted: false,
           },
           {
             _id: 0,
@@ -94,6 +93,8 @@ export abstract class UsersQueryRepositoryInterface extends MongoQueryRepository
               previewUrl: 1,
             },
             username: 1,
+            banReason: 1,
+            isBanned: 1,
           },
         )
         .lean();

@@ -52,13 +52,13 @@ export class UserClass
   public profile: ProfileClass | null;
 
   @prop({ default: false })
-  public isDeleted: boolean;
-
-  @prop({ default: false })
   public isBanned: boolean;
 
   @prop({ default: false })
   public isEmailConfirmed: boolean;
+
+  @prop({ default: 'Another reason' })
+  public banReason: string;
 }
 
 export const UserModel = getModelForClass(UserClass, {

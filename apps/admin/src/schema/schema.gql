@@ -24,7 +24,8 @@ type PaymentOutput {
   endDate: DateTime!
   currency: Currency!
   price: Float!
-  provider: PaymentProvider!
+  paymentType: PaymentProvider!
+  subscriptionType: SubscriptionType!
 }
 
 """ONETIME,RECCURING"""
@@ -50,6 +51,8 @@ type UserInfoOutput {
   profileLink: String!
   dateAdded: String!
   avatar: ImageOutput!
+  isBanned: Boolean!
+  banReason: String!
 }
 
 type UserOutput {
@@ -83,6 +86,7 @@ type Mutation {
   deleteUser(input: DeleteUserInput!): Boolean!
   banUser(input: BanUserInput!): Boolean!
   createAdmin(input: CreateAdminInput!): Admin!
+  unBanUser(input: BanUserInput!): Boolean!
 }
 
 input DeleteUserInput {
@@ -91,6 +95,7 @@ input DeleteUserInput {
 
 input BanUserInput {
   id: String!
+  banReason: String!
 }
 
 input CreateAdminInput {

@@ -7,7 +7,6 @@ export interface CreatedUserType
   extends Pick<User, 'email' | 'username' | 'id' | 'createdAt'> {
   accountPlan?: AccountPlan;
   isBanned?: boolean;
-  isDeleted?: boolean;
   avatar?: null;
   profile?: null;
   isEmailConfirmed?: boolean;
@@ -36,7 +35,6 @@ export const createdUserMessageCreator = (
   avatar: null,
   profile: null,
   isBanned: false,
-  isDeleted: false,
   isEmailConfirmed: false,
   ...data,
 });

@@ -20,4 +20,10 @@ export class UserInfoOutput implements UserInfoViewModel {
 
   @Field(() => ImageOutput)
   public avatar: ImageOutput;
+
+  @Field()
+  public isBanned: boolean;
+
+  @Field()
+  public banReason: string;
 }

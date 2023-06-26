@@ -30,9 +30,24 @@ export class AdminService {
     return result;
   }
 
-  public async banUser(id: string) {
+  public async banUser(id: string, banReason: string) {
+    console.log(id, banReason);
     const result = await this.usersRepository.update(id, {
       isBanned: true,
+      banReason,
+    });
+
+    if (result) {
+      this.rootClient.emit(AdminCommand.BanUser, id);
+    }
+
+    return result;
+  }
+
+  public async unBanUser(id: string) {
+    const result = await this.usersRepository.update(id, {
+      isBanned: false,
+      banReason: '',
     });
 
     if (result) {

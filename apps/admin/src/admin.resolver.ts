@@ -12,8 +12,8 @@ import { CreateAdminInput }                    from './app/graphql/input/create-
 import { DeleteUserInput }                     from './app/graphql/input/delete-user.input';
 import { Admin }                               from './app/graphql/model/admin.model';
 import { ImageOutput }                         from './app/graphql/output/avatar.output';
-import { PaymentOutput }                       from './app/graphql/output/payments.output';
 import { UserInfoOutput }                      from './app/graphql/output/user-info.outpul';
+import { UserPaymentsOutput }                  from './app/graphql/output/user-payments.output';
 import { UserOutput }                          from './app/graphql/output/user.output';
 import { PaymentsQueryRepositoryInterface }    from './db/interfaces/payments/payments-query-repository.interface';
 import { PostsQueryRepositoryInterface }       from './db/interfaces/post/posts-query-repository.interface';
@@ -99,7 +99,7 @@ export class AdminResolver {
       .flat();
   }
 
-  @Query(() => [PaymentOutput], { name: 'payments', nullable: true })
+  @Query(() => [UserPaymentsOutput], { name: 'payments', nullable: true })
   public async getPayments(
     @Args('userId', { type: () => ID }) userId: string,
     @Args() paginationQuery: PaginationQuery,

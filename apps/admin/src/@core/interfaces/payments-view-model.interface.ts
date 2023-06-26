@@ -4,8 +4,8 @@ import type {
   SubscriptionType,
 } from '@app/common/enums';
 
-export interface PaymentViewModel {
-  type: SubscriptionType;
+export interface UserPaymentViewModel {
+  subscriptionType: SubscriptionType;
   startDate: Date;
   endDate: Date;
   currency: Currency;

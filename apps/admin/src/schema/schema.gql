@@ -18,14 +18,23 @@ type ImageOutput {
   previewUrl: String
 }
 
+type UserInfoOutput {
+  id: ID!
+  username: String!
+  profileLink: String!
+  dateAdded: String!
+  avatar: ImageOutput!
+  isBanned: Boolean!
+  banReason: String!
+}
+
 type UserPaymentsOutput {
-  type: SubscriptionType!
+  subscriptionType: SubscriptionType!
   startDate: DateTime!
   endDate: DateTime!
   currency: Currency!
   price: Float!
   paymentType: PaymentProvider!
-  subscriptionType: SubscriptionType!
 }
 
 """ONETIME,RECCURING"""
@@ -43,16 +52,6 @@ enum Currency {
 enum PaymentProvider {
   STRIPE
   PAYPAL
-}
-
-type UserInfoOutput {
-  id: ID!
-  username: String!
-  profileLink: String!
-  dateAdded: String!
-  avatar: ImageOutput!
-  isBanned: Boolean!
-  banReason: String!
 }
 
 type UserOutput {

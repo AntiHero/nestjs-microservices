@@ -18,7 +18,7 @@ import { UserOutput }                          from './app/graphql/output/user.o
 import { PaymentsQueryRepositoryInterface }    from './db/interfaces/payments/payments-query-repository.interface';
 import { PostsQueryRepositoryInterface }       from './db/interfaces/post/posts-query-repository.interface';
 import { UsersQueryRepositoryInterface }       from './db/interfaces/users-query-repository.interface';
-import { toPaymentsViewModel }                 from './utils/payments-view.mapper';
+import { toUserPaymentsViewModel }             from './utils/payments-view.mapper';
 import {
   PostImagesInput,
   toPostImagesViewModel,
@@ -113,7 +113,7 @@ export class AdminResolver {
       paginationQuery,
     );
 
-    return result.map(toPaymentsViewModel);
+    return result.map(toUserPaymentsViewModel);
   }
 
   @Mutation(() => Boolean)

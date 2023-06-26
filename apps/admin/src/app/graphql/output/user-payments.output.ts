@@ -6,7 +6,7 @@ import {
 } from '@app/common/enums';
 import { Field, Float, ObjectType, registerEnumType } from '@nestjs/graphql';
 
-import { PaymentViewModel }                           from 'apps/admin/src/@core/interfaces';
+import { UserPaymentViewModel }                       from 'apps/admin/src/@core/interfaces';
 
 registerEnumType(Currency, {
   name: 'Currency',
@@ -29,9 +29,10 @@ registerEnumType(PaymentProvider, {
 });
 
 @ObjectType()
-export class UserPaymentsOutput implements PaymentViewModel {
+export class UserPaymentsOutput implements UserPaymentViewModel {
+  provider: PaymentProvider;
   @Field(() => SubscriptionType)
-  public type: SubscriptionType;
+  public subscriptionType: SubscriptionType;
 
   @Field()
   public startDate: Date;
@@ -47,7 +48,4 @@ export class UserPaymentsOutput implements PaymentViewModel {
 
   @Field(() => PaymentProvider)
   public paymentType: PaymentProvider;
-
-  @Field(() => SubscriptionType)
-  public subscriptionType: SubscriptionType;
 }

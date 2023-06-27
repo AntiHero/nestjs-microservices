@@ -1,7 +1,7 @@
-import { ModelType } from '@typegoose/typegoose/lib/types';
-import { InjectModel } from 'nestjs-typegoose';
+import { ModelType }       from '@typegoose/typegoose/lib/types';
+import { InjectModel }     from 'nestjs-typegoose';
 
-import { PostClass } from 'apps/admin/src/app/entity/post.model';
+import { PostClass }       from 'apps/admin/src/app/entity/post.model';
 
 import { MongoRepository } from '../mongo/mongo.repository';
 

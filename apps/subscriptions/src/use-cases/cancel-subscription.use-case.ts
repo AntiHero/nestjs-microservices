@@ -1,12 +1,11 @@
-import { SubscriptionStatus } from '.prisma/subscriptions';
-import { InjectStripeService } from '@app/common/decorators/inject-stripe-service.decorator';
+import { SubscriptionStatus }              from '.prisma/subscriptions';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { InjectStripe }                    from 'nestjs-stripe';
 
-import { PrismaService } from 'apps/subscriptions/src/prisma/prisma.service';
+import { PrismaService }                   from 'apps/subscriptions/src/prisma/prisma.service';
 
-import { SubscriptionsQueryRepository } from '../repositories/subscriptions.query-repository';
-import { PaymentProviderService } from '../services/payment-provider.service';
-import { SubscriptionsTransactionService } from '../services/subscriptions-transaction.service';
+import { SubscriptionsQueryRepository }    from '../repositories/subscriptions.query-repository';
+import { SubscriptionsRepository }         from '../repositories/subscriptions.repository';
 
 export class CancelSubscriptionCommand {
   public constructor(public readonly userId: string) {}
@@ -19,9 +18,8 @@ export class CancelSubscriptionCommandHandler
   public constructor(
     private readonly prismaService: PrismaService,
     private readonly subscriptionsQueryRepository: SubscriptionsQueryRepository,
-    @InjectStripeService()
-    private readonly paymentProviderService: PaymentProviderService,
-    private readonly subscriptionsTransactionService: SubscriptionsTransactionService,
+    @InjectStripe()
+    private readonly subscriptionsTransactionService: SubscriptionsRepository,
   ) {}
 
   public async execute(command: CancelSubscriptionCommand) {
@@ -34,15 +32,10 @@ export class CancelSubscriptionCommandHandler
       });
 
     if (currentActiveSubscription) {
-      await Promise.all([
-        this.subscriptionsTransactionService.cancelSubscription(
-          this.prismaService,
-          currentActiveSubscription.id,
-        ),
-        this.paymentProviderService.cancelSubscription(
-          <string>currentActiveSubscription.relatedSubscription,
-        ),
-      ]);
+      await this.subscriptionsTransactionService.cancelSubscription(
+        this.prismaService,
+        currentActiveSubscription.id,
+      );
     }
   }
 }

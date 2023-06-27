@@ -1,6 +1,6 @@
-import { Injectable, Provider } from '@nestjs/common';
+import { Injectable, Provider }             from '@nestjs/common';
 
-import { PaymentsQueryRepositoryInterface } from './interfaces/payments/payments-query-repository.interface';
+import { PaymentsQueryRepositoryInterface } from '../../interfaces/payments/payments-query-repository.interface';
 
 @Injectable()
 export class PaymentsQueryRepository extends PaymentsQueryRepositoryInterface {}

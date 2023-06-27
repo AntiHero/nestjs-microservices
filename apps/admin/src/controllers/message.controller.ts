@@ -1,13 +1,16 @@
-import { ConfirmedEmailtype }       from '@app/common/message-creators/confirmed-email.message-creator';
-import { CreatedPostType }          from '@app/common/message-creators/created-post.message-creator';
-import { CreatedUserType }          from '@app/common/message-creators/created-user.message-creator';
-import { DeletedPostType }          from '@app/common/message-creators/deleted-post.message-creator';
-import { UpdatedAvatarType }        from '@app/common/message-creators/updated-avatar.message-creator';
-import { UpdatedPostType }          from '@app/common/message-creators/updated-post.message-creator';
-import { UpdatedProfileType }       from '@app/common/message-creators/updated-profile.message-creator';
-import { RootEvent }                from '@app/common/patterns/root.pattern';
-import { RmqService }               from '@app/common/src';
-import { Controller }               from '@nestjs/common';
+import { ConfirmedEmailtype }          from '@app/common/message-creators/confirmed-email.message-creator';
+import { CreatedPostType }             from '@app/common/message-creators/created-post.message-creator';
+import { CreatedSubscriptinType }      from '@app/common/message-creators/created-subscription.message-creator';
+import { CreatedUserType }             from '@app/common/message-creators/created-user.message-creator';
+import { DeletedPostType }             from '@app/common/message-creators/deleted-post.message-creator';
+import { UpdatedAvatarType }           from '@app/common/message-creators/updated-avatar.message-creator';
+import { UpdatedPostType }             from '@app/common/message-creators/updated-post.message-creator';
+import { UpdatedProfileType }          from '@app/common/message-creators/updated-profile.message-creator';
+import { SubscriptionEvent }           from '@app/common/patterns';
+import { RootEvent }                   from '@app/common/patterns/root.pattern';
+import { RmqService }                  from '@app/common/src';
+import { NotNullable }                 from '@app/common/types/not-nullable.type';
+import { Controller }                  from '@nestjs/common';
 import {
   Ctx,
   MessagePattern,
@@ -15,8 +18,9 @@ import {
   RmqContext,
 } from '@nestjs/microservices';
 
-import { PostsRepositoryInterface } from '../db/interfaces/post/posts-repository.interface';
-import { UsersRepositoryInterface } from '../db/interfaces/users-repository.interface';
+import { PaymentsRepositoryInterface } from '../db/interfaces/payments/payments-repository.interface';
+import { PostsRepositoryInterface }    from '../db/interfaces/post/posts-repository.interface';
+import { UsersRepositoryInterface }    from '../db/interfaces/users-repository.interface';
 
 @Controller()
 export class AdminMessageConroller {
@@ -24,6 +28,7 @@ export class AdminMessageConroller {
     private readonly rmqService: RmqService,
     private readonly usersRepository: UsersRepositoryInterface,
     private readonly postsRepository: PostsRepositoryInterface,
+    private readonly paymentsRepository: PaymentsRepositoryInterface,
   ) {}
 
   @MessagePattern(RootEvent.CreatedUser)
@@ -92,6 +97,16 @@ export class AdminMessageConroller {
     @Ctx() context: RmqContext,
   ) {
     await this.postsRepository.delete(id);
+
+    this.rmqService.ack(context);
+  }
+
+  @MessagePattern(SubscriptionEvent.SubscriptionCreated)
+  public async createSubscription(
+    @Payload() payload: NotNullable<CreatedSubscriptinType>,
+    @Ctx() context: RmqContext,
+  ) {
+    await this.paymentsRepository.create(payload);
 
     this.rmqService.ack(context);
   }

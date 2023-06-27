@@ -23,7 +23,8 @@ import { localConfig }                      from './config/global.config';
 import { mongooseConfigFactory }            from './config/mongoose.config';
 import { postgresConfigFactory }            from './config/typeorm.config';
 import { AdminMessageConroller }            from './controllers/message.controller';
-import { PaymentsQueryRepositoryProvider }  from './db/payments.query-repository';
+import { PaymentsQueryRepositoryProvider }  from './db/repositories/payments/payments.query-repository';
+import { PaymentsRepositoryProvider }       from './db/repositories/payments/payments.repository';
 import { PostsRepositoryProvider }          from './db/repositories/post/post-repository';
 import { PostsQueryRepositoryProvider }     from './db/repositories/post/posts.query-repository';
 import { UsersQueryRepositoryProvider }     from './db/repositories/user/users.query-repository';
@@ -47,6 +48,7 @@ import { UsersRepositoryProvider }          from './db/repositories/user/users.r
     PostsRepositoryProvider,
     PostsQueryRepositoryProvider,
     PaymentsQueryRepositoryProvider,
+    PaymentsRepositoryProvider,
     RmqService,
   ],
 })

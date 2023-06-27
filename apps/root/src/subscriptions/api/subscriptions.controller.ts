@@ -1,7 +1,6 @@
-import { PaymentsQueryDto }            from '@app/common/dtos/payments-query.dto';
-import { BaseHttpException }           from '@app/common/exceptions';
-import { PaymentsMapper }              from '@app/common/utils/payments.mapper';
-import { SubscriptionsMapper }         from '@app/common/utils/subscriptions-mapper';
+import { PaymentsQueryDto }              from '@app/common/dtos/payments-query.dto';
+import { BaseHttpException }             from '@app/common/exceptions';
+import { PaymentsMapper }                from '@app/common/utils/payments.mapper';
 import {
   Body,
   Controller,
@@ -12,26 +11,26 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags }                     from '@nestjs/swagger';
-import { firstValueFrom }              from 'rxjs';
+import { ApiTags }                       from '@nestjs/swagger';
+import { firstValueFrom }                from 'rxjs';
 
-import { ActiveUser }                  from 'apps/root/src/common/decorators/active-user.decorator';
-import { JwtGuard }                    from 'apps/root/src/common/guards/jwt-auth.guard';
+import { ActiveUser }                    from 'apps/root/src/common/decorators/active-user.decorator';
+import { JwtGuard }                      from 'apps/root/src/common/guards/jwt-auth.guard';
 import {
-  CancelSubscriptionApiDecorator,
   CheckoutSessionApiDecorator,
+  CurrentSubscriptionApiDecorator,
   PriceListApiDecorator,
   SubscriptionsPaymentsApiDecorator,
 } from 'apps/root/src/subscriptions/@common/decorators/swagger/subscriptions.decorator';
 
-import { CheckoutDto }                 from '../dto/checkout.dto';
-import { SubscriptionsServiceAdapter } from '../services/subscriptions.service-adapter';
+import { CheckoutDto }                   from '../dto/checkout.dto';
+import { SubscriptionsServiceInterface } from '../services/subscriptions.service-adapter';
 
 @ApiTags('Subscriptions')
 @Controller('api/subscriptions')
 export class SubscriptionsController {
   public constructor(
-    private readonly subscriptionsService: SubscriptionsServiceAdapter,
+    private readonly subscriptionsService: SubscriptionsServiceInterface,
   ) {}
 
   @Get('price-list')
@@ -78,20 +77,9 @@ export class SubscriptionsController {
     return PaymentsMapper.toViewModel(result.data);
   }
 
-  @Post('cancel')
-  @UseGuards(JwtGuard)
-  @CancelSubscriptionApiDecorator()
-  @HttpCode(HttpStatus.NO_CONTENT)
-  public async cancelSubscription(@ActiveUser('userId') userId: string) {
-    const result = await firstValueFrom(
-      this.subscriptionsService.cancelSubscription(userId),
-    );
-
-    if (result.err) throw new BaseHttpException(result.err);
-  }
-
   @Get('current')
   @UseGuards(JwtGuard)
+  @CurrentSubscriptionApiDecorator()
   public async getCurrentSubscription(@ActiveUser('userId') userId: string) {
     const result = await firstValueFrom(
       this.subscriptionsService.getCurrentSubscription(userId),
@@ -99,8 +87,6 @@ export class SubscriptionsController {
 
     if (result.err) throw new BaseHttpException(result.err);
 
-    if (!result.data) return null;
-
-    return SubscriptionsMapper.toViewModel(result.data);
+    return result.data;
   }
 }

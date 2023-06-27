@@ -1,34 +1,33 @@
-import { PaymentsQueryDto }             from '@app/common/dtos/payments-query.dto';
-import { GetCheckoutSessionUrlPayload } from '@app/common/interfaces/get-checkout-session-url-payload.interface';
-import { Result }                       from '@app/common/interfaces/result.interface';
-import { SubscriptionCommand }          from '@app/common/patterns/subscriptions.pattern';
+import { PaymentsQueryDto }                  from '@app/common/dtos/payments-query.dto';
+import { GetCheckoutSessionUrlPayload }      from '@app/common/interfaces/get-checkout-session-url-payload.interface';
+import { SubscriptionCommand }               from '@app/common/patterns/subscriptions.pattern';
+import { Result }                            from '@app/common/utils/result.util';
 import {
   Body,
   Controller,
   Get,
   HttpCode,
   HttpStatus,
-  Inject,
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { CommandBus }                   from '@nestjs/cqrs';
-import { ClientProxy, MessagePattern }  from '@nestjs/microservices';
-import { ApiExcludeEndpoint }           from '@nestjs/swagger';
+import { CommandBus }                        from '@nestjs/cqrs';
+import { MessagePattern }                    from '@nestjs/microservices';
+import { ApiExcludeEndpoint }                from '@nestjs/swagger';
 
-import { StripeWebhookGuard }           from './guards/stripe-webhook.guard';
-import { StripeEvent }                  from './interfaces';
-import { SubscriptionsQueryRepository } from './repositories/subscriptions.query-repository';
-import { CancelSubscriptionCommand }    from './use-cases/cancel-subscription.use-case';
-import { ProcessPaymentCommand }        from './use-cases/process-payment.use-case';
-import { StartPaymentCommand }          from './use-cases/start-payment.use-case';
+import { StripeWebhookGuard }                from '../guards/stripe-webhook.guard';
+import { StripeEvent }                       from '../interfaces';
+import { SubscriptionsQueryRepository }      from '../repositories/subscriptions.query-repository';
+import { CancelSubscriptionCommand }         from '../use-cases/cancel-subscription.use-case';
+import { ProcessCheckoutTransactionCommand } from '../use-cases/process-checkout-transaction.use-case';
+import { ProcessPaymentCommand }             from '../use-cases/process-payment.use-case';
+import { SubscriptionMapper }                from '../utils/subscription-mapper';
 
 @Controller()
 export class SubscriptionsController {
   public constructor(
     private readonly subscriptionsQueryRepository: SubscriptionsQueryRepository,
     private readonly commandBus: CommandBus,
-    @Inject('ROOT_RMQ') private readonly rootRmqClient: ClientProxy,
   ) {}
 
   @MessagePattern(SubscriptionCommand.GetPrices)
@@ -41,9 +40,9 @@ export class SubscriptionsController {
     const { priceId, paymentSystem, userId } = payload;
 
     const result = await this.commandBus.execute<
-      StartPaymentCommand,
+      ProcessCheckoutTransactionCommand,
       Result<string>
-    >(new StartPaymentCommand(paymentSystem, priceId, userId));
+    >(new ProcessCheckoutTransactionCommand(paymentSystem, priceId, userId));
 
     return result;
   }
@@ -60,17 +59,13 @@ export class SubscriptionsController {
         query,
       );
 
-      return {
-        data: result,
-      };
+      return new Result(result);
     } catch (error: any) {
-      return {
-        data: null,
-        err: {
-          errorCode: error?.response?.statusCode || 500,
-          message: error?.response?.message,
-        },
-      };
+      return new Result(
+        null,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        'Can not retrieve payments',
+      );
     }
   }
 
@@ -81,15 +76,13 @@ export class SubscriptionsController {
         new CancelSubscriptionCommand(payload.userId),
       );
 
-      return { data: null };
+      return new Result(null);
     } catch (error: any) {
-      return {
-        data: null,
-        err: {
-          errorCode: error?.response?.statusCode || 500,
-          message: error?.response?.message,
-        },
-      };
+      return new Result(
+        null,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        'Can not cancel subscription',
+      );
     }
   }
 
@@ -101,15 +94,13 @@ export class SubscriptionsController {
           payload.userId,
         );
 
-      return { data: result };
+      return new Result(result && SubscriptionMapper.toViewModel(result));
     } catch (error: any) {
-      return {
-        data: null,
-        err: {
-          errorCode: error?.response?.statusCode || 500,
-          message: error?.response?.message,
-        },
-      };
+      return new Result(
+        null,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        'Can not get current subscription',
+      );
     }
   }
 

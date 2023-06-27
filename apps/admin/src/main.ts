@@ -10,6 +10,18 @@ import { AdminModule }         from './admin.module';
 async function bootstrap() {
   const app = await NestFactory.create(AdminModule);
 
+  const frontendDomains = [
+    process.env.FRONTEND_LOCAL_DOMAIN as string,
+    process.env.FRONTEND_DOMAIN as string,
+  ];
+
+  console.log(frontendDomains, 'domains');
+
+  app.enableCors({
+    origin: frontendDomains,
+    credentials: true,
+  });
+
   const configService = app.get(ConfigService);
 
   app.useGlobalPipes(

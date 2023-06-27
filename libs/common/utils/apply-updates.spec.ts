@@ -8,7 +8,7 @@ describe('applyUpdates', () => {
       profile: {
         firstName: 'bob',
         lastName: 'dylan',
-        city: null,
+        city: null as string | null,
       },
     };
 

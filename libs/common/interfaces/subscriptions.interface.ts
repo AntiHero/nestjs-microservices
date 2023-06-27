@@ -1,9 +1,11 @@
 import { SubscriptionType } from '.prisma/subscriptions';
 
+import { PeriodType }       from '../enums/period-type.enum';
+
 export interface CurrentSubscriptionDbType {
   id: string;
-  endDate: Date | null;
-  startDate: Date;
+  endDate: string;
+  startDate: string;
   subscriptionPayment: {
     pricingPlan: {
       subscriptionType: SubscriptionType;
@@ -12,6 +14,9 @@ export interface CurrentSubscriptionDbType {
 }
 
 export interface CurrentSubscriptionViewModelType {
+  price: number;
+  period: number;
+  periodType: PeriodType;
   paymentDate: string;
   endDate: string;
 }

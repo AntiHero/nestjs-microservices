@@ -107,23 +107,23 @@ export function CurrentSubscriptionApiDecorator() {
 }
 
 class SubscriptionResponse {
-  @ApiProperty()
-  type: SubscriptionType;
+  @ApiProperty({ enum: Currency })
+  currency: Currency;
 
   @ApiProperty()
   amount: number;
 
-  @ApiProperty()
-  startDate: Date;
+  @ApiProperty({ format: 'DD.MM.YYYY', example: '30.05.2023' })
+  startDate: string;
 
-  @ApiProperty()
-  endDate: Date;
+  @ApiProperty({ format: 'DD.MM.YYYY', example: '30.06.2023' })
+  endDate: string;
 
   @ApiProperty()
   period: number;
 
-  @ApiProperty()
-  periodType: number;
+  @ApiProperty({ enum: PeriodType })
+  periodType: PeriodType;
 }
 
 class SubscriptionsPaymentsResponse {
@@ -159,7 +159,7 @@ class PaymentsResponseType implements Payment {
   public period: number;
 
   @ApiProperty({
-    enum: Object.keys(PeriodType),
+    enum: PeriodType,
     description: 'Subscription period type',
   })
   public periodType: PeriodType;
@@ -169,7 +169,7 @@ class GetPriceListResponse {
   @ApiProperty()
   public id: string;
 
-  @ApiProperty({ enum: Object.keys(Currency) })
+  @ApiProperty({ enum: Currency })
   public currency: Currency;
 
   @ApiProperty({ description: 'Period of subscription in months' })
@@ -186,6 +186,6 @@ class CreateCheckoutSessionResponse implements CheckoutDto {
   @ApiProperty({ required: false })
   public renew: boolean;
 
-  @ApiProperty({ enum: Object.keys(PaymentProvider) })
+  @ApiProperty({ enum: PaymentProvider })
   public paymentSystem: PaymentProvider;
 }

@@ -6,12 +6,12 @@ import {
   SubscriptionPayment,
   SubscriptionStatus,
 } from '.prisma/subscriptions';
-import { Injectable } from '@nestjs/common';
+import { Injectable }            from '@nestjs/common';
 
 import { PrismaTransactionType } from 'apps/subscriptions/src/interfaces/prisma-transaction.interface';
 
 @Injectable()
-export class SubscriptionsTransactionService {
+export class SubscriptionsRepository {
   public async createSubscription(
     tx: PrismaTransactionType,
     payload: Pick<Subscription, 'userId' | 'subscriptionPaymentId'> &

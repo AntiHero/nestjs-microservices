@@ -123,8 +123,8 @@ export class AdminResolver {
     return this.adminService.unBanUser(input.id);
   }
 
-  @Query(() => [PaymentOutput], { name: 'allUsersPayments' })
-  public async getAllUsersPayments(
+  @Query(() => [PaymentOutput], { name: 'paymentsList' })
+  public async getPaymentsList(
     @Args() paymentsPaginationQuery: PaymentsPaginationQuery,
   ) {
     const result =

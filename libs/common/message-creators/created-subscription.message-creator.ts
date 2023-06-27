@@ -4,7 +4,7 @@ import {
   SubscriptionPrice,
 } from '.prisma/subscriptions';
 
-type CreatedSubscriptinType = Pick<
+export type CreatedSubscriptinType = Pick<
   Subscription,
   'userId' | 'endDate' | 'startDate' | 'type' | 'id'
 > &

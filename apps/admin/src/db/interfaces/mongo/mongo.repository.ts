@@ -10,6 +10,18 @@ export abstract class MongoRepository<M> extends Repository<M> {
     super();
   }
 
+  public async deleteByQuery(query: Partial<M>) {
+    try {
+      const result = await this.repository.deleteMany(query);
+
+      return result.deletedCount ? true : false;
+    } catch (error) {
+      console.log(error);
+
+      return false;
+    }
+  }
+
   public async delete(id: string) {
     try {
       const result = await this.repository.deleteOne({

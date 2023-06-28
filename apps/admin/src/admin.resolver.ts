@@ -11,6 +11,7 @@ import { UserPaginationQuery }                     from './app/graphql/args/user
 import { BanUserInput }                            from './app/graphql/input/ban-user-input';
 import { CreateAdminInput }                        from './app/graphql/input/create-admin.input';
 import { DeleteUserInput }                         from './app/graphql/input/delete-user.input';
+import { UnBanUserInput }                          from './app/graphql/input/unban-user.input';
 import { Admin }                                   from './app/graphql/model/admin.model';
 import { ImagesPaginationOutput }                  from './app/graphql/output/pagination/images-pagination.output';
 import { PaymentsWithUserDetailsPaginationOutput } from './app/graphql/output/pagination/payments-with-user-details-pagination.output';
@@ -130,7 +131,7 @@ export class AdminResolver {
   }
 
   @Mutation(() => Boolean)
-  public async unBanUser(@Args('input') input: BanUserInput) {
+  public async unBanUser(@Args('input') input: UnBanUserInput) {
     return this.adminService.unBanUser(input.id);
   }
 

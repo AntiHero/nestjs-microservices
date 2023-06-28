@@ -57,7 +57,7 @@ export class UserClass
   @prop({ default: false })
   public isEmailConfirmed: boolean;
 
-  @prop({ default: 'Another reason' })
+  @prop({ default: '' })
   public banReason: string;
 }
 

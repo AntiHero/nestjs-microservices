@@ -8,21 +8,20 @@ import {
   Ip,
   Post,
   Query,
-  Req,
   Res,
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import { ConfigType } from '@nestjs/config';
-import { CommandBus } from '@nestjs/cqrs';
-import { ApiTags } from '@nestjs/swagger';
-import { CookieOptions, Response } from 'express';
+import { ConfigType }                        from '@nestjs/config';
+import { CommandBus }                        from '@nestjs/cqrs';
+import { ApiTags }                           from '@nestjs/swagger';
+import { CookieOptions, Response }           from 'express';
 
-import { RecaptchaGuard } from 'apps/root/src/common/guards/recaptcha.guard';
-import { githubOauthConfig } from 'apps/root/src/config/github-oauth.config';
+import { RecaptchaGuard }                    from 'apps/root/src/common/guards/recaptcha.guard';
+import { githubOauthConfig }                 from 'apps/root/src/config/github-oauth.config';
 
-import { JwtAdapter } from '../../adapters/jwt/jwt.adapter';
-import { ActiveUser } from '../../common/decorators/active-user.decorator';
+import { JwtAdapter }                        from '../../adapters/jwt/jwt.adapter';
+import { ActiveUser }                        from '../../common/decorators/active-user.decorator';
 import {
   AuthGoogleDecorator,
   AuthLoginSwaggerDecorator,
@@ -36,27 +35,27 @@ import {
   AuthWithGithubDecorator,
   MergeAccountsDecorator,
 } from '../../common/decorators/swagger/auth.decorator';
-import { CookieAuthGuard } from '../../common/guards/cookie-auth.guard';
-import { RefreshTokenJwtGuard } from '../../common/guards/jwt-auth.guard';
-import { ActiveUserData } from '../../user/types';
-import { AuthDto } from '../dto/auth.dto';
-import { ConfirmationCodeDto } from '../dto/confirmation-code.dto';
-import { EmailDto } from '../dto/email.dto';
-import { GithubCodeDto } from '../dto/github-code.dto';
-import { GoogleCodeDto } from '../dto/google-code.dto';
-import { LoginDto } from '../dto/login.dto';
-import { NewPasswordDto } from '../dto/new-password.dto';
-import { TokensPair } from '../types';
-import { ConfirmRegistrationCommand } from '../use-cases/confirm-registration-use-case';
-import { LoginUserCommand } from '../use-cases/login-user-use-case';
-import { LogoutUserCommand } from '../use-cases/logout-user-use-case';
-import { MergeAccountCommand } from '../use-cases/merge-account.use-case';
-import { NewPasswordCommand } from '../use-cases/new-password.use-case';
-import { PasswordRecoveryCommand } from '../use-cases/password-recovery.use-case';
-import { RegisterUserCommand } from '../use-cases/register-user-use-case';
+import { CookieAuthGuard }                   from '../../common/guards/cookie-auth.guard';
+import { RefreshTokenJwtGuard }              from '../../common/guards/jwt-auth.guard';
+import { ActiveUserData }                    from '../../user/types';
+import { AuthDto }                           from '../dto/auth.dto';
+import { ConfirmationCodeDto }               from '../dto/confirmation-code.dto';
+import { EmailDto }                          from '../dto/email.dto';
+import { GithubCodeDto }                     from '../dto/github-code.dto';
+import { GoogleCodeDto }                     from '../dto/google-code.dto';
+import { LoginDto }                          from '../dto/login.dto';
+import { NewPasswordDto }                    from '../dto/new-password.dto';
+import { TokensPair }                        from '../types';
+import { ConfirmRegistrationCommand }        from '../use-cases/confirm-registration-use-case';
+import { LoginUserCommand }                  from '../use-cases/login-user-use-case';
+import { LogoutUserCommand }                 from '../use-cases/logout-user-use-case';
+import { MergeAccountCommand }               from '../use-cases/merge-account.use-case';
+import { NewPasswordCommand }                from '../use-cases/new-password.use-case';
+import { PasswordRecoveryCommand }           from '../use-cases/password-recovery.use-case';
+import { RegisterUserCommand }               from '../use-cases/register-user-use-case';
 import { RegistrationEmailResendingCommand } from '../use-cases/registration-email-resending-use-case';
-import { SignUpWithGithubCommand } from '../use-cases/sign-up-user-with-github.use-case';
-import { SignUpUserWithGoogleCommand } from '../use-cases/sign-up-user-with-google.use-case';
+import { SignUpWithGithubCommand }           from '../use-cases/sign-up-user-with-github.use-case';
+import { SignUpUserWithGoogleCommand }       from '../use-cases/sign-up-user-with-google.use-case';
 
 @ApiTags('Auth')
 @Controller('/api/auth')

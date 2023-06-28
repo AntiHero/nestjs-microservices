@@ -4,6 +4,6 @@ import { DeleteUserInput }  from './delete-user.input';
 
 @InputType()
 export class BanUserInput extends DeleteUserInput {
-  @Field()
+  @Field({ defaultValue: 'Another Reason', nullable: true })
   public banReason: string;
 }

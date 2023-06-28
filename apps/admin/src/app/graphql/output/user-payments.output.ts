@@ -29,8 +29,7 @@ registerEnumType(PaymentProvider, {
 });
 
 @ObjectType()
-export class UserPaymentsOutput implements UserPaymentViewModel {
-  provider: PaymentProvider;
+export class UserPaymentOutput implements UserPaymentViewModel {
   @Field(() => SubscriptionType)
   public subscriptionType: SubscriptionType;
 

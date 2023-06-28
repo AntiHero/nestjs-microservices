@@ -31,5 +31,5 @@ export class UserPaginationQuery extends PaginationQuery {
   sortField = 'createdAt';
 
   @Field(() => BanFilter)
-  banFilter: boolean | null = null;
+  banFilter?: boolean | null = null;
 }

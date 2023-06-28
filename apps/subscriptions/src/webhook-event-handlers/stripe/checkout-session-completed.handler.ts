@@ -154,6 +154,7 @@ export class CheckoutSessinCompletedEventHandler extends Handler {
           },
           {
             timeout: this.timeout,
+            maxWait: this.maxWait,
           },
         );
 
@@ -165,4 +166,6 @@ export class CheckoutSessinCompletedEventHandler extends Handler {
   }
 
   private timeout = 10_000;
+
+  private maxWait = 5000;
 }

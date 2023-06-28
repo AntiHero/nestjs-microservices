@@ -6,13 +6,16 @@ import { InjectModel }                              from 'nestjs-typegoose';
 import { MongoQueryRepository }                     from './mongo/mongo-query-repository.interface';
 import { UserClass }                                from '../../app/entity/user.model';
 import { UserPaginationQuery }                      from '../../app/graphql/args/user-pagination-query';
+import { PaginationResult }                         from '../../interfaces/pagination-result.interface';
 
 export abstract class UsersQueryRepositoryInterface extends MongoQueryRepository<UserClass> {
   public constructor(@InjectModel(UserClass) repository: ModelType<UserClass>) {
     super(repository);
   }
 
-  public async getList(paginationQuery: UserPaginationQuery) {
+  public async getList(
+    paginationQuery: UserPaginationQuery,
+  ): Promise<PaginationResult<UserClass>> {
     try {
       const { page, pageSize, searchUsernameTerm, sortField, banFilter } =
         paginationQuery;
@@ -20,29 +23,33 @@ export abstract class UsersQueryRepositoryInterface extends MongoQueryRepository
       const sortDirection =
         paginationQuery.sortDirection === SortDirection.Asc ? 1 : -1;
 
+      const filter = {
+        username: { $regex: searchUsernameTerm },
+        ...(banFilter === BanFilter.Active
+          ? {
+              isBanned: false,
+            }
+          : banFilter === BanFilter.Banned
+          ? {
+              isBanned: true,
+            }
+          : {}),
+      };
+
+      const totalCount = await this.repository.count(filter);
+
       const result = await this.repository
-        .find({
-          username: { $regex: searchUsernameTerm },
-          ...(banFilter === BanFilter.Active
-            ? {
-                isBanned: false,
-              }
-            : banFilter === BanFilter.Banned
-            ? {
-                isBanned: true,
-              }
-            : {}),
-        })
-        .skip(pageSize * (page - 1))
-        .limit(pageSize)
+        .find(filter)
         .sort(
           sortField === UserSortFields.DateAdded
             ? { createdAt: sortDirection }
             : { username: sortDirection },
         )
+        .skip(pageSize * (page - 1))
+        .limit(pageSize)
         .lean();
 
-      return result;
+      return { data: result, totalCount };
     } catch (error) {
       console.log(error);
 
@@ -51,44 +58,7 @@ export abstract class UsersQueryRepositoryInterface extends MongoQueryRepository
   }
 
   public async getInfoById(id: string) {
-    console.log(id, 'id');
     try {
-      // const result = await this.repository.aggregate([
-      //   {
-      //     $match: {
-      //       id,
-      //     },
-      //   },
-      //   {
-      //     $lookup: {
-      //       from: 'posts',
-      //       localField: 'id',
-      //       foreignField: 'userId',
-      //       as: 'posts',
-      //     },
-      //   },
-      //   {
-      //     $project: {
-      //       _id: 0,
-      //       id: 1,
-      //       avatar: {
-      //         url: 1,
-      //         previewUrl: 1,
-      //       },
-      //       createdAt: 1,
-      //       username: 1,
-      //       totalImageCount: {
-      //         $sum: {
-      //           $map: {
-      //             input: '$posts.images',
-      //             as: 'image',
-      //             in: { $size: '$$image' },
-      //           },
-      //         },
-      //       },
-      //     },
-      //   },
-      // ]);
       const result = await this.repository
         .findOne(
           {

@@ -15,8 +15,6 @@ async function bootstrap() {
     process.env.FRONTEND_DOMAIN as string,
   ];
 
-  console.log(frontendDomains, 'domains');
-
   app.enableCors({
     origin: frontendDomains,
     credentials: true,

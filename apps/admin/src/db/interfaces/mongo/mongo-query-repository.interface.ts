@@ -15,17 +15,19 @@ export abstract class MongoQueryRepository<M> {
     try {
       const { page, pageSize, sortDirection } = paginationQuery;
 
+      const totalCount = await this.repository.count(filter);
+
       const result = await this.repository
         .find(filter)
         .select(selection)
-        .skip(pageSize * (page - 1))
-        .limit(pageSize)
         .sort({
           createdAt: sortDirection === SortDirection.Asc ? 1 : -1,
         })
+        .skip(pageSize * (page - 1))
+        .limit(pageSize)
         .lean();
 
-      return result;
+      return { data: result, totalCount };
     } catch (error) {
       console.log(error);
 

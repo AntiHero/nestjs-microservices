@@ -29,9 +29,9 @@ export class PaginationQuery {
   @Transform(({ value }) => {
     const parsedValue = parseInt(value);
 
-    return parsedValue > 0 ? parsedValue : 9;
+    return parsedValue > 0 ? parsedValue : 10;
   })
-  pageSize = 9;
+  pageSize = 10;
 
   @Field(() => SortDirection, {
     defaultValue: SortDirection.Desc,

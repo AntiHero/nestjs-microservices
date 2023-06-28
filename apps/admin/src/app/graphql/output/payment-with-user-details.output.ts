@@ -2,7 +2,7 @@ import { Currency, PaymentProvider, SubscriptionType } from '@app/common/enums';
 import { Field, ID, ObjectType }                       from '@nestjs/graphql';
 
 @ObjectType()
-export class PaymentOutput {
+export class PaymentWithUserDetailsOutput {
   @Field(() => ID)
   public id: string;
 
@@ -18,8 +18,8 @@ export class PaymentOutput {
   @Field()
   public dateAdded: string;
 
-  @Field()
-  public photo: string;
+  @Field(() => String, { nullable: true })
+  public photo: string | null;
 
   @Field(() => PaymentProvider)
   public paymentType: PaymentProvider;

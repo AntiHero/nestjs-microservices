@@ -1,4 +1,5 @@
 import { globalConfig }           from '@app/common/config/global.config';
+import { CacheModule }            from '@app/common/modules/cache/cache.module';
 import { LoggerModule }           from '@app/common/modules/logger/logger.module';
 import { Module }                 from '@nestjs/common';
 import { ConfigModule }           from '@nestjs/config';
@@ -34,6 +35,7 @@ import { UserModule }             from './user/user.module';
     SubscriptionsModule,
     RmqModule,
     LoggerModule,
+    CacheModule,
     EventEmitterModule.forRoot({
       wildcard: true,
       delimiter: ':',

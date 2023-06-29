@@ -1,8 +1,10 @@
+import { Cached }                        from '@app/common/decorators/cached.decorator';
 import { PaymentsQueryDto }              from '@app/common/dtos/payments-query.dto';
 import { BaseHttpException }             from '@app/common/exceptions';
 import { PaymentsMapper }                from '@app/common/utils/payments.mapper';
 import {
   Body,
+  CacheTTL,
   Controller,
   Get,
   HttpCode,
@@ -34,6 +36,8 @@ export class SubscriptionsController {
   ) {}
 
   @Get('price-list')
+  @Cached()
+  @CacheTTL(0)
   @PriceListApiDecorator()
   public async prices() {
     return this.subscriptionsService.getPriceList();

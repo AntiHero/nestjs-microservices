@@ -5,10 +5,7 @@ import { ClientToken, RmqClientToken }              from '@app/common/tokens';
 import { DynamicModule, Module }                    from '@nestjs/common';
 import { ConfigModule, ConfigService, ConfigType }  from '@nestjs/config';
 import { CqrsModule }                               from '@nestjs/cqrs';
-import {
-  EventEmitter2 as EventEmitter,
-  EventEmitterModule,
-} from '@nestjs/event-emitter';
+import { EventEmitterModule }                       from '@nestjs/event-emitter';
 import { ClientsModule, Transport }                 from '@nestjs/microservices';
 import { PaypalModule }                             from 'nestjs-paypal';
 import { StripeModule }                             from 'nestjs-stripe';

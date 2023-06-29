@@ -19,7 +19,7 @@ import { PaymentClass }                     from './app/entity/payments.model';
 import { PostClass }                        from './app/entity/post.model';
 import { UserClass }                        from './app/entity/user.model';
 import { AuthModule }                       from './auth/auth.module';
-import { localConfig }                      from './config/global.config';
+import { localConfig }                      from './config/local.config';
 import { mongooseConfigFactory }            from './config/mongoose.config';
 import { postgresConfigFactory }            from './config/typeorm.config';
 import { AdminMessageConroller }            from './controllers/message.controller';
@@ -33,10 +33,10 @@ import { UsersRepositoryProvider }          from './db/repositories/user/users.r
 @Module({
   imports: [
     ...AdminModule.setupTypegoose(),
+    AdminModule.setupConfig(),
     AdminModule.setupGraphql(),
     AdminModule.setupRmqClient(),
     AdminModule.setupTypeorm(),
-    AdminModule.setupConfig(),
     AuthModule,
   ],
   controllers: [AdminController, AdminMessageConroller],
@@ -83,17 +83,24 @@ export class AdminModule {
   }
 
   public static setupGraphql() {
-    return TypeOrmModule.forRootAsync({
-      useFactory: postgresConfigFactory,
-      inject: [ConfigService],
+    return GraphQLModule.forRoot({
+      driver: ApolloDriver,
+      autoSchemaFile: join(__dirname, 'schema/schema.gql'),
+      plugins: [],
+      cors: {
+        credentials: true,
+        origin: ['http://localhost:4000'],
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+        allowedHeaders:
+          'Content-Type,Accept,Authorization,Access-Control-Allow-Origin',
+      },
     });
   }
 
   public static setupTypeorm() {
-    return GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      autoSchemaFile: join(__dirname, 'schema/schema.gql'),
-      plugins: [],
+    return TypeOrmModule.forRootAsync({
+      useFactory: postgresConfigFactory,
+      inject: [ConfigService],
     });
   }
 

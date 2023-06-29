@@ -167,5 +167,5 @@ export class CheckoutSessinCompletedEventHandler extends Handler {
 
   private timeout = 10_000;
 
-  private maxWait = 5000;
+  private maxWait = 10_000;
 }

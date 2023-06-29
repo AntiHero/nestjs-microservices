@@ -13,6 +13,7 @@ export class RmqService {
     >,
   ) {}
   public getOptions(queue: string, noAck = false): RmqOptions {
+    console.log(this.configService.get('global.rabbit.uri', { infer: true }));
     return {
       transport: Transport.RMQ,
       options: {

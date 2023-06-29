@@ -15,7 +15,7 @@ export abstract class BaseTransactionUseCase<
 > {
   private timeout = 10_000;
 
-  private maxWait = 5000;
+  private maxWait = 10_000;
 
   public constructor(private readonly prismaService: PS) {}
 

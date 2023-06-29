@@ -3,6 +3,7 @@
 /node_modules
 **/node_modules
 utils/*.json
+/sql
 
 .yarn
 .env

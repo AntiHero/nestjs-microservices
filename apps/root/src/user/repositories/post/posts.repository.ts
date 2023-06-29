@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable }                 from '@nestjs/common';
 import { Post, Prisma, PrismaClient } from '@prisma/client';
-import { DatabaseError } from 'apps/root/src/common/errors';
-import { UpdatePostDto } from 'apps/root/src/user/dto/update-post.dto';
-import { PostsRepositoryAdapter } from '../adapters/post/posts.adapter';
+
+import { DatabaseError }              from 'apps/root/src/common/errors';
+import { UpdatePostDto }              from 'apps/root/src/user/dto/update-post.dto';
+
+import { PostsRepositoryAdapter }     from '../adapters/post/posts.adapter';
 
 @Injectable()
 export class PostsRepository extends PostsRepositoryAdapter<Post> {

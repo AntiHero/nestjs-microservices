@@ -1,21 +1,23 @@
-import { PaymentProvider } from '.prisma/subscriptions';
-import { Inject, Injectable } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
-import { Observable } from 'rxjs';
+import { PaymentProvider }               from '.prisma/subscriptions';
+import { PaymentsQueryDto }              from '@app/common/dtos/payments-query.dto';
+import { GetCheckoutSessionUrlPayload }  from '@app/common/interfaces/get-checkout-session-url-payload.interface';
+import { Payments }                      from '@app/common/interfaces/payments.interface';
+import { PriceList }                     from '@app/common/interfaces/price-list.interface';
+import { CurrentSubscriptionDbType }     from '@app/common/interfaces/subscriptions.interface';
+import { SubscriptionCommand }           from '@app/common/patterns/subscriptions.pattern';
+import { ClientToken }                   from '@app/common/tokens';
+import { Result }                        from '@app/common/utils/result.util';
+import { Inject, Injectable }            from '@nestjs/common';
+import { ClientProxy }                   from '@nestjs/microservices';
+import { Observable }                    from 'rxjs';
 
-import { Result } from '@app/common/interfaces/result.interface';
-import { Payments } from '@app/common/interfaces/payments.interface';
-import { PaymentsQueryDto } from '@app/common/dtos/payments-query.dto';
-import { PriceList } from '@app/common/interfaces/price-list.interface';
-import { SubscriptionsServiceAdapter } from './subscriptions.service-adapter';
-import { SubscriptionCommand } from '@app/common/patterns/subscriptions.pattern';
-import { CurrentSubscriptionDbType } from '@app/common/interfaces/subscriptions.interface';
-import { GetCheckoutSessionUrlPayload } from '@app/common/interfaces/get-checkout-session-url-payload.interface';
+import { SubscriptionsServiceInterface } from './subscriptions.service-adapter';
 
 @Injectable()
-export class SubscriptionsService extends SubscriptionsServiceAdapter {
+export class SubscriptionsService extends SubscriptionsServiceInterface {
   public constructor(
-    @Inject('SUBSCRIPTIONS') private readonly subscriptionsClient: ClientProxy,
+    @Inject(ClientToken.SUBSCRIPTIONS)
+    private readonly subscriptionsClient: ClientProxy,
   ) {
     super();
   }
@@ -59,8 +61,8 @@ export class SubscriptionsService extends SubscriptionsServiceAdapter {
     });
   }
 
-  public cancelSubscription(userId: string): Observable<Result> {
-    return this.subscriptionsClient.send<Result, { userId: string }>(
+  public cancelSubscription(userId: string): Observable<Result<null>> {
+    return this.subscriptionsClient.send<Result<null>, { userId: string }>(
       SubscriptionCommand.CancelSubscription,
       {
         userId,

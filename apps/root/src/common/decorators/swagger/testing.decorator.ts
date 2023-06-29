@@ -1,5 +1,5 @@
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { applyDecorators } from '@nestjs/common';
+import { HttpStatus, applyDecorators } from '@nestjs/common';
+import { ApiOperation, ApiResponse }   from '@nestjs/swagger';
 
 export function TestingRemoveAllDataDecorator() {
   return applyDecorators(
@@ -7,7 +7,7 @@ export function TestingRemoveAllDataDecorator() {
       summary: 'Clear database: delete all data from all tables',
     }),
     ApiResponse({
-      status: 204,
+      status: HttpStatus.NO_CONTENT,
       description: 'All data is deleted',
     }),
   );

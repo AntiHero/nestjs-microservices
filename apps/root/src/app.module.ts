@@ -1,9 +1,10 @@
 import { globalConfig }           from '@app/common/config/global.config';
+import { LoggerModule }           from '@app/common/modules/logger/logger.module';
 import { Module }                 from '@nestjs/common';
 import { ConfigModule }           from '@nestjs/config';
 import { EventEmitterModule }     from '@nestjs/event-emitter';
 
-import { AdaptorModule }          from './adaptors/adaptor.module';
+import { AdaptorModule }          from './adapters/adaptor.module';
 import { AppController }          from './app.controller';
 import { AuthModule }             from './auth/auth.module';
 import { githubOauthConfig }      from './config/github-oauth.config';
@@ -32,14 +33,11 @@ import { UserModule }             from './user/user.module';
     TestingModule,
     SubscriptionsModule,
     RmqModule,
+    LoggerModule,
     EventEmitterModule.forRoot({
       wildcard: true,
       delimiter: ':',
     }),
-    // RmqModule.register({
-    //   name: 'ADMIN_RMQ',
-    //   queue: 'admin',
-    // }),
   ],
   controllers: [AppController, TcpController],
 })

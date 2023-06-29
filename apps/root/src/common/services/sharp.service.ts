@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import sharp from 'sharp';
-import { ImageMetadataType } from '../types';
+import { Injectable }               from '@nestjs/common';
+import sharp                        from 'sharp';
 
 import { Dimensions, ImageService } from './image.service';
+import { ImageMetadataType }        from '../types';
 
 @Injectable()
 export class SharpService extends ImageService {

@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MailService } from './mail.service';
+
+import { MailService }         from './mail.service';
 
 describe.skip('MailService', () => {
   let service: MailService;

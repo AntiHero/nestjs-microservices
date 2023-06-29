@@ -1,6 +1,7 @@
 import { FileValidator, Injectable } from '@nestjs/common';
-import sharp from 'sharp';
-import { BAD_DIMENSIONS } from '../errors';
+import sharp                         from 'sharp';
+
+import { BAD_DIMENSIONS }            from '../errors';
 
 type ValidationOptions = {
   minWidth: number;

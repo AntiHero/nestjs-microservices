@@ -1,5 +1,6 @@
-import { TrimPipe } from './trim.pipe';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
+
+import { TrimPipe }                         from './trim.pipe';
 
 export function useGlobalPipes(app: INestApplication) {
   app.useGlobalPipes(

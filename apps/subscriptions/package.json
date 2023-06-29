@@ -2,5 +2,9 @@
   "name": "subscriptions",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "nestjs-paypal": "^0.0.4",
+    "nestjs-stripe": "^1.0.0"
+  }
 }

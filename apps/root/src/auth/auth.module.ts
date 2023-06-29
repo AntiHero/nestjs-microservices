@@ -8,7 +8,7 @@ import { SharpService }                      from 'apps/root/src/common/services
 import { AuthController }                    from './api/auth.controller';
 import { DevicesSessionsService }            from './services/devices.service';
 import { GithubUsersService }                from './services/github-users.service';
-import { AtStrategy, RtStrategy }            from './strategies';
+import { AtStrategy, RefreshTokenStrategy }  from './strategies';
 import { ConfirmRegistrationUseCase }        from './use-cases/confirm-registration-use-case';
 import { LoginUserUseCase }                  from './use-cases/login-user-use-case';
 import { LogoutUserUseCase }                 from './use-cases/logout-user-use-case';
@@ -19,7 +19,7 @@ import { RegisterUserUseCase }               from './use-cases/register-user-use
 import { RegistrationEmailResendingUseCase } from './use-cases/registration-email-resending-use-case';
 import { SignUpUserWithGithubUseCase }       from './use-cases/sign-up-user-with-github.use-case';
 import { SignUpUserWithGoogleUseCase }       from './use-cases/sign-up-user-with-google.use-case';
-import { AdaptorModule }                     from '../adaptors/adaptor.module';
+import { AdaptorModule }                     from '../adapters/adaptor.module';
 import { EventRouter }                       from '../common/event-router';
 import { AdminRmqClient }                    from '../common/services/admin-rmq-client.service';
 import { DeviceSessionsModule }              from '../deviceSessions/device-sessions.module';
@@ -51,7 +51,7 @@ const useCases = [
   controllers: [AuthController],
   providers: [
     AtStrategy,
-    RtStrategy,
+    RefreshTokenStrategy,
     GithubUsersService,
     DevicesSessionsService,
     {

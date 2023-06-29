@@ -1,9 +1,9 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { PrismaClient, Profile }                    from '@prisma/client';
 
-import { PrismaClient, Profile } from '@prisma/client';
-import { CreateUserProfileDto } from '../dto/create.user.profile.dto';
-import { UpdateUserProfileDto } from '../dto/update-user-profile.dto';
-import { ProfileRepositoryAdapter } from './adapters/profile-repository.adapter';
+import { ProfileRepositoryAdapter }                 from './adapters/profile-repository.adapter';
+import { CreateUserProfileDto }                     from '../dto/create.user.profile.dto';
+import { UpdateUserProfileDto }                     from '../dto/update-user-profile.dto';
 
 @Injectable()
 export class ProfileRepository extends ProfileRepositoryAdapter<Profile> {

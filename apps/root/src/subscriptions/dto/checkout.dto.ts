@@ -1,5 +1,5 @@
+import { PaymentProvider }              from '.prisma/subscriptions';
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
-import { PaymentProvider } from '.prisma/subscriptions';
 
 export class CheckoutDto {
   @IsEnum(PaymentProvider)

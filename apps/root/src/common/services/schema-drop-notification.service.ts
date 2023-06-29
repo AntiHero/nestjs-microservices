@@ -1,8 +1,8 @@
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import pg from 'pg';
+import { ConfigService }                             from '@nestjs/config';
+import pg                                            from 'pg';
 
-import { PRODUCTION_MODE } from 'apps/root/src/common/constants';
+import { PRODUCTION_MODE }                           from 'apps/root/src/common/constants';
 
 @Injectable()
 export class SchemaDropNotificationService

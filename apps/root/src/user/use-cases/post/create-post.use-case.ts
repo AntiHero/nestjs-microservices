@@ -1,9 +1,9 @@
-import { randomUUID } from 'crypto';
+import { randomUUID }                               from 'crypto';
 
-import { createdPostMessageCreator } from '@app/common/message-creators/created-post.message-creator';
-import { RootEvent } from '@app/common/patterns/root.pattern';
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { EventEmitter2 as EventEmitter } from '@nestjs/event-emitter';
+import { createdPostMessageCreator }                from '@app/common/message-creators/created-post.message-creator';
+import { RootEvent }                                from '@app/common/patterns/root.pattern';
+import { CommandHandler, ICommandHandler }          from '@nestjs/cqrs';
+import { EventEmitter2 as EventEmitter }            from '@nestjs/event-emitter';
 
 import {
   POST_PREVIEW_HEIGHT,
@@ -13,10 +13,10 @@ import {
   POST_CREATION_ERROR,
   PostCreationError,
 } from 'apps/root/src/common/errors';
-import { NOTIFY_ADMIN_EVENT } from 'apps/root/src/common/event-router';
-import { ImageService } from 'apps/root/src/common/services/image.service';
-import { CloudStrategy } from 'apps/root/src/common/strategies/cloud.strategy';
-import { PrismaService } from 'apps/root/src/prisma/prisma.service';
+import { NOTIFY_ADMIN_EVENT }                       from 'apps/root/src/common/event-router';
+import { ImageService }                             from 'apps/root/src/common/services/image.service';
+import { CloudStrategy }                            from 'apps/root/src/common/strategies/cloud.strategy';
+import { PrismaService }                            from 'apps/root/src/prisma/prisma.service';
 
 import type { CreatePostResult, ImageCreationData } from '../../types';
 
@@ -129,7 +129,8 @@ export class CreatePostUseCase implements ICommandHandler {
           description,
           userId,
           createdAt,
-          images: postImages.map(({ url, previewUrl }) => ({
+          images: postImages.map(({ url, previewUrl, id }) => ({
+            id,
             url,
             previewUrl,
           })),

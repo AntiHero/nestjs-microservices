@@ -35,13 +35,13 @@ export class ConfirmRegistrationUseCase
 
     await this.userRepository.confirmRegistration(user.email);
 
-    this.eventEmitter.emit(NOTIFY_ADMIN_EVENT, {
-      event: RootEvent.ConfirmedEmail,
-      message: confirmedEmailMessageCreator({
-        emailConfirmed: true,
+    this.eventEmitter.emit(NOTIFY_ADMIN_EVENT, [
+      RootEvent.ConfirmedEmail,
+      confirmedEmailMessageCreator({
+        isEmailConfirmed: true,
         userId: user.id,
       }),
-    });
+    ]);
   }
 
   public checkUserConfirmationCode(

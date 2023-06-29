@@ -1,23 +1,23 @@
-import { HttpStatus } from '@nestjs/common/enums';
-import { ConfigService } from '@nestjs/config';
-import { Injectable } from '@nestjs/common';
+import {
+  DeleteObjectsCommand,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3';
+import { Injectable }          from '@nestjs/common';
+import { HttpStatus }          from '@nestjs/common/enums';
 import {
   HttpException,
   InternalServerErrorException,
 } from '@nestjs/common/exceptions';
-import {
-  PutObjectCommand,
-  DeleteObjectsCommand,
-  S3Client,
-} from '@aws-sdk/client-s3';
+import { ConfigService }       from '@nestjs/config';
 
+import { CloudStrategy }       from './cloud.strategy';
 import {
   REGION,
   YANDEX_CLOUD_ENDPOINT,
   YANDEX_CLOUD_STORAGE_HOSTNAME,
 } from '../constants';
 import { FILE_DELITION_ERROR } from '../errors';
-import { CloudStrategy } from './cloud.strategy';
 
 @Injectable()
 export class YandexCloudStrategy extends CloudStrategy {

@@ -1,17 +1,18 @@
-import { globalConfig } from '@app/common/config/global.config';
-import { Module } from '@nestjs/common';
-import { ConfigType } from '@nestjs/config';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import { globalConfig }                  from '@app/common/config/global.config';
+import { ClientToken }                   from '@app/common/tokens';
+import { Module }                        from '@nestjs/common';
+import { ConfigType }                    from '@nestjs/config';
+import { ClientsModule, Transport }      from '@nestjs/microservices';
 
-import { SubscriptionsController } from './api/subscriptions.controller';
-import { SubscriptionsService } from './services/subscriptions.service';
-import { SubscriptionsServiceAdapter } from './services/subscriptions.service-adapter';
+import { SubscriptionsController }       from './api/subscriptions.controller';
+import { SubscriptionsService }          from './services/subscriptions.service';
+import { SubscriptionsServiceInterface } from './services/subscriptions.service-adapter';
 
 @Module({
   imports: [
     ClientsModule.registerAsync([
       {
-        name: 'SUBSCRIPTIONS',
+        name: ClientToken.SUBSCRIPTIONS,
         useFactory: (config: ConfigType<typeof globalConfig>) => {
           const { host, tcpPort: port } = config.subscriptions;
 
@@ -30,7 +31,7 @@ import { SubscriptionsServiceAdapter } from './services/subscriptions.service-ad
   controllers: [SubscriptionsController],
   providers: [
     {
-      provide: SubscriptionsServiceAdapter,
+      provide: SubscriptionsServiceInterface,
       useClass: SubscriptionsService,
     },
   ],

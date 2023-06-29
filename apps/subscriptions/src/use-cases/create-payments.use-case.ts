@@ -2,23 +2,21 @@ import {
   PaymentProvider,
   PaymentStatus,
   SubscriptionPrice,
-  SubscriptionType,
 } from '.prisma/subscriptions';
-import { NotFoundException } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { PrismaTransactionType } from '../interfaces/prisma-transaction.interface';
-import { SubscriptionsQueryRepository } from '../repositories/subscriptions.query-repository';
-import { SubscriptionsTransactionService } from '../services/subscriptions-transaction.service';
+import { PrismaTransactionType }           from '../interfaces/prisma-transaction.interface';
+import { SubscriptionsQueryRepository }    from '../repositories/subscriptions.query-repository';
+import { SubscriptionsRepository }         from '../repositories/subscriptions.repository';
 
 export class CreatePaymentsCommand {
   public constructor(
+    public readonly tx: PrismaTransactionType,
     public readonly data: {
       priceId: string;
       userId: string;
       provider: PaymentProvider;
-      tx: PrismaTransactionType;
-      subscriptionType: SubscriptionType;
+      pricingPlanId: string;
     },
   ) {}
 }
@@ -26,7 +24,6 @@ export class CreatePaymentsCommand {
 export interface PaymentData {
   paymentId: string;
   subscriptionPaymentId: string;
-  providerPriceId: string;
 }
 
 @CommandHandler(CreatePaymentsCommand)
@@ -35,46 +32,33 @@ export class CreatePaymentsCommandHandler
 {
   public constructor(
     private readonly subscriptionsQueryRepository: SubscriptionsQueryRepository,
-    private readonly subscriptionsTransactionService: SubscriptionsTransactionService,
+    private readonly subscriptionsRepository: SubscriptionsRepository,
   ) {}
 
-  public async execute(command: CreatePaymentsCommand) {
-    const { priceId, provider, subscriptionType, tx, userId } = command.data;
-
-    const pricingPlan =
-      await this.subscriptionsQueryRepository.getSubscriptionPricingPlanByQuery(
-        {
-          priceId,
-          provider,
-          subscriptionType,
-        },
-      );
+  public async execute(command: CreatePaymentsCommand): Promise<PaymentData> {
+    const {
+      tx,
+      data: { priceId, provider, pricingPlanId, userId },
+    } = command;
 
     const { currency, value: price } = <SubscriptionPrice>(
       await this.subscriptionsQueryRepository.getSubscriptionPriceById(priceId)
     );
 
-    if (!pricingPlan)
-      throw new NotFoundException('Pricing plan for subscription not found');
+    const status = PaymentStatus.PENDING;
 
-    const { id: pricingPlanId, providerPriceId } = pricingPlan;
-
-    const payment = await this.subscriptionsTransactionService.createPayments(
-      tx,
-      {
-        userId,
-        price,
-        currency,
-        pricingPlanId,
-        provider: provider,
-        status: PaymentStatus.PENDING,
-      },
-    );
+    const payment = await this.subscriptionsRepository.createPayments(tx, {
+      userId,
+      price,
+      currency,
+      pricingPlanId,
+      provider,
+      status,
+    });
 
     return {
       paymentId: payment.id,
       subscriptionPaymentId: <string>payment.subscriptionPayment?.id,
-      providerPriceId,
     };
   }
 }

@@ -4,6 +4,7 @@ import { globalConfig }                     from '@app/common/config/global.conf
 import { Queue }                            from '@app/common/queues';
 import { RmqService }                       from '@app/common/src';
 import { RmqModule }                        from '@app/common/src/rmq/rmq.module';
+import { RmqClientToken }                   from '@app/common/tokens';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module }                           from '@nestjs/common';
 import { ConfigModule, ConfigService }      from '@nestjs/config';
@@ -14,67 +15,29 @@ import { TypegooseModule }                  from 'nestjs-typegoose';
 import { AdminController }                  from './admin.controller';
 import { AdminResolver }                    from './admin.resolver';
 import { AdminService }                     from './admin.service';
-import { PostModel }                        from './app/entity/post.model';
-import { PaymentModel }                     from './app/entity/subscriptions.model';
-import { UserModel }                        from './app/entity/user.model';
+import { PaymentClass }                     from './app/entity/payments.model';
+import { PostClass }                        from './app/entity/post.model';
+import { UserClass }                        from './app/entity/user.model';
 import { AuthModule }                       from './auth/auth.module';
-import { localConfig }                      from './config/global.config';
+import { localConfig }                      from './config/local.config';
 import { mongooseConfigFactory }            from './config/mongoose.config';
 import { postgresConfigFactory }            from './config/typeorm.config';
 import { AdminMessageConroller }            from './controllers/message.controller';
-import { PaymentsQueryRepositoryProvider }  from './database/payments.query-repository';
-import { PostsQueryRepositoryProvider }     from './database/posts.query-repository';
-import { UsersQueryRepositoryProvider }     from './database/users.query-repository';
-import { UsersRepositoryProvider }          from './database/users.repository';
+import { PaymentsQueryRepositoryProvider }  from './db/repositories/payments/payments.query-repository';
+import { PaymentsRepositoryProvider }       from './db/repositories/payments/payments.repository';
+import { PostsRepositoryProvider }          from './db/repositories/post/post-repository';
+import { PostsQueryRepositoryProvider }     from './db/repositories/post/posts.query-repository';
+import { UsersQueryRepositoryProvider }     from './db/repositories/user/users.query-repository';
+import { UsersRepositoryProvider }          from './db/repositories/user/users.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forRootAsync({
-      useFactory: postgresConfigFactory,
-      inject: [ConfigService],
-    }),
-    TypegooseModule.forRootAsync({
-      useFactory: mongooseConfigFactory,
-      inject: [ConfigService],
-    }),
-    TypegooseModule.forFeature([
-      {
-        typegooseClass: UserModel,
-        schemaOptions: {
-          collection: 'users',
-        },
-      },
-      {
-        typegooseClass: PostModel,
-        schemaOptions: {
-          collection: 'posts',
-        },
-      },
-      {
-        typegooseClass: PaymentModel,
-        schemaOptions: {
-          collection: 'payments',
-        },
-      },
-    ]),
-    ConfigModule.forRoot({
-      isGlobal: true,
-      load: [localConfig, globalConfig],
-      envFilePath: [
-        `${process.cwd()}/apps/admin/.env`,
-        `${process.cwd()}/.env.global`,
-      ],
-    }),
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      autoSchemaFile: join(__dirname, 'schema/schema.gql'),
-      plugins: [],
-    }),
+    ...AdminModule.setupTypegoose(),
+    AdminModule.setupConfig(),
+    AdminModule.setupGraphql(),
+    AdminModule.setupRmqClient(),
+    AdminModule.setupTypeorm(),
     AuthModule,
-    RmqModule.register({
-      name: 'ROOT_RMQ',
-      queue: Queue.Root,
-    }),
   ],
   controllers: [AdminController, AdminMessageConroller],
   providers: [
@@ -82,9 +45,73 @@ import { UsersRepositoryProvider }          from './database/users.repository';
     AdminService,
     UsersQueryRepositoryProvider,
     UsersRepositoryProvider,
+    PostsRepositoryProvider,
     PostsQueryRepositoryProvider,
     PaymentsQueryRepositoryProvider,
+    PaymentsRepositoryProvider,
     RmqService,
   ],
 })
-export class AdminModule {}
+export class AdminModule {
+  public static setupTypegoose() {
+    return [
+      TypegooseModule.forRootAsync({
+        useFactory: mongooseConfigFactory,
+        inject: [ConfigService],
+      }),
+      TypegooseModule.forFeature([
+        {
+          typegooseClass: UserClass,
+          schemaOptions: {
+            collection: 'users',
+          },
+        },
+        {
+          typegooseClass: PostClass,
+          schemaOptions: {
+            collection: 'posts',
+          },
+        },
+        {
+          typegooseClass: PaymentClass,
+          schemaOptions: {
+            collection: 'payments',
+          },
+        },
+      ]),
+    ];
+  }
+
+  public static setupGraphql() {
+    return GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: join(__dirname, 'schema/schema.gql'),
+      plugins: [],
+    });
+  }
+
+  public static setupTypeorm() {
+    return TypeOrmModule.forRootAsync({
+      useFactory: postgresConfigFactory,
+      inject: [ConfigService],
+    });
+  }
+
+  public static setupRmqClient() {
+    return RmqModule.register({
+      name: RmqClientToken.ROOT_RMQ,
+      queue: Queue.Root,
+    });
+  }
+
+  public static setupConfig() {
+    return ConfigModule.forRoot({
+      isGlobal: true,
+      load: [localConfig, globalConfig],
+      envFilePath: [
+        `${process.cwd()}/apps/admin/.env`,
+        `${process.cwd()}/.env.global`,
+      ],
+    });
+  }
+}

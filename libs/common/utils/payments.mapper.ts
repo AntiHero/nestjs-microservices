@@ -1,4 +1,5 @@
-import { PeriodType } from '.prisma/subscriptions';
+import { PeriodType }                  from '.prisma/subscriptions';
+
 import { Payments, PaymentsViewModel } from '../interfaces/payments.interface';
 
 export class PaymentsMapper {
@@ -8,19 +9,17 @@ export class PaymentsMapper {
     return {
       count,
       payments: payments.map((payment) => {
+        const { id, price, provider, subscriptionPayment } = payment;
+        const { pricingPlan, subscription } = subscriptionPayment!;
+
         return {
-          id: payment.id,
-          price: payment.price,
-          provider: payment.provider,
-          period: payment.subscriptionPayment!.pricingPlan?.price.period || 0,
-          periodType:
-            payment.subscriptionPayment!.pricingPlan?.price.periodType ||
-            PeriodType.MONTH,
-          paymentDate:
-            payment.subscriptionPayment!.subscription!.startDate.toISOString(),
-          endDate:
-            payment.subscriptionPayment!.subscription?.endDate?.toISOString() ||
-            null,
+          id,
+          price,
+          provider,
+          period: pricingPlan?.price.period || 0,
+          periodType: pricingPlan?.price.periodType || PeriodType.MONTH,
+          paymentDate: subscription!.startDate as unknown as string,
+          endDate: (subscription?.endDate as unknown as string) || null,
         };
       }),
     };

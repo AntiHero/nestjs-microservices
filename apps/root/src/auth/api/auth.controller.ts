@@ -8,20 +8,19 @@ import {
   Ip,
   Post,
   Query,
-  Req,
   Res,
   UnauthorizedException,
   UseGuards,
-}                                            from '@nestjs/common';
+} from '@nestjs/common';
 import { ConfigType }                        from '@nestjs/config';
 import { CommandBus }                        from '@nestjs/cqrs';
 import { ApiTags }                           from '@nestjs/swagger';
-import { CookieOptions, Request, Response }  from 'express';
+import { CookieOptions, Response }           from 'express';
 
 import { RecaptchaGuard }                    from 'apps/root/src/common/guards/recaptcha.guard';
 import { githubOauthConfig }                 from 'apps/root/src/config/github-oauth.config';
 
-import { JwtAdaptor }                        from '../../adaptors/jwt/jwt.adaptor';
+import { JwtAdapter }                        from '../../adapters/jwt/jwt.adapter';
 import { ActiveUser }                        from '../../common/decorators/active-user.decorator';
 import {
   AuthGoogleDecorator,
@@ -35,9 +34,9 @@ import {
   AuthRegistrationSwaggerDecorator,
   AuthWithGithubDecorator,
   MergeAccountsDecorator,
-}                                            from '../../common/decorators/swagger/auth.decorator';
+} from '../../common/decorators/swagger/auth.decorator';
 import { CookieAuthGuard }                   from '../../common/guards/cookie-auth.guard';
-import { JwtRtGuard }                        from '../../common/guards/jwt-auth.guard';
+import { RefreshTokenJwtGuard }              from '../../common/guards/jwt-auth.guard';
 import { ActiveUserData }                    from '../../user/types';
 import { AuthDto }                           from '../dto/auth.dto';
 import { ConfirmationCodeDto }               from '../dto/confirmation-code.dto';
@@ -67,23 +66,24 @@ export class AuthController {
     secure: true,
   };
 
-  constructor(
+  public constructor(
     private commandBus: CommandBus,
-    private readonly jwtAdaptor: JwtAdaptor,
+    private readonly jwtAdaptor: JwtAdapter,
     @Inject(githubOauthConfig.KEY)
     private readonly githubConfig: ConfigType<typeof githubOauthConfig>,
   ) {}
+
   @Post('registration')
   @AuthRegistrationSwaggerDecorator()
-  @HttpCode(204)
-  async registration(@Body() authDto: AuthDto) {
+  @HttpCode(HttpStatus.NO_CONTENT)
+  public async registration(@Body() authDto: AuthDto) {
     return this.commandBus.execute(new RegisterUserCommand(authDto));
   }
 
   @Post('registration-confirmation')
   @AuthRegistrationConfirmationSwaggerDecorator()
-  @HttpCode(204)
-  async registrationConfirmation(
+  @HttpCode(HttpStatus.NO_CONTENT)
+  public async registrationConfirmation(
     @Body() confirmationCodeDto: ConfirmationCodeDto,
   ) {
     return this.commandBus.execute(
@@ -93,8 +93,8 @@ export class AuthController {
 
   @Post('registration-email-resending')
   @AuthRegistrationEmailResendingSwaggerDecorator()
-  @HttpCode(204)
-  async registrationEmailResending(@Body() emailDto: EmailDto) {
+  @HttpCode(HttpStatus.NO_CONTENT)
+  public async registrationEmailResending(@Body() emailDto: EmailDto) {
     return this.commandBus.execute(
       new RegistrationEmailResendingCommand(emailDto),
     );
@@ -103,8 +103,8 @@ export class AuthController {
   @Post('login')
   @AuthLoginSwaggerDecorator()
   @UseGuards(CookieAuthGuard)
-  @HttpCode(200)
-  async login(
+  @HttpCode(HttpStatus.OK)
+  public async login(
     @Body() loginDto: LoginDto,
     @Ip() ip: string,
     @Res({ passthrough: true }) res: Response,
@@ -127,13 +127,11 @@ export class AuthController {
   @AuthGoogleDecorator()
   @HttpCode(HttpStatus.OK)
   @Post('google/sign-in')
-  async googleSignIn(
+  public async googleSignIn(
     @Ip() ip: string,
     @Body() googleCodeDto: GoogleCodeDto,
     @Res({ passthrough: true }) res: Response,
-    @Req() req: Request,
-    @Headers('user-agent')
-    userAgent: string,
+    @Headers('user-agent') userAgent: string,
     @ActiveUser('deviceId') deviceId: string | null,
   ) {
     const { code } = googleCodeDto;
@@ -151,41 +149,45 @@ export class AuthController {
     const { accessToken, refreshToken } = result;
 
     res.cookie('refreshToken', refreshToken, this.cookieOptions);
+
     return { accessToken };
   }
 
-  @UseGuards(JwtRtGuard)
+  @UseGuards(RefreshTokenJwtGuard)
   @Post('logout')
   @AuthLogoutSwaggerDecorator()
-  @HttpCode(204)
-  async logout(
+  @HttpCode(HttpStatus.NO_CONTENT)
+  public async logout(
     @ActiveUser('deviceId') deviceId: string,
     @Res({ passthrough: true }) res: Response,
   ) {
     await this.commandBus.execute(new LogoutUserCommand(deviceId));
+
     res.clearCookie('refreshToken', this.cookieOptions);
   }
 
-  @UseGuards(JwtRtGuard)
+  @UseGuards(RefreshTokenJwtGuard)
   @Post('refresh-token')
   @AuthRefreshTokenSwaggerDecorator()
-  @HttpCode(200)
-  async refreshToken(
+  @HttpCode(HttpStatus.OK)
+  public async refreshToken(
     @ActiveUser() user: ActiveUserData,
     @Res({ passthrough: true }) res: Response,
   ): Promise<{ accessToken: string }> {
     const { accessToken, refreshToken } = await this.jwtAdaptor.refreshToken(
       user,
     );
+
     res.cookie('refreshToken', refreshToken, this.cookieOptions);
+
     return { accessToken };
   }
 
   @Post('password-recovery')
   @AuthPasswordRecoverySwaggerDecorator()
   @UseGuards(RecaptchaGuard)
-  @HttpCode(204)
-  async passwordRecovery(@Body() emailDto: EmailDto) {
+  @HttpCode(HttpStatus.NO_CONTENT)
+  public async passwordRecovery(@Body() emailDto: EmailDto) {
     const { email } = emailDto;
 
     return this.commandBus.execute(new PasswordRecoveryCommand(email));
@@ -193,8 +195,8 @@ export class AuthController {
 
   @Post('new-password')
   @AuthNewPasswordSwaggerDecorator()
-  @HttpCode(204)
-  async newPassword(
+  @HttpCode(HttpStatus.NO_CONTENT)
+  public async newPassword(
     @Body() newPasswordDto: NewPasswordDto,
     @Res() res: Response,
   ) {
@@ -203,6 +205,7 @@ export class AuthController {
     await this.commandBus.execute(
       new NewPasswordCommand(newPassword, recoveryCode),
     );
+
     res.clearCookie('refreshToken', this.cookieOptions);
   }
 
@@ -210,7 +213,7 @@ export class AuthController {
   @AuthWithGithubDecorator()
   @UseGuards(CookieAuthGuard)
   @HttpCode(HttpStatus.OK)
-  async gihtubSignIn(
+  public async gihtubSignIn(
     @Ip() ip: string,
     @Body() githubCodeDto: GithubCodeDto,
     @Headers('user-agent') userAgent: string,
@@ -228,8 +231,11 @@ export class AuthController {
       response.status(HttpStatus.ACCEPTED).send({ email: result });
       return;
     }
+
     const { accessToken, refreshToken } = result;
+
     response.cookie('refreshToken', refreshToken, this.cookieOptions);
+
     response.status(HttpStatus.OK).json({ accessToken });
   }
 
@@ -237,7 +243,7 @@ export class AuthController {
   @MergeAccountsDecorator()
   @UseGuards(CookieAuthGuard)
   @HttpCode(HttpStatus.OK)
-  async mergeAccounts(
+  public async mergeAccounts(
     @Query('code') mergeCode: string,
     @Ip() ip: string,
     @Headers('user-agent') userAgent: string,

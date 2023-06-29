@@ -1,11 +1,11 @@
-import { PaymentProvider } from '.prisma/subscriptions';
-import { Inject } from '@nestjs/common';
+import { PaymentProvider }                 from '.prisma/subscriptions';
+import { Inject }                          from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom }                  from 'rxjs';
 
-import { PAYMENT_SERVICES } from '../constants';
-import { PaymentProviderService } from '../services/payment-provider.service';
-import { RootServiceAdapter } from '../services/root.service-adapter';
+import { PAYMENT_SERVICES }                from '../constants';
+import { PaymentProviderService }          from '../services/payment-provider.service';
+import { RootServiceInterface }            from '../services/root.service.interface';
 
 export class CreateCustomerIfNotExistsCommand {
   public constructor(
@@ -26,8 +26,8 @@ export class CreateCustomerIfNotExistsCommandHandler
 
   public constructor(
     @Inject(PAYMENT_SERVICES)
-    private readonly paymentServices: PaymentProviderService[], // private readonly usersRepository: UserRepository,
-    private readonly rootService: RootServiceAdapter,
+    private readonly paymentServices: PaymentProviderService[],
+    private readonly rootService: RootServiceInterface,
   ) {
     this.paymentServicesMap = Object.fromEntries(
       this.paymentServices.map((service) => [service.provider, service]),

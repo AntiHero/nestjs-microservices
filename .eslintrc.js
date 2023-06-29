@@ -39,7 +39,6 @@ module.exports = {
     '@typescript-eslint/no-namespace': 'off',
     'prettier/prettier': 'off',
     'import/no-unresolved': 'error',
-    // 'import/no-named-as-default-member': 'off',
     'import/order': [
       'error',
       {

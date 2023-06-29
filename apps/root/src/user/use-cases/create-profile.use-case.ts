@@ -1,10 +1,12 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { CreateUserProfileDto } from '../dto/create.user.profile.dto';
-import { UserRepository } from '../repositories/user.repository';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
-import { ProfileRepositoryAdapter } from '../repositories/adapters/profile-repository.adapter';
-import { ProfileQueryRepositoryAdapter } from '../repositories/adapters/profile-query-repository.adapter';
-import { Profile } from '@prisma/client';
+import { CommandHandler, ICommandHandler }       from '@nestjs/cqrs';
+import { Profile }                               from '@prisma/client';
+
+import { CreateUserProfileDto }                  from '../dto/create.user.profile.dto';
+import { ProfileQueryRepositoryAdapter }         from '../repositories/adapters/profile-query-repository.adapter';
+import { ProfileRepositoryAdapter }              from '../repositories/adapters/profile-repository.adapter';
+import { UserRepository }                        from '../repositories/user.repository';
+
 
 export class CreateProfileCommand {
   constructor(

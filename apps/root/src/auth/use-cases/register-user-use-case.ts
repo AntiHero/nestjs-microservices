@@ -1,14 +1,14 @@
-import { createdUserMessageCreator }              from '@app/common/message-creators/created-user.message-creator';
-import { RootEvent }                              from '@app/common/patterns/root.pattern';
+import { createdUserMessageCreator } from '@app/common/message-creators/created-user.message-creator';
+import { RootEvent } from '@app/common/patterns/root.pattern';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { CommandHandler, ICommandHandler }        from '@nestjs/cqrs';
-import { EventEmitter2 as EventEmitter }          from '@nestjs/event-emitter';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { EventEmitter2 as EventEmitter } from '@nestjs/event-emitter';
 
-import { BcryptAdaptor }                          from '../../adaptors/bcrypt/bcrypt.adaptor';
-import { NOTIFY_ADMIN_EVENT }                     from '../../common/event-router';
-import { MailService }                            from '../../mail/mail.service';
-import { UserRepository }                         from '../../user/repositories/user.repository';
-import { AuthDto }                                from '../dto/auth.dto';
+import { BcryptAdapter } from '../../adapters/bcrypt/bcrypt.adapter';
+import { NOTIFY_ADMIN_EVENT } from '../../common/event-router';
+import { MailService } from '../../mail/mail.service';
+import { UserRepository } from '../../user/repositories/user.repository';
+import { AuthDto } from '../dto/auth.dto';
 
 export class RegisterUserCommand {
   constructor(public authDto: AuthDto) {}
@@ -20,7 +20,7 @@ export class RegisterUserUseCase
   constructor(
     private readonly userRepository: UserRepository,
     private readonly mailService: MailService,
-    private readonly bcryptAdaptor: BcryptAdaptor,
+    private readonly bcryptAdaptor: BcryptAdapter,
     private readonly eventEmitter: EventEmitter,
   ) {}
   async execute(command: RegisterUserCommand) {
@@ -59,7 +59,7 @@ export class RegisterUserUseCase
         message,
       ]);
 
-      return this.mailService.sendUserConfirmation(
+      return this.mailService.sendUserConfirmationEmail(
         newUser,
         newUser.emailConfirmation.confirmationCode,
       );

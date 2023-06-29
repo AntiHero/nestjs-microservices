@@ -1,10 +1,10 @@
-import { randomUUID }                      from 'crypto';
+import { randomUUID } from 'crypto';
 
-import { ServiceUnavailableException }     from '@nestjs/common';
+import { ServiceUnavailableException } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { MailService }                     from 'apps/root/src/mail/mail.service';
-import { UserRepository }                  from 'apps/root/src/user/repositories/user.repository';
+import { MailService } from 'apps/root/src/mail/mail.service';
+import { UserRepository } from 'apps/root/src/user/repositories/user.repository';
 
 export class PasswordRecoveryCommand {
   public constructor(public readonly email: string) {}
@@ -30,7 +30,7 @@ export class PasswordRecoveryUserUseCase
 
     try {
       await Promise.all([
-        this.mailService.sendPasswordRecovery(user, recoveryCode),
+        this.mailService.sendPasswordRecoveryEmail(user, recoveryCode),
         this.usersRepository.updatePasswordRecoveryCode(user.id, recoveryCode),
       ]);
     } catch (error) {

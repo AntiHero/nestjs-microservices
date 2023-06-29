@@ -17,9 +17,9 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { CommandBus } from '@nestjs/cqrs';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { CommandBus }                           from '@nestjs/cqrs';
+import { FileInterceptor, FilesInterceptor }    from '@nestjs/platform-express';
+import { ApiTags }                              from '@nestjs/swagger';
 
 import {
   FILES_FIELD,
@@ -29,25 +29,7 @@ import {
   MIN_AVATAR_HEIGHT,
   MIN_AVATAR_WIDTH,
 } from 'apps/root/src/common/constants';
-
-import { MinimizeImagePipe } from 'apps/root/src/common/pipes/minimize-image.pipe';
-import { ActiveUser } from 'apps/root/src/common/decorators/active-user.decorator';
-import { UploadAvatarCommand } from '../use-cases/upload-avatar.use-case';
-import { ImageValidationPipe } from 'apps/root/src/common/pipes/image-validation.pipe';
-import {
-  GetProfileApiDecorator,
-  UpdateProfileApiDecorator,
-  UploadUserAvatarApiDecorator,
-} from 'apps/root/src/common/decorators/swagger/users.decorator';
-import { JwtAtGuard } from '../../common/guards/jwt-auth.guard';
-import { ProfileMapper } from '../utils/profile-mapper';
-
-import { UpdateProfileCommand } from '../use-cases/update-profile.use-case';
-import { UpdateUserProfileDto } from '../dto/update-user-profile.dto';
-import { ProfileQueryRepositoryAdapter } from '../repositories/adapters/profile-query-repository.adapter';
-import { UserEmailConfirmationGuard } from '../../common/guards/user-confirmation.guard';
-import { CreatePostCommand } from '../use-cases/post/create-post.use-case';
-import { DeletePostCommand } from '../use-cases/post/delete-post.use-case';
+import { ActiveUser }                           from 'apps/root/src/common/decorators/active-user.decorator';
 import {
   CreatePostApiDecorator,
   DeletePostApiDecorator,
@@ -55,17 +37,34 @@ import {
   GetPostsApiDecorator,
   UpdatePostApiDecorator,
 } from 'apps/root/src/common/decorators/swagger/posts.decorator';
+import {
+  GetProfileApiDecorator,
+  UpdateProfileApiDecorator,
+  UploadUserAvatarApiDecorator,
+} from 'apps/root/src/common/decorators/swagger/users.decorator';
+import { ImageValidationPipe }                  from 'apps/root/src/common/pipes/image-validation.pipe';
+import { MinimizeImagePipe }                    from 'apps/root/src/common/pipes/minimize-image.pipe';
+
+import { JwtGuard }                             from '../../common/guards/jwt-auth.guard';
+import { UserEmailConfirmationGuard }           from '../../common/guards/user-confirmation.guard';
+import { CreatePostDto }                        from '../dto/create-post.dto';
+import { PostsQueryDto }                        from '../dto/posts-query.dto';
+import { UpdatePostDto }                        from '../dto/update-post.dto';
+import { UpdateUserProfileDto }                 from '../dto/update-user-profile.dto';
+import { PostsQueryRepositoryAdatapter }        from '../repositories/adapters/post/posts.query-adapter';
+import { ProfileQueryRepositoryAdapter }        from '../repositories/adapters/profile-query-repository.adapter';
+import { UserRepository }                       from '../repositories/user.repository';
 import { CreatePostResult as CreatePostResult } from '../types';
-import { UpdatePostCommand } from '../use-cases/post/update-post.use-case';
-import { UpdatePostDto } from '../dto/update-post.dto';
-import { CreatePostDto } from '../dto/create-post.dto';
-import { PostsQueryDto } from '../dto/posts-query.dto';
-import { PostsQueryRepositoryAdatapter } from '../repositories/adapters/post/posts.query-adapter';
-import { PostsMapper } from '../utils/posts.mapper';
-import { UserRepository } from '../repositories/user.repository';
+import { CreatePostCommand }                    from '../use-cases/post/create-post.use-case';
+import { DeletePostCommand }                    from '../use-cases/post/delete-post.use-case';
+import { UpdatePostCommand }                    from '../use-cases/post/update-post.use-case';
+import { UpdateProfileCommand }                 from '../use-cases/update-profile.use-case';
+import { UploadAvatarCommand }                  from '../use-cases/upload-avatar.use-case';
+import { PostsMapper }                          from '../utils/posts.mapper';
+import { ProfileMapper }                        from '../utils/profile-mapper';
 
 @ApiTags('Users')
-@UseGuards(JwtAtGuard, UserEmailConfirmationGuard)
+@UseGuards(JwtGuard, UserEmailConfirmationGuard)
 @Controller('/api/users')
 export class UsersController {
   public constructor(

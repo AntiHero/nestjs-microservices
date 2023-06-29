@@ -1,11 +1,11 @@
 import {
-  HttpStatus,
   BadRequestException,
+  HttpStatus,
   ParseFilePipeBuilder,
 } from '@nestjs/common';
 
-import { MAX_AVATAR_SIZE } from '../constants';
 import { ImageDimensionsValidatonPipe } from './image-dimensions-validation.pipe';
+import { MAX_AVATAR_SIZE }              from '../constants';
 
 export const ImageValidationPipe = <
   T extends {

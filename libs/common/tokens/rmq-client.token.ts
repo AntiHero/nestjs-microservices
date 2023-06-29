@@ -1,2 +1,2 @@
 export const ADMIN_RMQ = 'ADMIN_RMQ';
-export const ROOT_RMT = 'ROOT_RMQ';
+export const ROOT_RMQ = 'ROOT_RMQ';

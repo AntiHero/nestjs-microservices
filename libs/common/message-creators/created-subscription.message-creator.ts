@@ -1,10 +1,15 @@
-import { Payment, Subscription } from '.prisma/subscriptions';
+import {
+  Payment,
+  Subscription,
+  SubscriptionPrice,
+} from '.prisma/subscriptions';
 
-type CreatedSubscriptinType = Pick<
+export type CreatedSubscriptinType = Pick<
   Subscription,
   'userId' | 'endDate' | 'startDate' | 'type' | 'id'
 > &
-  Pick<Payment, 'currency' | 'price' | 'provider' | 'status'>;
+  Pick<Payment, 'currency' | 'price' | 'provider' | 'status'> &
+  Pick<SubscriptionPrice, 'period' | 'periodType'>;
 
 export const createdSubscriptionMessageCreator = (
   data: CreatedSubscriptinType,

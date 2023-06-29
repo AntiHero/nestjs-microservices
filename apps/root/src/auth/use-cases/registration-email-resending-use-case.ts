@@ -29,7 +29,7 @@ export class RegistrationEmailResendingUseCase
       await this.userRepository.updateEmailConfirmationInfo(user.email);
 
     try {
-      await this.mailService.sendUserConfirmation(
+      await this.mailService.sendUserConfirmationEmail(
         user,
         emailConfirmationInfo.confirmationCode,
       );

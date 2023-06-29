@@ -1,6 +1,6 @@
-import { Provider } from '@nestjs/common';
+import { Provider }              from '@nestjs/common';
 
-import { PAYMENT_STRATEGIES } from '../constants';
+import { PAYMENT_STRATEGIES }    from '../constants';
 import { StripePaymentStrategy } from '../payment-strategies/stripe.strategy';
 
 export const PaymentStrategiesProvider: Provider = {

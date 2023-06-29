@@ -1,4 +1,4 @@
-import { applyDecorators } from '@nestjs/common';
+import { HttpStatus, applyDecorators } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -14,6 +14,7 @@ import {
   ApiResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+
 import {
   ABOUT_ME_LENGTH_MAX,
   ABOUT_ME_LENGTH_MIN,
@@ -28,7 +29,7 @@ import {
   USERNAME_LENGTH_MAX,
   USERNAME_LENGTH_MIN,
 } from 'apps/root/src/common/constants';
-import { FieldError } from 'apps/root/src/types';
+import { FieldError }                  from 'apps/root/src/types';
 
 export function UploadUserAvatarApiDecorator() {
   return applyDecorators(
@@ -83,20 +84,20 @@ export function UploadUserAvatarApiDecorator() {
 export function GetProfileApiDecorator() {
   return applyDecorators(
     ApiOperation({
-      summary: 'Return user profile',
+      summary: 'Get user profile',
     }),
     ApiResponse({
-      status: 200,
+      status: HttpStatus.OK,
       description: 'Success',
       schema: {
         type: 'object',
         example: {
-          username: 'Licence_to_kill',
-          name: 'James',
-          surname: 'Bond',
-          birthday: '2007-07-07',
-          city: 'London',
-          aboutMe: 'Bond, James Bond...',
+          username: 'Leon Kennedy',
+          name: 'John',
+          surname: 'Doe',
+          birthday: '1990-01-01',
+          city: 'SecretCity',
+          aboutMe: "I'm from Raccoon city...",
           avatar: {
             url: 'http://cloud.image.png',
             previewUrl: 'http://cloud.preview.image.png',
@@ -108,7 +109,7 @@ export function GetProfileApiDecorator() {
       description: 'User not found',
     }),
     ApiUnauthorizedResponse({
-      description: 'JWT accessToken is missing, expired or incorrect',
+      description: 'JWT accessToken is missing, expired, or incorrect',
     }),
     ApiBearerAuth(),
   );
@@ -126,31 +127,23 @@ export function CreateProfileApiDecorator() {
         properties: {
           name: {
             type: 'string',
-            minimum: NAME_LENGTH_MIN,
-            maximum: NAME_LENGTH_MAX,
-            example: 'James',
+            example: 'John',
           },
           surname: {
             type: 'string',
-            minimum: SURNAME_LENGTH_MIN,
-            maximum: SURNAME_LENGTH_MAX,
-            example: 'Bond',
+            example: 'Doe',
           },
           birthday: {
             type: 'string',
-            example: '2007-07-07',
+            example: '1990-01-01',
           },
           city: {
             type: 'string',
-            minimum: CITY_LENGTH_MIN,
-            maximum: CITY_LENGTH_MAX,
-            example: 'London',
+            example: 'City',
           },
           aboutMe: {
             type: 'string',
-            minimum: ABOUT_ME_LENGTH_MIN,
-            maximum: ABOUT_ME_LENGTH_MAX,
-            example: 'Bond, James Bond...',
+            example: 'I am a secret agent...',
           },
         },
       },
@@ -159,18 +152,18 @@ export function CreateProfileApiDecorator() {
       description: 'User account has been created',
     }),
     ApiBadRequestResponse({
-      description: 'If the InputModel has incorrect values, ',
+      description: 'Invalid input values',
       type: FieldError,
     }),
     ApiNotFoundResponse({
-      description: 'User with such id was not found',
+      description: 'User with the specified ID not found',
     }),
     ApiUnauthorizedResponse({
-      description: 'JWT accessToken is missing, expired or incorrect',
+      description: 'JWT accessToken is missing, expired, or incorrect',
     }),
     ApiForbiddenResponse({
       description:
-        'If account has been already created, or if the user has not confirmed their emai',
+        'Account already created or user has not confirmed their email',
     }),
     ApiBearerAuth(),
   );
@@ -187,37 +180,27 @@ export function UpdateProfileApiDecorator() {
         properties: {
           username: {
             type: 'string',
-            minimum: USERNAME_LENGTH_MIN,
-            maximum: USERNAME_LENGTH_MAX,
-            example: 'Licence_to_kill',
+            example: 'Leon Kennedy',
           },
           name: {
             type: 'string',
-            minimum: NAME_LENGTH_MIN,
-            maximum: NAME_LENGTH_MAX,
-            example: 'James',
+            example: 'John',
           },
           surname: {
             type: 'string',
-            minimum: SURNAME_LENGTH_MIN,
-            maximum: SURNAME_LENGTH_MAX,
-            example: 'Bond',
+            example: 'Doe',
           },
           birthday: {
             type: 'string',
-            example: '2007-07-07',
+            example: '1990-01-01',
           },
           city: {
             type: 'string',
-            minimum: CITY_LENGTH_MIN,
-            maximum: CITY_LENGTH_MAX,
-            example: 'London',
+            example: 'City',
           },
           aboutMe: {
             type: 'string',
-            minimum: ABOUT_ME_LENGTH_MIN,
-            maximum: ABOUT_ME_LENGTH_MAX,
-            example: 'Bond, James Bond...',
+            example: "I'm from Raccoon city...",
           },
         },
       },
@@ -226,17 +209,18 @@ export function UpdateProfileApiDecorator() {
       description: 'User account has been updated',
     }),
     ApiBadRequestResponse({
-      description: 'If the InputModel has incorrect values',
+      description: 'Invalid input values',
       type: FieldError,
     }),
     ApiNotFoundResponse({
-      description: 'User with such id or corresponding account was not found',
+      description:
+        'User with the specified ID or corresponding account not found',
     }),
     ApiUnauthorizedResponse({
-      description: 'JWT accessToken is missing, expired or incorrect',
+      description: 'JWT accessToken is missing, expired, or incorrect',
     }),
     ApiForbiddenResponse({
-      description: 'The user has not confirmed their emai',
+      description: 'User has not confirmed their email',
     }),
     ApiBearerAuth(),
   );

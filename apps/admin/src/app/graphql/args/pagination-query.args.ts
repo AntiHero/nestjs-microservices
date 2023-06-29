@@ -1,4 +1,4 @@
-import { BanSearchStatus, SortDirection }         from '@app/common/enums';
+import { BanFilter, SortDirection }               from '@app/common/enums';
 import { ArgsType, Field, Int, registerEnumType } from '@nestjs/graphql';
 import { Transform }                              from 'class-transformer';
 import { IsEnum, IsNumber, IsString }             from 'class-validator';
@@ -8,9 +8,9 @@ registerEnumType(SortDirection, {
   description: `${Object.keys(SortDirection)}`,
 });
 
-registerEnumType(BanSearchStatus, {
-  name: 'BanSearchStatusType',
-  description: `${Object.keys(BanSearchStatus)}`,
+registerEnumType(BanFilter, {
+  name: 'BanFilterType',
+  description: `${Object.keys(BanFilter)}`,
 });
 
 @ArgsType()
@@ -29,9 +29,9 @@ export class PaginationQuery {
   @Transform(({ value }) => {
     const parsedValue = parseInt(value);
 
-    return parsedValue > 0 ? parsedValue : 9;
+    return parsedValue > 0 ? parsedValue : 10;
   })
-  pageSize = 9;
+  pageSize = 10;
 
   @Field(() => SortDirection, {
     defaultValue: SortDirection.Desc,

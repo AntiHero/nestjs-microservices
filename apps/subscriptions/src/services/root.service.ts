@@ -1,16 +1,20 @@
-import { GetUserInfoResult } from '@app/common/interfaces/get-user-info-result.interface';
-import { SubscriptionCommand } from '@app/common/patterns/subscriptions.pattern';
+import { GetUserInfoResult }            from '@app/common/interfaces/get-user-info-result.interface';
+import { SubscriptionCommand }          from '@app/common/patterns/subscriptions.pattern';
+import { ClientToken }                  from '@app/common/tokens';
 import { Inject, Injectable, Provider } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
-import { Observable } from 'rxjs';
+import { ClientProxy }                  from '@nestjs/microservices';
+import { Observable }                   from 'rxjs';
 
-import { RootServiceAdapter } from './root.service-adapter';
+import { RootServiceInterface }         from './root.service.interface';
 
 @Injectable()
-export class RootService extends RootServiceAdapter {
-  public constructor(@Inject('ROOT') private readonly rootClient: ClientProxy) {
+export class RootService extends RootServiceInterface {
+  public constructor(
+    @Inject(ClientToken.ROOT) private readonly rootClient: ClientProxy,
+  ) {
     super();
   }
+
   public getUserInfo(userId: string): Observable<GetUserInfoResult | null> {
     return this.rootClient.send(SubscriptionCommand.GetUserInfo, {
       userId,
@@ -19,6 +23,6 @@ export class RootService extends RootServiceAdapter {
 }
 
 export const RootServiceProvider: Provider = {
-  provide: RootServiceAdapter,
+  provide: RootServiceInterface,
   useClass: RootService,
 };

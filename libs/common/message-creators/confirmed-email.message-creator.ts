@@ -1,6 +1,6 @@
 export type ConfirmedEmailtype = {
   userId: string;
-  emailConfirmed: boolean;
+  isEmailConfirmed: boolean;
 };
 
 export const confirmedEmailMessageCreator = (

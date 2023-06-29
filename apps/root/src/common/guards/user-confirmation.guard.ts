@@ -4,6 +4,7 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
+
 import { UserRepository } from 'apps/root/src/user/repositories/user.repository';
 
 @Injectable()
@@ -16,6 +17,7 @@ export class UserEmailConfirmationGuard implements CanActivate {
     const user = await this.usersRepository.findUserById(userId);
 
     if (!user || !user.emailConfirmation?.isConfirmed) {
+      console.log('here');
       throw new ForbiddenException();
     }
 

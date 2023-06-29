@@ -2,11 +2,11 @@ import {
   SubscriptionCommand,
   SubscriptionEvent,
 } from '@app/common/patterns/subscriptions.pattern';
-import { Injectable } from '@nestjs/common';
-import { OnEvent } from '@nestjs/event-emitter';
+import { Injectable }     from '@nestjs/common';
+import { OnEvent }        from '@nestjs/event-emitter';
 
 import { AdminRmqClient } from '../clients/admn-rmq-client';
-import { RootRmqClient } from '../clients/root-rmq.client';
+import { RootRmqClient }  from '../clients/root-rmq.client';
 
 interface EventPayload<T> {
   event: string;

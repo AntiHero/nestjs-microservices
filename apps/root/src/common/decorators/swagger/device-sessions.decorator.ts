@@ -1,4 +1,4 @@
-import { applyDecorators } from '@nestjs/common';
+import { HttpStatus, applyDecorators } from '@nestjs/common';
 import {
   ApiCookieAuth,
   ApiForbiddenResponse,
@@ -7,21 +7,21 @@ import {
   ApiResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { DeviceViewModel } from '../../../deviceSessions/types';
+
+import { DeviceViewModel }             from '../../../deviceSessions/types';
 
 export function GetAllDevicesSwaggerDecorator() {
   return applyDecorators(
     ApiOperation({
-      summary: 'Returns all devices with active sessions for the current user',
+      summary: 'Get all devices with active sessions',
     }),
     ApiResponse({
-      status: 200,
+      status: HttpStatus.OK,
       description: 'Success',
       type: [DeviceViewModel],
     }),
     ApiUnauthorizedResponse({
-      description:
-        'JWT refreshToken inside cookie is missing, expired or incorrect',
+      description: 'Missing or expired JWT refreshToken in the cookie',
     }),
     ApiCookieAuth(),
   );
@@ -30,15 +30,14 @@ export function GetAllDevicesSwaggerDecorator() {
 export function DeleteAllDevicesSessionsButActiveSwaggerDecorator() {
   return applyDecorators(
     ApiOperation({
-      summary: "Terminate all other (except current) device's sessions",
+      summary: "Terminate all other device's sessions (except current)",
     }),
     ApiResponse({
-      status: 204,
-      description: 'No Content',
+      status: HttpStatus.NO_CONTENT,
+      description: 'Success',
     }),
     ApiUnauthorizedResponse({
-      description:
-        'JWT refreshToken inside cookie is missing, expired or incorrect',
+      description: 'Missing or expired JWT refreshToken in the cookie',
     }),
     ApiCookieAuth(),
   );
@@ -50,18 +49,17 @@ export function DeleteDeviceSessionSwaggerDecorator() {
       summary: 'Terminate specified device session',
     }),
     ApiResponse({
-      status: 204,
-      description: 'No Content',
+      status: HttpStatus.NO_CONTENT,
+      description: 'Success',
     }),
     ApiUnauthorizedResponse({
-      description:
-        'JWT refreshToken inside cookie is missing, expired or incorrect',
+      description: 'Missing or expired JWT refreshToken in the cookie',
     }),
     ApiForbiddenResponse({
-      description: 'If try to delete the deviceId of other user',
+      description: "Deleting another user's device session",
     }),
     ApiNotFoundResponse({
-      description: 'If the device session for the given deviceId not found',
+      description: 'Device session not found for the given deviceId',
     }),
     ApiCookieAuth(),
   );

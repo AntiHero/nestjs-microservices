@@ -83,17 +83,10 @@ export class AdminModule {
   }
 
   public static setupGraphql() {
-    return GraphQLModule.forRoot({
+    return GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(__dirname, 'schema/schema.gql'),
       plugins: [],
-      cors: {
-        credentials: true,
-        origin: ['http://localhost:4000'],
-        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-        allowedHeaders:
-          'Content-Type,Accept,Authorization,Access-Control-Allow-Origin',
-      },
     });
   }
 

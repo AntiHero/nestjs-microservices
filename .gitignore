@@ -4,6 +4,7 @@
 **/node_modules
 utils/*.json
 /sql
+/backup
 
 .yarn
 .env

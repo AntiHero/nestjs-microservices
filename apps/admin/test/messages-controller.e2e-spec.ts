@@ -20,6 +20,7 @@ import { AdminModule }                  from '../src/admin.module';
 import { PostClass, PostModel }         from '../src/app/entity/post.model';
 import { UserClass, UserModel }         from '../src/app/entity/user.model';
 import { AdminMessageConroller }        from '../src/controllers/message.controller';
+import { PaymentsRepositoryProvider }   from '../src/db/repositories/payments/payments.repository';
 import { PostsRepositoryProvider }      from '../src/db/repositories/post/post-repository';
 import { UsersRepositoryProvider }      from '../src/db/repositories/user/users.repository';
 
@@ -61,7 +62,12 @@ describe('AdminController (e2e)', () => {
         }),
       ],
       controllers: [AdminMessageConroller],
-      providers: [RmqService, UsersRepositoryProvider, PostsRepositoryProvider],
+      providers: [
+        RmqService,
+        UsersRepositoryProvider,
+        PostsRepositoryProvider,
+        PaymentsRepositoryProvider,
+      ],
     }).compile();
 
     app = moduleFixture.createNestApplication();

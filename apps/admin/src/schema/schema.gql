@@ -18,29 +18,19 @@ type ImageOutput {
   previewUrl: String
 }
 
-type UserInfoOutput {
+type ImagesPaginationOutput {
+  data: [ImageOutput!]!
+}
+
+type PaymentWithUserDetailsOutput {
   id: ID!
   username: String!
-  profileLink: String!
-  dateAdded: String!
-  avatar: ImageOutput!
-  isBanned: Boolean!
-  banReason: String!
-}
-
-type UserPaymentsOutput {
-  subscriptionType: SubscriptionType!
-  startDate: DateTime!
-  endDate: DateTime!
+  amount: Float!
   currency: Currency!
-  price: Float!
+  dateAdded: String!
+  photo: String
   paymentType: PaymentProvider!
-}
-
-"""ONETIME,RECCURING"""
-enum SubscriptionType {
-  ONETIME
-  RECCURING
+  subscriptionType: SubscriptionType!
 }
 
 """USD"""
@@ -54,6 +44,16 @@ enum PaymentProvider {
   PAYPAL
 }
 
+"""ONETIME,RECCURING"""
+enum SubscriptionType {
+  ONETIME
+  RECCURING
+}
+
+type PaymentsWithUserDetailsPaginationOutput {
+  data: [PaymentWithUserDetailsOutput!]!
+}
+
 type UserOutput {
   id: ID!
   username: String!
@@ -61,12 +61,40 @@ type UserOutput {
   dateAdded: String!
 }
 
+type UserPaginationOutput {
+  data: [UserOutput!]!
+}
+
+type UserPaymentOutput {
+  subscriptionType: SubscriptionType!
+  startDate: DateTime!
+  endDate: DateTime!
+  currency: Currency!
+  price: Float!
+  paymentType: PaymentProvider!
+}
+
+type UserPaymentsPaginationOutput {
+  data: [UserPaymentOutput!]!
+}
+
+type UserInfoOutput {
+  id: ID!
+  username: String!
+  profileLink: String!
+  dateAdded: String!
+  avatar: ImageOutput!
+  isBanned: Boolean!
+  banReason: String!
+}
+
 type Query {
   healthCheck: String!
-  userList(page: Int! = 1, pageSize: Int! = 9, sortDirection: SortDirectionType! = Desc, searchUsernameTerm: String! = "", sortField: UserSortFields! = DateAdded, banFilter: BanFilterType!): [UserOutput!]!
+  userList(page: Int! = 1, pageSize: Int! = 10, sortDirection: SortDirectionType! = Desc, searchUsernameTerm: String! = "", sortField: UserSortFields! = DateAdded, banFilter: BanFilterType!): UserPaginationOutput!
   userInfo(id: ID!): UserInfoOutput!
-  userPhotos(userId: ID!, page: Int! = 1, pageSize: Int! = 9, sortDirection: SortDirectionType! = Desc): [ImageOutput!]
-  payments(userId: ID!, page: Int! = 1, pageSize: Int! = 9, sortDirection: SortDirectionType! = Desc): [UserPaymentsOutput!]
+  userPhotos(userId: ID!, page: Int! = 1, pageSize: Int! = 10, sortDirection: SortDirectionType! = Desc): ImagesPaginationOutput
+  userPayments(userId: ID!, page: Int! = 1, pageSize: Int! = 10, sortDirection: SortDirectionType! = Desc): UserPaymentsPaginationOutput
+  paymentsList(page: Int! = 1, pageSize: Int! = 10, sortDirection: SortDirectionType! = Desc, sortField: PaymentsSortFields! = DateAdded, status: PaymentStatus! = CONFIRMED, searchUsernameTerm: String! = ""): PaymentsWithUserDetailsPaginationOutput!
 }
 
 """Asc,Desc"""
@@ -88,11 +116,27 @@ enum BanFilterType {
   All
 }
 
+"""Username,Amount,PaymentType,DateAdded,Status"""
+enum PaymentsSortFields {
+  Username
+  Amount
+  PaymentType
+  DateAdded
+  Status
+}
+
+"""CONFIRMED,PENDING,REJECTED"""
+enum PaymentStatus {
+  CONFIRMED
+  PENDING
+  REJECTED
+}
+
 type Mutation {
   deleteUser(input: DeleteUserInput!): Boolean!
   banUser(input: BanUserInput!): Boolean!
   createAdmin(input: CreateAdminInput!): Admin!
-  unBanUser(input: BanUserInput!): Boolean!
+  unBanUser(input: UnBanUserInput!): Boolean!
 }
 
 input DeleteUserInput {
@@ -101,11 +145,15 @@ input DeleteUserInput {
 
 input BanUserInput {
   id: String!
-  banReason: String!
+  banReason: String = "Another Reason"
 }
 
 input CreateAdminInput {
   email: String!
   username: String!
   password: String!
+}
+
+input UnBanUserInput {
+  id: String!
 }

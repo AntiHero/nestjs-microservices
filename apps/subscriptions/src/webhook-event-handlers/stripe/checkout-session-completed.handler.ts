@@ -150,6 +150,8 @@ export class CheckoutSessinCompletedEventHandler extends Handler {
                   plan: AccountPlan.BUSINESS,
                 }),
               });
+
+              // outbox here
             }
           },
           {

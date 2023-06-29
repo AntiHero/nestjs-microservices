@@ -8,7 +8,7 @@ interface TransportOptins {
   tcpPort: number;
 }
 
-interface GlobalConfig {
+export interface GlobalConfig {
   subscriptions: TransportOptins;
   root: TransportOptins;
   rabbit: {

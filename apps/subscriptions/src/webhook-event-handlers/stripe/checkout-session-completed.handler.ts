@@ -9,8 +9,10 @@ import {
   SubscriptionCommand,
   SubscriptionEvent,
 } from '@app/common/patterns/subscriptions.pattern';
+import { Queue }                               from '@app/common/queues';
 import { Injectable }                          from '@nestjs/common';
 import { EventEmitter2 as EventEmitter }       from '@nestjs/event-emitter';
+import { ClientRMQ }                           from '@nestjs/microservices';
 import { AccountPlan }                         from '@prisma/client';
 import { PaymentException }                    from 'apps/root/src/common/exceptions/subscriptions.exception';
 
@@ -19,6 +21,7 @@ import { SubscriptionsQueryRepository }        from 'apps/subscriptions/src/repo
 import { SubscriptionsRepository }             from 'apps/subscriptions/src/repositories/subscriptions.repository';
 
 import { CHECKOUT_SESSION_COMPLETED }          from '../../constants';
+import { OutboxRepositoryInterface }           from '../../repositories/outbox/outbox-repository.interface';
 import { determineSubscriptionEndDate }        from '../../utils/calculate-subscription-end-date';
 import { Handler }                             from '../abstract.handler';
 
@@ -29,6 +32,7 @@ export class CheckoutSessinCompletedEventHandler extends Handler {
     private readonly subscriptionsRepository: SubscriptionsRepository,
     private readonly subscriptionsQueryRepository: SubscriptionsQueryRepository,
     private readonly eventEmitter: EventEmitter,
+    private readonly outboxRepository: OutboxRepositoryInterface,
   ) {
     super();
   }
@@ -123,14 +127,15 @@ export class CheckoutSessinCompletedEventHandler extends Handler {
               const subscriptionCreatedEvent =
                 SubscriptionEvent.SubscriptionCreated;
 
-              this.eventEmitter.emit(subscriptionCreatedEvent, {
+              // outbox here
+              await this.outboxRepository.write(tx, {
                 event: subscriptionCreatedEvent,
                 message: createdSubscriptionMessageCreator({
                   id,
                   currency,
                   price,
-                  endDate,
-                  startDate,
+                  endDate: endDate?.toISOString() || null,
+                  startDate: startDate?.toISOString() || null,
                   provider,
                   status,
                   type,
@@ -150,8 +155,6 @@ export class CheckoutSessinCompletedEventHandler extends Handler {
                   plan: AccountPlan.BUSINESS,
                 }),
               });
-
-              // outbox here
             }
           },
           {

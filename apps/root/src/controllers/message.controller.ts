@@ -62,4 +62,11 @@ export class TcpController {
 
     this.rmqService.ack(context);
   }
+
+  // @MessagePattern('test')
+  // public test(@Payload() payload: any, @Ctx() context: RmqContext) {
+  //   console.log('test is coming');
+
+  //   this.rmqService.ack(context);
+  // }
 }

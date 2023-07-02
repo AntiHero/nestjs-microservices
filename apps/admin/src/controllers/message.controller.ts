@@ -106,7 +106,13 @@ export class AdminMessageConroller {
     @Payload() payload: NotNullable<CreatedSubscriptinType>,
     @Ctx() context: RmqContext,
   ) {
-    await this.paymentsRepository.create(payload);
+    const { startDate, endDate } = payload;
+
+    await this.paymentsRepository.create({
+      ...payload,
+      startDate: new Date(startDate),
+      endDate: new Date(endDate),
+    });
 
     this.rmqService.ack(context);
   }

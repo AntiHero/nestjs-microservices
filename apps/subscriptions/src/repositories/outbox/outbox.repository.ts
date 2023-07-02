@@ -1,6 +1,6 @@
 import { DeliveryStatus, Outbox }     from '.prisma/subscriptions';
 import { DatabaseException }          from '@app/common/exceptions/database.exception';
-import { Provider }                   from '@nestjs/common';
+import { Injectable, Provider }       from '@nestjs/common';
 
 import {
   OutboxRepositoryInterface,
@@ -10,6 +10,7 @@ import {
 import type { PrismaTransactionType } from '../../interfaces/prisma-transaction.interface';
 import { PrismaService }              from '../../prisma/prisma.service';
 
+@Injectable()
 export class OutboxRepository extends OutboxRepositoryInterface {
   public constructor(private readonly prisma: PrismaService) {
     super();

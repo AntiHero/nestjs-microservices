@@ -14,6 +14,6 @@ export abstract class RmqClient {
       })
       .build();
 
-    this.client.emit<string, RmqRecord<T>>(pattern, record);
+    return this.client.emit<string, RmqRecord<T>>(pattern, record);
   }
 }

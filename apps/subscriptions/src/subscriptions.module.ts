@@ -25,9 +25,11 @@ import {
   WebhookEventHandlersProvider,
   webhookEventHandlers,
 } from './providers/webhook-event-handlers.provider';
+import { OutboxRepositoryProvider }                 from './repositories/outbox/outbox.repository';
 import { SubscriptionsQueryRepository }             from './repositories/subscriptions.query-repository';
 import { SubscriptionsRepository }                  from './repositories/subscriptions.repository';
 import { EventRouter }                              from './services/event-router';
+import { OutboxWorkerService }                      from './services/outbox-worker.service';
 import { RootServiceProvider }                      from './services/root.service';
 import { StripePaymentService }                     from './services/stripe-payment-provider.service';
 import { CancelSubscriptionCommandHandler }         from './use-cases/cancel-subscription.use-case';
@@ -66,10 +68,12 @@ const commandHandlers = [
     PaymentStrategiesProvider,
     WebhookEventHandlersProvider,
     SubscriptionsQueryRepository,
+    OutboxRepositoryProvider,
     SubscriptionsRepository,
     RootRmqClient,
     AdminRmqClient,
     RootServiceProvider,
+    OutboxWorkerService,
   ],
 })
 export class SubscriptionsModule {

@@ -1,52 +1,68 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator subscriptions {
-  provider = "prisma-client-js"
-  output   = "../../node_modules/.prisma/subscriptions"
+  provider        = "prisma-client-js"
+  output          = "../../node_modules/.prisma/subscriptions"
+  previewFeatures = ["multiSchema"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_SUBSCRIPTIONS_URL")
+  schemas  = ["base", "outbox"]
+  // schemas  = ["base", "outbox"]
   // shadowDatabaseUrl = env("SHADOW_DATABASE_SUBSCRIPTIONS_URL")
 }
 
 enum Currency {
   USD
+
+  @@schema("base")
 }
 
 enum PaymentStatus {
   PENDING
   CONFIRMED
   REJECTED
+
+  @@schema("base")
 }
 
 enum PaymentReference {
   SUBSCRIPTION
   OTHER
+
+  @@schema("base")
 }
 
 enum PaymentProvider {
   STRIPE
   PAYPAL
+
+  @@schema("base")
 }
 
 enum SubscriptionType {
   ONETIME
   RECCURING
+
+  @@schema("base")
 }
 
 enum SubscriptionStatus {
   ACTIVE
   PENDING
   CANCELLED
+
+  @@schema("base")
 }
 
 enum PeriodType {
   DAY
   MONTH
   YEAR
+
+  @@schema("base")
 }
 
 model Payment {
@@ -60,6 +76,8 @@ model Payment {
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
   subscriptionPayment SubscriptionPayment?
+
+  @@schema("base")
 }
 
 model SubscriptionPayment {
@@ -72,6 +90,8 @@ model SubscriptionPayment {
   createdAt     DateTime                @default(now())
   updatedAt     DateTime                @updatedAt
   subscription  Subscription?
+
+  @@schema("base")
 }
 
 model SubscriptionPricingPlan {
@@ -84,6 +104,8 @@ model SubscriptionPricingPlan {
   createdAt           DateTime              @default(now())
   updatedAt           DateTime              @updatedAt
   subscriptionPayment SubscriptionPayment[]
+
+  @@schema("base")
 }
 
 model SubscriptionPrice {
@@ -95,6 +117,8 @@ model SubscriptionPrice {
   createdAt               DateTime                  @default(now())
   updatedAt               DateTime                  @updatedAt
   SubscriptionPricingPlan SubscriptionPricingPlan[]
+
+  @@schema("base")
 }
 
 model Subscription {
@@ -109,4 +133,26 @@ model Subscription {
   subscriptionPaymentId String              @unique
   createdAt             DateTime            @default(now())
   updatedAt             DateTime            @updatedAt
+
+  @@schema("base")
+}
+
+enum DeliveryStatus {
+  SENT
+  FAILED
+  PENDING
+
+  @@schema("outbox")
+}
+
+model Outbox {
+  id             String         @id @default(uuid())
+  event          String
+  message        Json
+  deliveryStatus DeliveryStatus @default(PENDING)
+  retryCount     Int            @default(0)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  @@schema("outbox")
 }

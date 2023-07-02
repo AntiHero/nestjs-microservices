@@ -27,7 +27,8 @@
       "entryFile": "main",
       "sourceRoot": "apps/subscriptions/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/subscriptions/tsconfig.app.json"
+        "tsConfigPath": "apps/subscriptions/tsconfig.app.json",
+        "webpackConfigPath": "webpack.subs.config.js"
       }
     },
     "common": {

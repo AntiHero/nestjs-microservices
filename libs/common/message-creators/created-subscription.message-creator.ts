@@ -6,10 +6,13 @@ import {
 
 export type CreatedSubscriptinType = Pick<
   Subscription,
-  'userId' | 'endDate' | 'startDate' | 'type' | 'id'
+  'userId' | 'type' | 'id'
 > &
   Pick<Payment, 'currency' | 'price' | 'provider' | 'status'> &
-  Pick<SubscriptionPrice, 'period' | 'periodType'>;
+  Pick<SubscriptionPrice, 'period' | 'periodType'> & {
+    endDate: string | null;
+    startDate: string | null;
+  };
 
 export const createdSubscriptionMessageCreator = (
   data: CreatedSubscriptinType,

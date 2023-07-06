@@ -7,5 +7,5 @@ export enum CircuitBreakerState {
 export enum CircuitBrakerParams {
   FAILURE_THRESHOLD = 3,
   SUCCESS_THRESHOLD = 3,
-  RESET_TIMEOUT = 10_000,
+  RESET_TIMEOUT = 30_000,
 }

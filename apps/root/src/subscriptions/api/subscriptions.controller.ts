@@ -54,8 +54,8 @@ export class SubscriptionsController {
     @ActiveUser('userId') userId: string,
     @Body() checkoutDto: CheckoutDto,
   ) {
-    console.log('inside controller');
     const { priceId, paymentSystem } = checkoutDto;
+
     const result = await firstValueFrom(
       this.subscriptionsService.getCheckoutSessionUrl({
         priceId,

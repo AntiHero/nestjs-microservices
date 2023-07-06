@@ -1,10 +1,11 @@
-import { INestApplication } from '@nestjs/common';
-import { PrismaService } from '../../src/prisma/prisma.service';
-import { JwtService } from '@nestjs/jwt';
-import { getApp } from '../testing-connection';
-import request from 'supertest';
-import { authStub } from '../auth/stubs/auth.stub';
+import { INestApplication }          from '@nestjs/common';
+import { JwtService }                from '@nestjs/jwt';
+import request                       from 'supertest';
+
+import { PrismaService }             from '../../src/prisma/prisma.service';
 import { helperFunctionsForTesting } from '../auth/helpers/helper-functions';
+import { authStub }                  from '../auth/stubs/auth.stub';
+import { getApp }                    from '../testing-connection';
 
 const sampleProfile = {
   name: 'James',

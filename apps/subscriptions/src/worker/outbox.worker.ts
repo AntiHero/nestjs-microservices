@@ -8,7 +8,7 @@ import { firstValueFrom }         from 'rxjs';
 import { PrismaService }          from '../prisma/prisma.service';
 
 export class OutboxProcessor {
-  private timeout = 3000;
+  private timeout = 1000;
 
   public prisma: PrismaService;
 

@@ -30,6 +30,6 @@ export class UserPaginationQuery extends PaginationQuery {
   @Field(() => UserSortFields)
   sortField = 'createdAt';
 
-  @Field(() => BanFilter)
+  @Field(() => BanFilter, { nullable: true })
   banFilter?: boolean | null = null;
 }

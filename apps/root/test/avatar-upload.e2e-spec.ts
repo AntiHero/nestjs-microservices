@@ -1,23 +1,25 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { ConfigModule } from '@nestjs/config';
-import { PrismaClient } from '@prisma/client';
-import request from 'supertest';
+import fs                      from 'node:fs';
+
 import {
   CanActivate,
-  createParamDecorator,
   INestApplication,
+  createParamDecorator,
 } from '@nestjs/common';
-import fs from 'node:fs';
+import { ConfigModule }        from '@nestjs/config';
+import { Test, TestingModule } from '@nestjs/testing';
+import { PrismaClient }        from '@prisma/client';
+import request                 from 'supertest';
 
-import { AuthDto } from 'apps/root/src/auth/dto/auth.dto';
-import { AuthModule } from 'apps/root/src/auth/auth.module';
-import { UserModule } from 'apps/root/src/user/user.module';
-import { BAD_DIMENSIONS } from 'apps/root/src/common/errors';
-import { API, FILE_FIELD } from 'apps/root/src/common/constants';
-import { UserTestUtils } from './utils/user.test-utils';
-import { PrismaModule } from 'apps/root/src/prisma/prisma.module';
-import { useGlobalPipes } from 'apps/root/src/common/pipes/global.pipe';
-import { useGlobalFilters } from 'apps/root/src/common/filters/global.filter';
+import { AuthModule }          from 'apps/root/src/auth/auth.module';
+import { AuthDto }             from 'apps/root/src/auth/dto/auth.dto';
+import { API, FILE_FIELD }     from 'apps/root/src/common/constants';
+import { BAD_DIMENSIONS }      from 'apps/root/src/common/errors';
+import { useGlobalFilters }    from 'apps/root/src/common/filters/global.filter';
+import { useGlobalPipes }      from 'apps/root/src/common/pipes/global.pipe';
+import { PrismaModule }        from 'apps/root/src/prisma/prisma.module';
+import { UserModule }          from 'apps/root/src/user/user.module';
+
+import { UserTestUtils }       from './utils/user.test-utils';
 
 let mockId = '';
 

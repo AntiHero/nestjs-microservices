@@ -11,6 +11,7 @@ export interface UserViewModel {
 export const toUserViewModel = (input: UserClass): UserViewModel => ({
   id: input.id,
   username: input.username,
+  isBanned: input.isBanned,
   profileLink: `${process.env.FRONTEND_DOMAIN}/users/${input.username}`,
   isBanned: input.isBanned,
   dateAdded: input.createdAt as unknown as string,

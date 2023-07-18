@@ -1,14 +1,15 @@
-import { IS_PUBLIC_KEY } from '@app/common/decorators/public.decorator';
+import { IS_PUBLIC_KEY }       from '@app/common/decorators/public.decorator';
 import {
   CanActivate,
   ExecutionContext,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
+import { Reflector }           from '@nestjs/core';
 import { GqlExecutionContext } from '@nestjs/graphql';
+import { GraphQLError }        from 'graphql';
 
-import { AuthService } from '../../auth/auth.service';
+import { AuthService }         from '../../auth/auth.service';
 
 @Injectable()
 export class BasicAuthGuard implements CanActivate {
@@ -34,13 +35,22 @@ export class BasicAuthGuard implements CanActivate {
     const decodeResult = this.decode(payload);
 
     if (schema?.toLowerCase() !== 'basic' || !decodeResult)
-      throw new UnauthorizedException();
+      throw new GraphQLError('You are not authorized to perform this action.', {
+        extensions: {
+          code: 'FORBIDDEN',
+        },
+      });
 
     const [email, password] = decodeResult.split(':');
 
     const validationResult = await this.authService.validate(email, password);
 
-    if (!validationResult) throw new UnauthorizedException();
+    if (!validationResult)
+      throw new GraphQLError('You are not authorized to perform this action.', {
+        extensions: {
+          code: 'FORBIDDEN',
+        },
+      });
 
     return true;
   }

@@ -87,6 +87,15 @@ export class AdminModule {
       driver: ApolloDriver,
       autoSchemaFile: join(__dirname, 'schema/schema.gql'),
       plugins: [],
+      formatError: (error: any) => {
+        const graphQLFormattedError = {
+          message:
+            error.extensions?.exception?.response?.message || error.message,
+          code: error.extensions?.code || 'SERVER_ERROR',
+          name: error.extensions?.exception?.name || error.name,
+        };
+        return graphQLFormattedError;
+      },
     });
   }
 

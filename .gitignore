@@ -47,3 +47,7 @@ k8s
 
 # docker
 data
+
+backup
+*.csv
+sql

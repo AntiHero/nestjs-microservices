@@ -14,5 +14,8 @@ export class UserOutput implements UserViewModel {
   public profileLink: string;
 
   @Field()
+  public isBanned: boolean;
+
+  @Field()
   public dateAdded: string;
 }

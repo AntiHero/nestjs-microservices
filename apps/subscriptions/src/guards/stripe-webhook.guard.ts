@@ -1,12 +1,12 @@
-import { InjectStripeClient } from '@app/common/decorators/inject-stripe-client.decorator';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import Stripe from 'stripe';
+import { ConfigService }                             from '@nestjs/config';
+import { InjectStripe }                              from 'nestjs-stripe';
+import Stripe                                        from 'stripe';
 
 @Injectable()
 export class StripeWebhookGuard implements CanActivate {
   public constructor(
-    @InjectStripeClient() private readonly stripe: Stripe,
+    @InjectStripe() private readonly stripe: Stripe,
     private readonly configService: ConfigService,
   ) {}
 

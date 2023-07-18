@@ -13,6 +13,47 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type ImageOutput {
+  url: String
+  previewUrl: String
+}
+
+type ImagesPaginationOutput {
+  data: [ImageOutput!]!
+}
+
+type PaymentWithUserDetailsOutput {
+  id: ID!
+  username: String!
+  amount: Float!
+  currency: Currency!
+  dateAdded: String!
+  photo: String
+  paymentType: PaymentProvider!
+  subscriptionType: SubscriptionType!
+}
+
+"""USD"""
+enum Currency {
+  USD
+}
+
+"""STRIPE,PAYPAL"""
+enum PaymentProvider {
+  STRIPE
+  PAYPAL
+}
+
+"""ONETIME,RECCURING"""
+enum SubscriptionType {
+  ONETIME
+  RECCURING
+}
+
+type PaymentsWithUserDetailsPaginationOutput {
+  data: [PaymentWithUserDetailsOutput!]!
+}
+
 type UserOutput {
   id: ID!
   username: String!
@@ -20,41 +61,21 @@ type UserOutput {
   dateAdded: String!
 }
 
-type ImageOutput {
-  url: String
-  previewUrl: String
+type UserPaginationOutput {
+  data: [UserOutput!]!
 }
 
-type PaymentOutput {
-  type: SubscriptionType!
+type UserPaymentOutput {
+  subscriptionType: SubscriptionType!
   startDate: DateTime!
   endDate: DateTime!
   currency: Currency!
   price: Float!
-  provider: PaymentProvider!
+  paymentType: PaymentProvider!
 }
 
-"""
-ONETIME,RECCURING
-"""
-enum SubscriptionType {
-  ONETIME
-  RECCURING
-}
-
-"""
-USD
-"""
-enum Currency {
-  USD
-}
-
-"""
-STRIPE,PAYPAL
-"""
-enum PaymentProvider {
-  STRIPE
-  PAYPAL
+type UserPaymentsPaginationOutput {
+  data: [UserPaymentOutput!]!
 }
 
 type UserInfoOutput {
@@ -63,59 +84,76 @@ type UserInfoOutput {
   profileLink: String!
   dateAdded: String!
   avatar: ImageOutput!
+  isBanned: Boolean!
+  banReason: String!
 }
 
 type Query {
   healthCheck: String!
-  userList(
-    page: Int! = 1
-    pageSize: Int! = 9
-    sortDirection: SortDirectionType! = Desc
-    searchUsernameTerm: String! = ""
-    sortField: UserSortFields! = DateAdded
-  ): [UserOutput!]!
+  userList(page: Int! = 1, pageSize: Int! = 10, sortDirection: SortDirectionType! = Desc, searchUsernameTerm: String! = "", sortField: UserSortFields! = DateAdded, banFilter: BanFilterType!): UserPaginationOutput!
   userInfo(id: ID!): UserInfoOutput!
-  userPhotos(
-    userId: ID!
-    page: Int! = 1
-    pageSize: Int! = 9
-    sortDirection: SortDirectionType! = Desc
-  ): [ImageOutput!]
-  payments(
-    userId: ID!
-    page: Int! = 1
-    pageSize: Int! = 9
-    sortDirection: SortDirectionType! = Desc
-  ): [PaymentOutput!]
+  userPhotos(userId: ID!, page: Int! = 1, pageSize: Int! = 10, sortDirection: SortDirectionType! = Desc): ImagesPaginationOutput
+  userPayments(userId: ID!, page: Int! = 1, pageSize: Int! = 10, sortDirection: SortDirectionType! = Desc): UserPaymentsPaginationOutput
+  paymentsList(page: Int! = 1, pageSize: Int! = 10, sortDirection: SortDirectionType! = Desc, sortField: PaymentsSortFields! = DateAdded, status: PaymentStatus! = CONFIRMED, searchUsernameTerm: String! = ""): PaymentsWithUserDetailsPaginationOutput!
 }
 
-"""
-Asc,Desc
-"""
+"""Asc,Desc"""
 enum SortDirectionType {
   Asc
   Desc
 }
 
-"""
-Username,DateAdded
-"""
+"""Username,DateAdded"""
 enum UserSortFields {
   Username
   DateAdded
 }
 
+"""Banned,Active,All"""
+enum BanFilterType {
+  Banned
+  Active
+  All
+}
+
+"""Username,Amount,PaymentType,DateAdded,Status"""
+enum PaymentsSortFields {
+  Username
+  Amount
+  PaymentType
+  DateAdded
+  Status
+}
+
+"""CONFIRMED,PENDING,REJECTED"""
+enum PaymentStatus {
+  CONFIRMED
+  PENDING
+  REJECTED
+}
+
 type Mutation {
   deleteUser(input: DeleteUserInput!): Boolean!
+  banUser(input: BanUserInput!): Boolean!
   createAdmin(input: CreateAdminInput!): Admin!
+  unBanUser(input: UnBanUserInput!): Boolean!
 }
 
 input DeleteUserInput {
   id: String!
 }
 
+input BanUserInput {
+  id: String!
+  banReason: String = "Another Reason"
+}
+
 input CreateAdminInput {
   email: String!
   username: String!
   password: String!
+}
+
+input UnBanUserInput {
+  id: String!
 }

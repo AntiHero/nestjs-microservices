@@ -5,10 +5,10 @@ export class QueryDto {
   @IsNumber()
   @IsPositive()
   @Transform(({ value }) => parseInt(value) || 1)
-  public page: number;
+  public page?: number = 1;
 
   @IsNumber()
   @IsPositive()
   @Transform(({ value }) => parseInt(value) || 9)
-  public pageSize: number;
+  public pageSize?: number = 9;
 }

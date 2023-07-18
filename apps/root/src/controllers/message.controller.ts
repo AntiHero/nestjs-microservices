@@ -8,7 +8,7 @@ import {
   MessagePattern,
   Payload,
   RmqContext,
-}                              from '@nestjs/microservices';
+} from '@nestjs/microservices';
 import { AccountPlan }         from '@prisma/client';
 
 import { UserRepository }      from '../user/repositories/user.repository';
@@ -39,9 +39,8 @@ export class TcpController {
     @Ctx() context: RmqContext,
   ) {
     const { userId, plan } = data;
-    console.log(userId, plan);
 
-    await this.userRepository.updateAccountPlan(userId, plan);
+    await this.userRepository.update(userId, { accountPlan: plan });
     this.rmqService.ack(context);
   }
 
@@ -54,4 +53,20 @@ export class TcpController {
 
     this.rmqService.ack(context);
   }
+
+  @MessagePattern(AdminCommand.BanUser)
+  public async banUser(@Payload() userId: string, @Ctx() context: RmqContext) {
+    await this.userRepository.update(userId, {
+      isBanned: true,
+    });
+
+    this.rmqService.ack(context);
+  }
+
+  // @MessagePattern('test')
+  // public test(@Payload() payload: any, @Ctx() context: RmqContext) {
+  //   console.log('test is coming');
+
+  //   this.rmqService.ack(context);
+  // }
 }

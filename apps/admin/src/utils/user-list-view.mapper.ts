@@ -1,4 +1,4 @@
-import { UserModel } from '../app/entity/user.model';
+import { UserClass } from '../app/entity/user.model';
 
 export interface UserViewModel {
   id: string;
@@ -8,7 +8,7 @@ export interface UserViewModel {
   isBanned: boolean;
 }
 
-export const toUserViewModel = (input: UserModel): UserViewModel => ({
+export const toUserViewModel = (input: UserClass): UserViewModel => ({
   id: input.id,
   username: input.username,
   profileLink: `${process.env.FRONTEND_DOMAIN}/users/${input.username}`,

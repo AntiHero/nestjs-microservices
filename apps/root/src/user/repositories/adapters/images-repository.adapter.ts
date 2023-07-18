@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable }        from '@nestjs/common';
+
 import { RepositoryAdapter } from 'apps/root/src/common/adapters/repository.adapter';
 
 @Injectable()

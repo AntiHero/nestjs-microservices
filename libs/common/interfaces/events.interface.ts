@@ -1,3 +1,5 @@
+import { PeriodType } from '../enums/period-type.enum';
+
 export interface StripeEvent<T> {
   id: string;
   object: 'event';
@@ -18,7 +20,13 @@ export interface StripeEvent<T> {
 export interface StripeCheckoutSessionObject {
   id: string;
   object: 'checkout.session';
-  metadata: { subscriptionId: string; customerId: string; paymentId: string };
+  metadata: {
+    subscriptionId: string;
+    customerId: string;
+    paymentId: string;
+    period: string;
+    periodType: PeriodType;
+  };
   mode: 'payment' | 'subscription';
   invoice: string;
   payment_status: 'paid';

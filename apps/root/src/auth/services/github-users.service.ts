@@ -1,13 +1,13 @@
-import { ConfigType } from '@nestjs/config';
 import {
   ForbiddenException,
   Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { ConfigType }        from '@nestjs/config';
 
+import { ImageService }      from 'apps/root/src/common/services/image.service';
 import { ImageMetadataType } from 'apps/root/src/common/types';
-import { ImageService } from 'apps/root/src/common/services/image.service';
 import { githubOauthConfig } from 'apps/root/src/config/github-oauth.config';
 
 interface GithubUser {

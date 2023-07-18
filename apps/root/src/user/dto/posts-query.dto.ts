@@ -1,7 +1,7 @@
+import { Transform }                    from 'class-transformer';
 import { IsNumber, IsOptional, IsUUID } from 'class-validator';
-import { Transform } from 'class-transformer';
 
-import { ValidateIfOtherNotExists } from 'apps/root/src/common/decorators/validate-if-other-not-exists.decorator';
+import { ValidateIfOtherNotExists }     from 'apps/root/src/common/decorators/validate-if-other-not-exists.decorator';
 
 export class PostsQueryDto {
   @IsNumber()

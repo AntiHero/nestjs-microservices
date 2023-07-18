@@ -1,11 +1,12 @@
-import { forwardRef, Module } from '@nestjs/common';
-import { DeviceSessionsRepository } from './repositories/device-sessions.repository';
-import { DeviceSessionsController } from './api/device-sessions.controller';
-import { CqrsModule } from '@nestjs/cqrs';
+import { Module, forwardRef }                      from '@nestjs/common';
+import { CqrsModule }                              from '@nestjs/cqrs';
+
+import { DeviceSessionsController }                from './api/device-sessions.controller';
+import { DeviceSessionsRepository }                from './repositories/device-sessions.repository';
 import { AllUserDevicesWithActiveSessionsUseCase } from './use-cases/all-user-devices-with-active-sessions.use-case';
-import { AdaptorModule } from '../adaptors/adaptor.module';
 import { DeleteAllDeviceSessionsButActiveUseCase } from './use-cases/delete-all-device-sessions-but-active.use-case';
-import { DeleteDeviceSessionUseCase } from './use-cases/delete-device-session.use-case';
+import { DeleteDeviceSessionUseCase }              from './use-cases/delete-device-session.use-case';
+import { AdaptorModule }                           from '../adapters/adaptor.module';
 
 const useCases = [
   AllUserDevicesWithActiveSessionsUseCase,

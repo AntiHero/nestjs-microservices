@@ -1,0 +1,32 @@
+[
+  {
+    "id": "d6cd80ed-860c-45fc-aa02-edc47aef226f",
+    "userId": "c5536084-675c-4307-b963-a1fcc33c62bc",
+    "description": "new post",
+    "createdAt": "2023-06-11T22:11:40.360Z",
+    "images": [
+      {
+        "id": "7b44c054-a800-4f61-97eb-5a63ac903ca0",
+        "url": "https://inctagram.storage.yandexcloud.net/content/users/c5536084-675c-4307-b963-a1fcc33c62bc/posts/d6cd80ed-860c-45fc-aa02-edc47aef226f/1dc3cac5-b71c-4a00-b65c-7177db26eb10.jpg",
+        "previewUrl": "https://inctagram.storage.yandexcloud.net/content/users/c5536084-675c-4307-b963-a1fcc33c62bc/posts/d6cd80ed-860c-45fc-aa02-edc47aef226f/.preivew.29378c02-2626-48cc-ad08-fdc5d86b0df0.jpg",
+        "createdAt": "2023-06-11T22:11:40.360Z",
+        "updatedAt": "2023-06-11T22:11:40.360Z"
+      }
+    ]
+  },
+  {
+    "id": "c084b308-6757-4fb9-8e51-ba71554f25a3",
+    "userId": "c5536084-675c-4307-b963-a1fcc33c62bc",
+    "description": "trip to Raccoon City",
+    "createdAt": "2023-06-12T12:08:34.367Z",
+    "images": [
+      {
+        "id": "a0e6fee0-d21b-49a6-8652-a002748efa31",
+        "url": "https://inctagram.storage.yandexcloud.net/content/users/c5536084-675c-4307-b963-a1fcc33c62bc/posts/c084b308-6757-4fb9-8e51-ba71554f25a3/9c081778-c746-4810-bb98-2f7355bd9516.jpg",
+        "previewUrl": "https://inctagram.storage.yandexcloud.net/content/users/c5536084-675c-4307-b963-a1fcc33c62bc/posts/c084b308-6757-4fb9-8e51-ba71554f25a3/.preivew.5e6cce44-8308-4520-bf88-aa89ba6d1432.jpg",
+        "createdAt": "2023-06-12T12:08:34.367Z",
+        "updatedAt": "2023-06-12T12:08:34.367Z"
+      }
+    ]
+  }
+]

@@ -1,8 +1,9 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
-import { JwtAdaptor } from '../../adaptors/jwt/jwt.adaptor';
-import { DeviceSessionsRepository } from '../repositories/device-sessions.repository';
-import { ActiveUserData } from '../../user/types';
+import { CommandHandler, ICommandHandler }       from '@nestjs/cqrs';
+
+import { JwtAdapter }                            from '../../adapters/jwt/jwt.adapter';
+import { ActiveUserData }                        from '../../user/types';
+import { DeviceSessionsRepository }              from '../repositories/device-sessions.repository';
 
 export class DeleteDeviceSessionCommand {
   constructor(public user: ActiveUserData, public deviceId: string) {}
@@ -12,7 +13,7 @@ export class DeleteDeviceSessionUseCase
   implements ICommandHandler<DeleteDeviceSessionCommand>
 {
   constructor(
-    private readonly jwtAdaptor: JwtAdaptor,
+    private readonly jwtAdaptor: JwtAdapter,
     private readonly deviceSessionsRepository: DeviceSessionsRepository,
   ) {}
   async execute(command: DeleteDeviceSessionCommand) {

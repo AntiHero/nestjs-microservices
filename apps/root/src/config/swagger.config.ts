@@ -1,7 +1,7 @@
+import { INestApplication }               from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { INestApplication } from '@nestjs/common';
 
-export function setupSwagger(app: INestApplication): void {
+export function setupSwaggerModule(app: INestApplication): void {
   const options = new DocumentBuilder()
     .setTitle('INCTAGRAM')
     .setDescription('API documentation for INCTAGRAM App')

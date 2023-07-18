@@ -1,12 +1,12 @@
+import { Injectable }    from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
-import { Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { User }          from '@prisma/client';
 
 @Injectable()
 export class MailService {
   public constructor(private readonly mailerService: MailerService) {}
 
-  async sendUserConfirmation(user: Partial<User>, token: string) {
+  async sendUserConfirmationEmail(user: Partial<User>, token: string) {
     const url = `${process.env.FRONTEND_DOMAIN}/registration/confirmation?code=${token}&email=${user.email}`;
 
     await this.mailerService.sendMail({
@@ -20,7 +20,7 @@ export class MailService {
     });
   }
 
-  async sendPasswordRecovery(user: User, token: string) {
+  async sendPasswordRecoveryEmail(user: User, token: string) {
     const url = `${process.env.FRONTEND_DOMAIN}/recovery/new-password?code=${token}&email=${user.email}`;
 
     await this.mailerService.sendMail({
@@ -34,7 +34,7 @@ export class MailService {
     });
   }
 
-  public async sendAccountsMerge(
+  public async sendMergeAccountEmail(
     user: Pick<User, 'email' | 'username'>,
     token: string,
   ) {
@@ -53,7 +53,7 @@ export class MailService {
       },
     });
   }
-  public async sendOauthAccountCreationConfirmation(
+  public async sendOauthAccountCreationEmail(
     user: Pick<User, 'email' | 'username'>,
   ) {
     const { email, username } = user;

@@ -1,37 +1,17 @@
-import { AccountPlan }      from '@app/common/enums';
-import type { User }        from '@prisma/client';
-import { prop }             from '@typegoose/typegoose';
-import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
+import { AccountPlan }            from '@app/common/enums';
+import type { User }              from '@prisma/client';
+import { getModelForClass, prop } from '@typegoose/typegoose';
+import { TimeStamps }             from '@typegoose/typegoose/lib/defaultClasses';
 
-export class AvatarModel extends TimeStamps {
-  @prop()
-  public id: string;
-
+export class AvatarClass extends TimeStamps {
   @prop({ type: () => String, default: null })
   public url: string | null;
 
   @prop({ type: () => String, default: null })
   public previewUrl: string | null;
-
-  @prop({ type: () => Number, default: null })
-  public size: number | null;
-
-  @prop({ type: () => Number, default: null })
-  public height: number | null;
-
-  @prop({ type: () => Number, default: null })
-  public width: number | null;
-
-  @prop()
-  public userId: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ProfileModel extends Base {}
-export class ProfileModel extends TimeStamps {
-  @prop()
-  public id: string;
-
+export class ProfileClass extends TimeStamps {
   @prop({ type: () => String, default: null })
   public name: string | null;
 
@@ -46,14 +26,9 @@ export class ProfileModel extends TimeStamps {
 
   @prop({ type: () => String, default: null })
   public aboutMe: string | null;
-
-  @prop()
-  public userId: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface UserModel extends Base {}
-export class UserModel
+export class UserClass
   extends TimeStamps
   implements
     Record<Exclude<keyof User, 'createdAt' | 'updatedAt' | 'hash'>, any>
@@ -70,18 +45,24 @@ export class UserModel
   @prop({ enum: AccountPlan, type: () => String })
   public accountPlan: AccountPlan;
 
-  @prop({ type: () => AvatarModel, default: null })
-  public avatar: AvatarModel | null;
+  @prop({ type: () => AvatarClass, default: null })
+  public avatar: AvatarClass | null;
 
-  @prop({ type: () => ProfileModel, defaultt: null })
-  public profile: ProfileModel | null;
+  @prop({ type: () => ProfileClass, default: null })
+  public profile: ProfileClass | null;
 
-  @prop()
-  public isDeleted: boolean;
-
-  @prop()
+  @prop({ default: false })
   public isBanned: boolean;
 
-  @prop()
+  @prop({ default: false })
   public isEmailConfirmed: boolean;
+
+  @prop({ default: '' })
+  public banReason: string;
 }
+
+export const UserModel = getModelForClass(UserClass, {
+  options: {
+    customName: 'users',
+  },
+});

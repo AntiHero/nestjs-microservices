@@ -1,4 +1,5 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType }                 from '@nestjs/graphql';
+
 import { AvatarViewModel as ImageViewModel } from 'apps/admin/src/utils/common.interfaces';
 
 @ObjectType()

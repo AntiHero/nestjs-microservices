@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { Injectable }     from '@nestjs/common';
+import { User }           from '@prisma/client';
+
 import { ProfileDbModel } from 'apps/root/src/user/types';
 
 @Injectable()

@@ -1,13 +1,14 @@
-import { randomUUID } from 'crypto';
+import { randomUUID }                            from 'crypto';
 
-import { Injectable } from '@nestjs/common';
-import { AccountPlan, EmailConfirmation, OauthAccount } from '@prisma/client';
-import { add } from 'date-fns';
+import { DatabaseException }                     from '@app/common/exceptions/database.exception';
+import { Injectable }                            from '@nestjs/common';
+import { EmailConfirmation, OauthAccount, User } from '@prisma/client';
+import { add }                                   from 'date-fns';
 
-import { UpdateOrCreateOauthAccountPaylod } from 'apps/root/src/auth/types';
+import { UpdateOrCreateOauthAccountPaylod }      from 'apps/root/src/auth/types';
 
-import { PrismaService } from '../../prisma/prisma.service';
-import { CreateUserDto } from '../dto/create.user.dto';
+import { PrismaService }                         from '../../prisma/prisma.service';
+import { CreateUserDto }                         from '../dto/create.user.dto';
 import {
   CreateUserWithOauthAccountData,
   UserWithEmailConfirmation,
@@ -233,7 +234,7 @@ export class UserRepository {
     id: string,
   ): Promise<UserWithEmailConfirmation | null> {
     try {
-      return this.prisma.user.findFirst({
+      const result = this.prisma.user.findUnique({
         where: {
           id,
         },
@@ -241,6 +242,8 @@ export class UserRepository {
           emailConfirmation: true,
         },
       });
+
+      return result;
     } catch (error) {
       console.log(error);
 
@@ -303,15 +306,21 @@ export class UserRepository {
     }
   }
 
-  public updateAccountPlan(id: string, accountPlan: AccountPlan) {
-    return this.prisma.user.update({
-      where: {
-        id,
-      },
-      data: {
-        accountPlan,
-      },
-    });
+  public async update(id: string, updates: Partial<User>) {
+    try {
+      const result = await this.prisma.user.update({
+        where: {
+          id,
+        },
+        data: updates,
+      });
+
+      return !!result;
+    } catch (error) {
+      console.log(error);
+
+      throw new DatabaseException();
+    }
   }
 
   public async delete(id: string) {

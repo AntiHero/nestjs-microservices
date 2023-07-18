@@ -5,6 +5,4 @@ export abstract class CloudStrategy {
   ): Promise<string>;
 
   public abstract remove(path: string | string[]): Promise<void>;
-
-  // public abstract removeAll(): Promise<void>;
 }

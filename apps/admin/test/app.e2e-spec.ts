@@ -1,52 +1,11 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { RmqClientToken }                from '@app/common/tokens';
 import { CanActivate, INestApplication } from '@nestjs/common';
-import request from 'supertest';
-import { AdminModule } from './../src/admin.module';
-import mongoose from 'mongoose';
+import { Test, TestingModule }           from '@nestjs/testing';
+import mongoose                          from 'mongoose';
+import request                           from 'supertest';
 
-const testUsers = [
-  {
-    id: '76075d78-763a-43bf-a56b-488ce44541a1',
-    username: 'alice_test',
-    email: 'alice@gmail.com',
-    createdAt: '2023-05-27T15:43:33.931Z',
-    accountPlan: 'PERSONAL',
-    isBanned: false,
-    avatar: {
-      url: 'https://avatars.githubusercontent.com/u/109024996?v=4',
-      previewUrl: 'https://avatars.githubusercontent.com/u/109024996?v=4',
-    },
-    profile: {
-      name: 'alice',
-      surname: null,
-      birthday: null,
-      city: null,
-      aboutMe: null,
-    },
-    isDeleted: false,
-  },
-  {
-    id: '279bf07e-b0c5-456b-b1d5-69a01e62fa54',
-    username: 'bob_test',
-    email: 'bob@gmail.com',
-    createdAt: '2023-05-30T14:38:00.266Z',
-    accountPlan: 'PERSONAL',
-    isBanned: false,
-    avatar: {
-      url: 'https://inctagram.storage.yandexcloud.net/content/users/279bf07e-b0c5-456b-b1d5-69a01e62fa54/avatar/15d8227d-a175-465a-9477-f43a08cbbfeb.jpg',
-      previewUrl:
-        'https://inctagram.storage.yandexcloud.net/content/users/279bf07e-b0c5-456b-b1d5-69a01e62fa54/avatar/.preivew.9ba8c974-8544-4479-864a-f1e2d4617c5c.jpg',
-    },
-    profile: {
-      name: 'bob',
-      surname: null,
-      birthday: null,
-      city: null,
-      aboutMe: null,
-    },
-    isDeleted: false,
-  },
-];
+import { AdminModule }                   from './../src/admin.module';
+import testUsers                         from './mock-data/users.json';
 
 jest.mock('apps/admin/src/@core/guards/basic.guard.ts', () => {
   class MockedGuard implements CanActivate {
@@ -78,13 +37,20 @@ describe('AdminController (e2e)', () => {
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AdminModule],
-    }).compile();
+    })
+      .overrideProvider(RmqClientToken.ROOT_RMQ)
+      .useValue({
+        emit() {
+          null;
+        },
+      })
+      .compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
   });
 
-  describe('users query', () => {
+  describe('users', () => {
     const testUser1 = {
       id: testUsers[0].id,
       username: testUsers[0].username,
@@ -99,10 +65,11 @@ describe('AdminController (e2e)', () => {
       dateAdded: testUsers[1].createdAt,
     };
 
-    test('should return user list', async () => {
-      expect.assertions(2);
+    describe('users queries', () => {
+      test('should return user list', async () => {
+        expect.assertions(2);
 
-      const query = `
+        const query = `
       query {
         userList {
           id
@@ -113,23 +80,23 @@ describe('AdminController (e2e)', () => {
       }
     `;
 
-      await request(app.getHttpServer())
-        .post('/graphql')
-        .send({ query })
-        .expect(200)
-        .then((response) => {
-          expect(response.body.data.userList.length).toBe(2);
-          expect(response.body.data.userList).toStrictEqual([
-            testUser2,
-            testUser1,
-          ]);
-        });
-    });
+        await request(app.getHttpServer())
+          .post('/graphql')
+          .send({ query })
+          .expect(200)
+          .then((response) => {
+            expect(response.body.data.userList.length).toBe(2);
+            expect(response.body.data.userList).toStrictEqual([
+              testUser2,
+              testUser1,
+            ]);
+          });
+      });
 
-    test('should sort users by username, desc by default', async () => {
-      expect.assertions(4);
+      test('should sort users by username, desc by default', async () => {
+        expect.assertions(4);
 
-      const query = `
+        const query = `
         query {
           userList(sortField: Username) {
             id
@@ -140,19 +107,19 @@ describe('AdminController (e2e)', () => {
         }
       `;
 
-      await request(app.getHttpServer())
-        .post('/graphql')
-        .send({ query })
-        .expect(200)
-        .then((response) => {
-          expect(response.body.data.userList.length).toBe(2);
-          expect(response.body.data.userList).toStrictEqual([
-            testUser2,
-            testUser1,
-          ]);
-        });
+        await request(app.getHttpServer())
+          .post('/graphql')
+          .send({ query })
+          .expect(200)
+          .then((response) => {
+            expect(response.body.data.userList.length).toBe(2);
+            expect(response.body.data.userList).toStrictEqual([
+              testUser2,
+              testUser1,
+            ]);
+          });
 
-      const queryWithSortingAsc = `
+        const queryWithSortingAsc = `
         query {
           userList(sortField: Username, sortDirection: Asc) {
             id
@@ -163,23 +130,23 @@ describe('AdminController (e2e)', () => {
         }
       `;
 
-      await request(app.getHttpServer())
-        .post('/graphql')
-        .send({ query: queryWithSortingAsc })
-        .expect(200)
-        .then((response) => {
-          expect(response.body.data.userList.length).toBe(2);
-          expect(response.body.data.userList).toStrictEqual([
-            testUser1,
-            testUser2,
-          ]);
-        });
-    });
+        await request(app.getHttpServer())
+          .post('/graphql')
+          .send({ query: queryWithSortingAsc })
+          .expect(200)
+          .then((response) => {
+            expect(response.body.data.userList.length).toBe(2);
+            expect(response.body.data.userList).toStrictEqual([
+              testUser1,
+              testUser2,
+            ]);
+          });
+      });
 
-    test('should sort users by createdAt date', async () => {
-      expect.assertions(4);
+      test('should sort users by createdAt date', async () => {
+        expect.assertions(4);
 
-      const query = `
+        const query = `
         query {
           userList(sortField: DateAdded) {
             id
@@ -190,19 +157,19 @@ describe('AdminController (e2e)', () => {
         }
       `;
 
-      await request(app.getHttpServer())
-        .post('/graphql')
-        .send({ query })
-        .expect(200)
-        .then((response) => {
-          expect(response.body.data.userList.length).toBe(2);
-          expect(response.body.data.userList).toStrictEqual([
-            testUser2,
-            testUser1,
-          ]);
-        });
+        await request(app.getHttpServer())
+          .post('/graphql')
+          .send({ query })
+          .expect(200)
+          .then((response) => {
+            expect(response.body.data.userList.length).toBe(2);
+            expect(response.body.data.userList).toStrictEqual([
+              testUser2,
+              testUser1,
+            ]);
+          });
 
-      const queryWithSortingAsc = `
+        const queryWithSortingAsc = `
         query {
           userList(sortField: DateAdded, sortDirection: Asc) {
             id
@@ -213,17 +180,73 @@ describe('AdminController (e2e)', () => {
         }
       `;
 
-      await request(app.getHttpServer())
-        .post('/graphql')
-        .send({ query: queryWithSortingAsc })
-        .expect(200)
-        .then((response) => {
-          expect(response.body.data.userList.length).toBe(2);
-          expect(response.body.data.userList).toStrictEqual([
-            testUser1,
-            testUser2,
-          ]);
-        });
+        await request(app.getHttpServer())
+          .post('/graphql')
+          .send({ query: queryWithSortingAsc })
+          .expect(200)
+          .then((response) => {
+            expect(response.body.data.userList.length).toBe(2);
+            expect(response.body.data.userList).toStrictEqual([
+              testUser1,
+              testUser2,
+            ]);
+          });
+      });
+    });
+
+    describe('users mutations', () => {
+      test('should ban user', async () => {
+        const userInfo = `
+        query {
+          userInfo(id: "${testUser1.id}") {
+            isBanned
+            banReason
+          }
+        }
+      `;
+
+        await request(app.getHttpServer())
+          .post('/graphql')
+          .send({ query: userInfo })
+          .expect(200)
+          .then((response) => {
+            expect(response.body.data.userInfo.isBanned).toBe(false);
+            expect(response.body.data.userInfo.banReason).toBe('');
+          });
+
+        const banUser = `
+          mutation {
+            banUser(input: { id: "${testUser1.id}", banReason: "Another reason" }) 
+          }
+      `;
+
+        await request(app.getHttpServer())
+          .post('/graphql')
+          .send({ query: banUser })
+          .expect(200)
+          .then((response) => {
+            expect(response.body.data.banUser).toBe(true);
+          });
+
+        const userList = `
+        query {
+          userList(sortField: DateAdded, sortDirection: Asc, banFilter: Banned) {
+            id
+          }
+        }
+      `;
+
+        await request(app.getHttpServer())
+          .post('/graphql')
+          .send({ query: userList })
+          .expect(200)
+          .then((response) => {
+            expect(response.body.data.userList.length).toBe(1);
+            expect(response.body.data.userList[0]).toMatchObject({
+              id: testUser1.id,
+            });
+          });
+      });
     });
   });
 

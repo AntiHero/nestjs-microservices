@@ -1,5 +1,6 @@
+import { format, parseISO }                      from 'date-fns';
+
 import type { ProfileDbModel, ProfileViewModel } from '../types';
-import { format, parseISO } from 'date-fns';
 
 export class ProfileMapper {
   public static toViewModel(model: ProfileDbModel | null): ProfileViewModel {

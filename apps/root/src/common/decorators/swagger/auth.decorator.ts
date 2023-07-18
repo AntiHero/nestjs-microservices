@@ -1,3 +1,4 @@
+import { HttpStatus, applyDecorators }        from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -5,37 +6,33 @@ import {
   ApiForbiddenResponse,
   ApiGoneResponse,
   ApiNotFoundResponse,
-  ApiOkResponse,
   ApiOperation,
   ApiQuery,
   ApiResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { AuthDto } from 'apps/root/src/auth/dto/auth.dto';
+
+import { AuthDto }                            from 'apps/root/src/auth/dto/auth.dto';
+import { GithubCodeDto }                      from 'apps/root/src/auth/dto/github-code.dto';
+
+import { ConfirmationCodeDto }                from '../../../auth/dto/confirmation-code.dto';
+import { EmailDto }                           from '../../../auth/dto/email.dto';
+import { GoogleCodeDto }                      from '../../../auth/dto/google-code.dto';
+import { LoginDto }                           from '../../../auth/dto/login.dto';
+import { NewPasswordDto }                     from '../../../auth/dto/new-password.dto';
 import { FieldError, LogginSuccessViewModel } from '../../../types';
-import { applyDecorators } from '@nestjs/common';
-import { ConfirmationCodeDto } from '../../../auth/dto/confirmation-code.dto';
-import { EmailDto } from '../../../auth/dto/email.dto';
-import { NewPasswordDto } from '../../../auth/dto/new-password.dto';
-import { LoginDto } from '../../../auth/dto/login.dto';
-import { GoogleCodeDto } from '../../../auth/dto/google-code.dto';
-import { GithubCodeDto } from 'apps/root/src/auth/dto/github-code.dto';
 
 export function AuthRegistrationSwaggerDecorator() {
   return applyDecorators(
-    ApiOperation({
-      summary:
-        'Registration in the system. Email with the registration code will be send to passed email address',
-    }),
+    ApiOperation({ summary: 'User registration' }),
     ApiBody({ type: AuthDto }),
     ApiResponse({
-      status: 204,
+      status: HttpStatus.NO_CONTENT,
       description:
-        'Input data is accepted. Email with confirmation code will be send to passed email address',
+        'Registration successful. Confirmation code sent to email address.',
     }),
     ApiBadRequestResponse({
-      description:
-        'If the inputModel has incorrect values (in particular if the user with the given email already registered)',
+      description: 'Invalid input data or email already registered',
       type: FieldError,
     }),
   );
@@ -43,39 +40,30 @@ export function AuthRegistrationSwaggerDecorator() {
 
 export function AuthLoginSwaggerDecorator() {
   return applyDecorators(
-    ApiOperation({
-      summary: 'Try login user to the system',
-    }),
+    ApiOperation({ summary: 'User login' }),
     ApiBody({ type: LoginDto }),
     ApiResponse({
-      status: 200,
-      description:
-        'Returns JWT accessToken (expires after 1 hour) in body and JWT refreshToken in cookie (http-only, secure) (expires after 2 hours).',
+      status: HttpStatus.OK,
+      description: 'User login successful',
       type: LogginSuccessViewModel,
     }),
     ApiBadRequestResponse({
-      description: 'inputModel has incorrect values',
+      description: 'Invalid input data',
       type: FieldError,
     }),
-    ApiUnauthorizedResponse({
-      description: 'The password or email is wrong',
-    }),
+    ApiUnauthorizedResponse({ description: 'Incorrect password or email' }),
   );
 }
 
 export function AuthLogoutSwaggerDecorator() {
   return applyDecorators(
-    ApiOperation({
-      summary:
-        'In cookie client must send correct refreshToken that will be revoked',
-    }),
+    ApiOperation({ summary: 'User logout' }),
     ApiResponse({
-      status: 204,
-      description: 'No Content',
+      status: HttpStatus.NO_CONTENT,
+      description: 'Logout successful',
     }),
     ApiUnauthorizedResponse({
-      description:
-        'JWT refreshToken inside cookie is missing, expired or incorrect',
+      description: 'Invalid or missing refresh token',
     }),
     ApiCookieAuth(),
   );
@@ -83,16 +71,14 @@ export function AuthLogoutSwaggerDecorator() {
 
 export function AuthRegistrationConfirmationSwaggerDecorator() {
   return applyDecorators(
-    ApiOperation({
-      summary: 'Confirm registration',
-    }),
+    ApiOperation({ summary: 'Confirm user registration' }),
     ApiBody({ type: ConfirmationCodeDto }),
     ApiResponse({
-      status: 204,
-      description: 'Email was verified. Account was activated',
+      status: HttpStatus.NO_CONTENT,
+      description: 'Email verification successful. Account activated',
     }),
     ApiBadRequestResponse({
-      description: 'Confirmation code is incorrect or has been applied',
+      description: 'Incorrect or already used confirmation code',
       type: FieldError,
     }),
     ApiGoneResponse({
@@ -104,39 +90,32 @@ export function AuthRegistrationConfirmationSwaggerDecorator() {
 
 export function AuthRegistrationEmailResendingSwaggerDecorator() {
   return applyDecorators(
-    ApiOperation({
-      summary: 'Resend confirmation registration email if user exists',
-    }),
+    ApiOperation({ summary: 'Resend confirmation email' }),
     ApiBody({ type: EmailDto }),
     ApiResponse({
-      status: 204,
+      status: HttpStatus.NO_CONTENT,
       description:
-        'Input data is accepted. Email with confirmation code will be send to passed email address.',
+        'Email resent. Confirmation code sent to provided email address.',
     }),
     ApiBadRequestResponse({
-      description: 'inputModel has incorrect values',
+      description: 'Invalid input data',
       type: FieldError,
     }),
-    ApiNotFoundResponse({
-      description: 'User with the given email does not exist',
-    }),
+    ApiNotFoundResponse({ description: 'User with the given email not found' }),
   );
 }
 
 export function AuthRefreshTokenSwaggerDecorator() {
   return applyDecorators(
-    ApiOperation({
-      summary: 'Generate new pair of access and refresh token',
-    }),
+    ApiOperation({ summary: 'Generate new access and refresh tokens' }),
     ApiResponse({
-      status: 200,
+      status: HttpStatus.OK,
       description:
-        'Returns JWT accessToken (expires after 1 hour) in body and JWT refreshToken in cookie (http-only, secure) (expires after 2 hours).',
+        'New JWT accessToken (valid for 1 hour) returned in the response body. JWT refreshToken (valid for 2 hours) returned in the response cookie (http-only, secure).',
       type: LogginSuccessViewModel,
     }),
     ApiUnauthorizedResponse({
-      description:
-        'JWT refreshToken inside cookie is missing, expired or incorrect',
+      description: 'Invalid, expired, or missing refreshToken',
     }),
     ApiCookieAuth(),
   );
@@ -145,8 +124,7 @@ export function AuthRefreshTokenSwaggerDecorator() {
 export function AuthPasswordRecoverySwaggerDecorator() {
   return applyDecorators(
     ApiOperation({
-      summary:
-        'Password recovery via Email confirmation. Email should be sent with the RecoveryCode inside',
+      summary: 'Recover password via Email confirmation',
     }),
     ApiBody({
       schema: {
@@ -155,7 +133,7 @@ export function AuthPasswordRecoverySwaggerDecorator() {
         properties: {
           email: {
             type: 'string',
-            example: 'Jamesbond@yandex.ru',
+            example: 'example@example.com',
           },
           recaptchaToken: {
             type: 'string',
@@ -164,19 +142,18 @@ export function AuthPasswordRecoverySwaggerDecorator() {
       },
     }),
     ApiResponse({
-      status: 204,
+      status: HttpStatus.NO_CONTENT,
       description:
-        "Even if current email is not registered (for prevent user's email detection)",
+        'Password recovery email sent (even if email is not registered)',
     }),
     ApiBadRequestResponse({
-      description:
-        'InputModel has invalid email or recaptcha was not provided (for example 222^gmail.com)',
+      description: 'Invalid email or missing recaptcha token',
     }),
     ApiForbiddenResponse({
-      description: 'invalid-input-response (recaptcha is not correct)',
+      description: 'Invalid recaptcha token',
     }),
     ApiGoneResponse({
-      description: 'Code expired',
+      description: 'Recovery code expired',
     }),
   );
 }
@@ -188,88 +165,72 @@ export function AuthNewPasswordSwaggerDecorator() {
     }),
     ApiBody({ type: NewPasswordDto }),
     ApiResponse({
-      status: 204,
-      description: 'If code is valid and new password is accepted',
+      status: HttpStatus.NO_CONTENT,
+      description: 'Password recovery successful',
     }),
     ApiBadRequestResponse({
-      description:
-        'If the inputModel has incorrect value (incorrect password length) or RecoveryCode is incorrect or expired',
+      description: 'Invalid input or expired recovery code',
     }),
   );
 }
 
 export function AuthGoogleDecorator() {
   return applyDecorators(
-    ApiOperation({
-      summary: 'Sign in via Google account',
-    }),
+    ApiOperation({ summary: 'Sign in with Google account' }),
     ApiBody({ type: GoogleCodeDto }),
     ApiResponse({
-      status: 200,
-      description:
-        'If google credentials are correct, returns JWT accessToken (expires after 1 hour) in body and JWT refreshToken in cookie (http-only, secure) (expires after 2 hours).',
+      status: HttpStatus.OK,
+      description: 'Sign in successful with Google credentials',
       type: LogginSuccessViewModel,
     }),
     ApiResponse({
-      status: 202,
+      status: HttpStatus.ACCEPTED,
       description:
-        'If user is already registered, returns an email with suggestion to merge accounts',
+        'User already registered. Email sent with account merge suggestion',
       schema: {
         type: 'object',
         example: {
-          email: 'Jamesbond@yandex.ru',
+          email: 'example@example.com',
         },
       },
     }),
-    ApiUnauthorizedResponse({
-      description: 'If the code provided is incorrect',
-    }),
+    ApiUnauthorizedResponse({ description: 'Incorrect code' }),
   );
 }
 
 export function AuthWithGithubDecorator() {
   return applyDecorators(
-    ApiOperation({
-      summary: 'Sign in/sign up via Github account',
-    }),
+    ApiOperation({ summary: 'Sign in/Sign up with GitHub account' }),
     ApiBody({ type: GithubCodeDto }),
     ApiResponse({
-      status: 200,
-      description:
-        'Success. An email regarding successful registration has been sent to the user',
+      status: HttpStatus.OK,
+      description: 'Sign in/Sign up successful with GitHub credentials',
       type: LogginSuccessViewModel,
     }),
     ApiResponse({
-      status: 202,
+      status: HttpStatus.ACCEPTED,
+      description: 'Email sent regarding successful registration',
       schema: {
         type: 'object',
         example: {
-          email: 'Jamesbond@yandex.ru',
+          email: 'example@example.com',
         },
       },
-      description: 'Email to which prompt for account merging has been sent.',
     }),
-    ApiUnauthorizedResponse({
-      description: 'Incorrect code',
-    }),
+    ApiUnauthorizedResponse({ description: 'Incorrect code' }),
   );
 }
 
 export function MergeAccountsDecorator() {
   return applyDecorators(
-    ApiOperation({
-      summary: 'Merge existing accounts',
-    }),
+    ApiOperation({ summary: 'Merge existing accounts' }),
     ApiQuery({ name: 'code', type: 'string' }),
     ApiResponse({
-      status: 200,
-      description:
-        'Returns JWT accessToken (expires after 1 hour) in body and JWT refreshToken in cookie (http-only, secure) (expires after 2 hours).',
+      status: HttpStatus.OK,
+      description: 'Account merge successful',
       type: LogginSuccessViewModel,
     }),
-    ApiUnauthorizedResponse({
-      description: 'Incorrect code',
-    }),
+    ApiUnauthorizedResponse({ description: 'Incorrect code' }),
     ApiCookieAuth(),
   );
 }

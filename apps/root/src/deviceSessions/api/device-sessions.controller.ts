@@ -20,13 +20,13 @@ import { DeleteAllDeviceSessionsButActiveCommand } from '../use-cases/delete-all
 import { DeleteDeviceSessionCommand } from '../use-cases/delete-device-session.use-case';
 import { ActiveUser } from '../../common/decorators/active-user.decorator';
 import { ActiveUserData } from '../../user/types';
-import { JwtRtGuard } from '../../common/guards/jwt-auth.guard';
+import { RefreshTokenJwtGuard } from '../../common/guards/jwt-auth.guard';
 
 @ApiTags('DeviceSessions')
 @Controller('/api/sessions/devices')
 export class DeviceSessionsController {
   constructor(private commandBus: CommandBus) {}
-  @UseGuards(JwtRtGuard)
+  @UseGuards(RefreshTokenJwtGuard)
   @Get()
   @GetAllDevicesSwaggerDecorator()
   async getAllDevicesForUserId(@ActiveUser() user: ActiveUserData) {
@@ -36,7 +36,7 @@ export class DeviceSessionsController {
     >(new AllUserDevicesWithActiveSessionsCommand(user));
   }
 
-  @UseGuards(JwtRtGuard)
+  @UseGuards(RefreshTokenJwtGuard)
   @Delete()
   @DeleteAllDevicesSessionsButActiveSwaggerDecorator()
   @HttpCode(204)
@@ -46,7 +46,7 @@ export class DeviceSessionsController {
     );
   }
 
-  @UseGuards(JwtRtGuard)
+  @UseGuards(RefreshTokenJwtGuard)
   @Delete(':deviceId')
   @DeleteDeviceSessionSwaggerDecorator()
   @HttpCode(204)

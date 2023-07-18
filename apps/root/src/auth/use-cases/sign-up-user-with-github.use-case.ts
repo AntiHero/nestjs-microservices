@@ -1,27 +1,27 @@
-import { randomUUID }                                 from 'crypto';
+import { randomUUID } from 'crypto';
 
-import { createdUserMessageCreator }                  from '@app/common/message-creators/created-user.message-creator';
-import { RootEvent }                                  from '@app/common/patterns';
+import { createdUserMessageCreator } from '@app/common/message-creators/created-user.message-creator';
+import { RootEvent } from '@app/common/patterns';
 import { BadRequestException, UnauthorizedException } from '@nestjs/common';
-import { CommandHandler, ICommandHandler }            from '@nestjs/cqrs';
-import { EventEmitter2 as EventEmitter }              from '@nestjs/event-emitter';
-import { User }                                       from '@prisma/client';
-import { add }                                        from 'date-fns';
-import Joi                                            from 'joi';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { EventEmitter2 as EventEmitter } from '@nestjs/event-emitter';
+import { User } from '@prisma/client';
+import { add } from 'date-fns';
+import Joi from 'joi';
 
-import { OauthProvider }                              from 'apps/root/src/common/constants';
-import { MailService }                                from 'apps/root/src/mail/mail.service';
+import { OauthProvider } from 'apps/root/src/common/constants';
+import { MailService } from 'apps/root/src/mail/mail.service';
 import {
   AvatarPayload,
   CreateUserWithOauthAccountData,
-}                                                     from 'apps/root/src/user/types';
+} from 'apps/root/src/user/types';
 
-import { JwtAdaptor }                                 from '../../adaptors/jwt/jwt.adaptor';
-import { NOTIFY_ADMIN_EVENT }                         from '../../common/event-router';
-import { UserRepository }                             from '../../user/repositories/user.repository';
-import { DevicesSessionsService }                     from '../services/devices.service';
-import { GithubUsersService }                         from '../services/github-users.service';
-import type { OauthCommandData }                      from '../types';
+import { JwtAdapter } from '../../adapters/jwt/jwt.adapter';
+import { NOTIFY_ADMIN_EVENT } from '../../common/event-router';
+import { UserRepository } from '../../user/repositories/user.repository';
+import { DevicesSessionsService } from '../services/devices.service';
+import { GithubUsersService } from '../services/github-users.service';
+import type { OauthCommandData } from '../types';
 
 export class SignUpWithGithubCommand {
   public constructor(public readonly data: OauthCommandData) {
@@ -46,7 +46,7 @@ export class SignUpUserWithGithubUseCase
     private readonly githubUserService: GithubUsersService,
     private readonly userRepository: UserRepository,
     private readonly emailService: MailService,
-    private readonly jwtAdaptor: JwtAdaptor,
+    private readonly jwtAdaptor: JwtAdapter,
     private readonly eventEmitter: EventEmitter,
   ) {}
 
@@ -126,7 +126,7 @@ export class SignUpUserWithGithubUseCase
           message,
         ]);
 
-        await this.emailService.sendOauthAccountCreationConfirmation(user);
+        await this.emailService.sendOauthAccountCreationEmail(user);
       } else {
         const existingOauthAccount =
           await this.userRepository.findOauthAccountByQuery({
@@ -145,7 +145,7 @@ export class SignUpUserWithGithubUseCase
             mergeCodeExpDate: add(new Date(), { minutes: 10 }),
           });
 
-          await this.emailService.sendAccountsMerge(user, mergeCode);
+          await this.emailService.sendMergeAccountEmail(user, mergeCode);
 
           return email;
         }

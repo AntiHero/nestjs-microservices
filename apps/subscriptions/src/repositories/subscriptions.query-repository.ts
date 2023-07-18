@@ -6,13 +6,15 @@ import {
   SubscriptionPricingPlan,
   SubscriptionStatus,
 } from '.prisma/subscriptions';
-import { PaymentsQueryDto } from '@app/common/dtos/payments-query.dto';
-import { DatabaseException } from '@app/common/exceptions/database.exception';
-import { Injectable } from '@nestjs/common';
+import { PaymentsQueryDto }      from '@app/common/dtos/payments-query.dto';
+import { DatabaseException }     from '@app/common/exceptions/database.exception';
+import { CurrentSubscription }   from '@app/common/interfaces/current-subscription.interface';
+import { Injectable }            from '@nestjs/common';
 
-import { PrismaService } from 'apps/subscriptions/src/prisma/prisma.service';
+import { PrismaService }         from 'apps/subscriptions/src/prisma/prisma.service';
 
-import { Payments } from '../interfaces';
+import { Payments }              from '../interfaces';
+import { PrismaTransactionType } from '../interfaces/prisma-transaction.interface';
 
 @Injectable()
 export class SubscriptionsQueryRepository {
@@ -107,7 +109,6 @@ export class SubscriptionsQueryRepository {
     userId: string,
     query: PaymentsQueryDto,
   ): Promise<[number, Payments[]]> {
-    console.log(userId, query, 'repo');
     const { page, pageSize } = query;
 
     try {
@@ -152,7 +153,7 @@ export class SubscriptionsQueryRepository {
           },
         },
         take: pageSize,
-        skip: (page - 1) * pageSize,
+        skip: (<number>page - 1) * <number>pageSize,
       });
 
       return [count, payments];
@@ -163,7 +164,9 @@ export class SubscriptionsQueryRepository {
     }
   }
 
-  public async getUserCurrentSubscription(userId: string) {
+  public async getUserCurrentSubscription(
+    userId: string,
+  ): Promise<CurrentSubscription | null> {
     try {
       const result = this.prismaService.subscription.findFirst({
         where: {
@@ -182,6 +185,14 @@ export class SubscriptionsQueryRepository {
               pricingPlan: {
                 select: {
                   subscriptionType: true,
+                  price: {
+                    select: {
+                      currency: true,
+                      period: true,
+                      periodType: true,
+                      value: true,
+                    },
+                  },
                 },
               },
             },
@@ -236,9 +247,12 @@ export class SubscriptionsQueryRepository {
     }
   }
 
-  public async getOverallPaymentInformation(id: string) {
+  public async getOverallPaymentInformation(
+    tx: PrismaTransactionType,
+    id: string,
+  ) {
     try {
-      const result = await this.prismaService.payment.findUnique({
+      const result = await tx.payment.findUnique({
         where: {
           id,
         },

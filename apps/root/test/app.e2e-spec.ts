@@ -1,8 +1,8 @@
+import { INestApplication }    from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import request from 'supertest';
+import request                 from 'supertest';
 
-import { AppModule } from 'apps/root/src/app.module';
+import { AppModule }           from 'apps/root/src/app.module';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;

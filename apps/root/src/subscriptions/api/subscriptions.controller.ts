@@ -1,6 +1,7 @@
 import { Cached }                        from '@app/common/decorators/cached.decorator';
 import { PaymentsQueryDto }              from '@app/common/dtos/payments-query.dto';
 import { BaseHttpException }             from '@app/common/exceptions';
+import { CircuitBreakerInterceptor }     from '@app/common/interceptors/circuit-breaker/circuti-breaker.interceptor';
 import { PaymentsMapper }                from '@app/common/utils/payments.mapper';
 import {
   Body,
@@ -12,6 +13,7 @@ import {
   Post,
   Query,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags }                       from '@nestjs/swagger';
 import { firstValueFrom }                from 'rxjs';
@@ -45,6 +47,7 @@ export class SubscriptionsController {
 
   @Post('checkout-session')
   @CheckoutSessionApiDecorator()
+  @UseInterceptors(CircuitBreakerInterceptor)
   @UseGuards(JwtGuard)
   @HttpCode(HttpStatus.OK)
   public async createCheckoutSession(
@@ -52,6 +55,7 @@ export class SubscriptionsController {
     @Body() checkoutDto: CheckoutDto,
   ) {
     const { priceId, paymentSystem } = checkoutDto;
+
     const result = await firstValueFrom(
       this.subscriptionsService.getCheckoutSessionUrl({
         priceId,

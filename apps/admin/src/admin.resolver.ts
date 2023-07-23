@@ -55,12 +55,12 @@ export class AdminResolver {
     return view;
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => ID, { nullable: true })
   public async deleteUser(@Args('input') input: DeleteUserInput) {
     return this.adminService.deleteUser(input.id);
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => ID, { nullable: true })
   public async banUser(@Args('input') input: BanUserInput) {
     return this.adminService.banUser(input.id, input.banReason);
   }
@@ -130,7 +130,7 @@ export class AdminResolver {
     return view;
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => ID, { nullable: true })
   public async unBanUser(@Args('input') input: UnBanUserInput) {
     return this.adminService.unBanUser(input.id);
   }

@@ -22,17 +22,17 @@ export abstract class MongoRepository<M> extends Repository<M> {
     }
   }
 
-  public async delete(id: string) {
+  public async delete(id: string): Promise<string | null> {
     try {
       const result = await this.repository.deleteOne({
         id,
       });
 
-      return result.deletedCount ? true : false;
+      return result.deletedCount ? id : null;
     } catch (error) {
       console.log(error);
 
-      return false;
+      return null;
     }
   }
 
@@ -48,17 +48,20 @@ export abstract class MongoRepository<M> extends Repository<M> {
     }
   }
 
-  public async update(id: string, updates: DeepPartial<M>): Promise<boolean> {
+  public async update(
+    id: string,
+    updates: DeepPartial<M>,
+  ): Promise<string | null> {
     try {
       const result = await this.repository.findOne({
         id,
       });
 
-      if (!result) return false;
+      if (!result) return null;
 
       await applyUpdates(result, <any>updates).save();
 
-      return true;
+      return id;
     } catch (error) {
       console.log(error);
 
